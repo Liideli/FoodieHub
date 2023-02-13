@@ -1,64 +1,82 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {ButtonGroup} from '@rneui/base';
-import {Avatar, ListItem as RNEListItem} from '@rneui/themed';
 import PropTypes from 'prop-types';
-import {useContext} from 'react';
-import {Alert} from 'react-native';
-import {MainContext} from '../contexts/MainContext';
-import {useMedia} from '../hooks/ApiHooks';
 import {uploadsUrl} from '../utils/variables';
+import {Dimensions} from 'react-native';
+import {
+  AspectRatio,
+  Box,
+  Image,
+  Stack,
+  Heading,
+  Text,
+  HStack,
+  Pressable,
+} from 'native-base';
 
 const ListItem = ({singleMedia, navigation}) => {
-  const {user, setUpdate, update} = useContext(MainContext);
-  const {deleteMedia} = useMedia();
   const item = singleMedia;
-
-  const doDelete = () => {
-    try {
-      Alert.alert('Delete', 'this file permanently', [
-        {text: 'Cancel'},
-        {
-          text: 'OK',
-          onPress: async () => {
-            const token = await AsyncStorage.getItem('userToken');
-            const response = await deleteMedia(item.file_id, token);
-            response && setUpdate(!update);
-          },
-        },
-      ]);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const width = Dimensions.get('window').width;
 
   return (
-    <RNEListItem
+    <Pressable
       onPress={() => {
         navigation.navigate('Single', item);
       }}
     >
-      <Avatar size="large" source={{uri: uploadsUrl + item.thumbnails?.w160}} />
-      <RNEListItem.Content>
-        <RNEListItem.Title>{item.title}</RNEListItem.Title>
-        <RNEListItem.Subtitle numberOfLines={3}>
-          {item.description}
-        </RNEListItem.Subtitle>
-        {item.user_id === user.user_id && (
-          <ButtonGroup
-            buttons={['Modify', 'Delete']}
-            rounded
-            onPress={(index) => {
-              if (index === 0) {
-                navigation.navigate('Modify', {file: item});
-              } else {
-                doDelete();
-              }
-            }}
-          />
-        )}
-      </RNEListItem.Content>
-      <RNEListItem.Chevron />
-    </RNEListItem>
+      <Box alignItems="center">
+        <Box
+          width={width / 2}
+          rounded="lg"
+          overflow="hidden"
+          borderColor="coolGray.200"
+          borderWidth="2"
+          _dark={{
+            borderColor: 'coolGray.600',
+            backgroundColor: 'gray.700',
+          }}
+          _web={{
+            shadow: 2,
+            borderWidth: 0,
+          }}
+          _light={{
+            backgroundColor: 'gray.50',
+          }}
+        >
+          <Box>
+            <AspectRatio w="100%" ratio={1 / 1}>
+              <Image
+                source={{uri: uploadsUrl + item.thumbnails?.w160}}
+                alt="image"
+              />
+            </AspectRatio>
+          </Box>
+          <Stack p="4" space={3}>
+            <Stack space={2}>
+              <Heading size="md" ml="-1">
+                {item.title}
+              </Heading>
+            </Stack>
+            <Text fontWeight="400">{item.description}</Text>
+            <HStack
+              alignItems="center"
+              space={4}
+              justifyContent="space-between"
+            >
+              <HStack alignItems="center">
+                <Text
+                  color="coolGray.600"
+                  _dark={{
+                    color: 'warmGray.200',
+                  }}
+                  fontWeight="400"
+                >
+                  User Name
+                </Text>
+              </HStack>
+            </HStack>
+          </Stack>
+        </Box>
+      </Box>
+    </Pressable>
   );
 };
 
