@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import {uploadsUrl} from '../utils/variables';
 import {Dimensions} from 'react-native';
+import {MainContext} from '../contexts/MainContext';
+import {useContext} from 'react';
 import {
   AspectRatio,
   Box,
@@ -15,6 +17,7 @@ import {
 const ListItem = ({singleMedia, navigation}) => {
   const item = singleMedia;
   const width = Dimensions.get('window').width;
+  const {user} = useContext(MainContext);
 
   return (
     <Pressable
@@ -49,7 +52,7 @@ const ListItem = ({singleMedia, navigation}) => {
               />
             </AspectRatio>
           </Box>
-          <Stack p="4" space={3}>
+          <Stack p="4" space={3} overflow="hidden">
             <Stack space={2}>
               <Heading size="md" ml="-1">
                 {item.title}
@@ -62,15 +65,17 @@ const ListItem = ({singleMedia, navigation}) => {
               justifyContent="space-between"
             >
               <HStack alignItems="center">
-                <Text
-                  color="coolGray.600"
-                  _dark={{
-                    color: 'warmGray.200',
-                  }}
-                  fontWeight="400"
-                >
-                  User Name
-                </Text>
+                {item.user_id === user.user_id && (
+                  <Text
+                    color="coolGray.600"
+                    _dark={{
+                      color: 'warmGray.200',
+                    }}
+                    fontWeight="400"
+                  >
+                    {user.username}
+                  </Text>
+                )}
               </HStack>
             </HStack>
           </Stack>

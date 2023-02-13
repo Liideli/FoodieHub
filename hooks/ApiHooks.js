@@ -17,6 +17,7 @@ const doFetch = async (url, options) => {
 const useMedia = (myFilesOnly) => {
   const [mediaArray, setMediaArray] = useState([]);
   const {update, user} = useContext(MainContext);
+
   const loadMedia = async () => {
     try {
       // const response = await fetch(baseUrl + 'media');
@@ -26,25 +27,23 @@ const useMedia = (myFilesOnly) => {
       if (myFilesOnly) {
         json = json.filter((file) => file.user_id === user.user_id);
       }
+
       json.reverse();
-      // 2nd fetch:
       const media = await Promise.all(
         json.map(async (file) => {
           const fileResponse = await fetch(baseUrl + 'media/' + file.file_id);
-          const json = await fileResponse.json();
-          return json;
+          return await fileResponse.json();
         })
       );
       setMediaArray(media);
     } catch (error) {
-      console.log('List, loadMedia', error);
+      console.error('List, loadMedia', error);
     }
   };
-
   useEffect(() => {
     loadMedia();
     // load media when update state changes in main context
-    // by add update state to the array below
+    // by adding update state to the array below
   }, [update]);
 
   const postMedia = async (fileData, token) => {
@@ -52,18 +51,45 @@ const useMedia = (myFilesOnly) => {
       method: 'post',
       headers: {
         'x-access-token': token,
-        'Content-type': 'multipart/form-data',
+        'Content-Type': 'multipart/form-data',
       },
       body: fileData,
     };
     try {
       return await doFetch(baseUrl + 'media', options);
     } catch (error) {
-      throw new Error('postUpload' + error.message);
+      throw new Error('postMedia: ' + error.message);
     }
   };
 
-  return {mediaArray, postMedia};
+  const deleteMedia = async (id, token) => {
+    try {
+      return await doFetch(baseUrl + 'media/' + id, {
+        headers: {'x-access-token': token},
+        method: 'delete',
+      });
+    } catch (error) {
+      throw new Error('deleteMedia, ' + error.message);
+    }
+  };
+
+  const putMedia = async (id, data, token) => {
+    const options = {
+      method: 'put',
+      headers: {
+        'x-access-token': token,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    };
+    try {
+      return await doFetch(baseUrl + 'media/' + id, options);
+    } catch (error) {
+      throw new Error('putMedia: ' + error.message);
+    }
+  };
+
+  return {mediaArray, postMedia, deleteMedia, putMedia};
 };
 
 const useAuthentication = () => {
@@ -73,19 +99,17 @@ const useAuthentication = () => {
       // TODO: add method, headers and body for sending json data with POST
       method: 'post',
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(userCredentials),
     };
     try {
       // TODO: use fetch to send request to login endpoint and return the result as json, handle errors with try/catch and response.ok
-      const loginResult = await doFetch(baseUrl + 'login', options);
-      return loginResult;
+      return await doFetch(baseUrl + 'login', options);
     } catch (error) {
-      throw new Error('postLogin' + error.message);
+      throw new Error('postLogin: ' + error.message);
     }
   };
-
   return {postLogin};
 };
 
@@ -98,8 +122,7 @@ const useUser = () => {
       headers: {'x-access-token': token},
     };
     try {
-      const result = await doFetch(baseUrl + 'users/user', options);
-      return result.available;
+      return await doFetch(baseUrl + 'users/user', options);
     } catch (error) {
       throw new Error('checkUser: ' + error.message);
     }
@@ -108,20 +131,21 @@ const useUser = () => {
     const options = {
       method: 'post',
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(userData),
     };
     try {
       return await doFetch(baseUrl + 'users', options);
     } catch (error) {
-      throw new Error('postUser' + error.message);
+      throw new Error('postUser: ' + error.message);
     }
   };
 
   const checkUsername = async (username) => {
     try {
-      return await doFetch(baseUrl + 'users/username/' + username);
+      const result = await doFetch(baseUrl + 'users/username/' + username);
+      return result.available;
     } catch (error) {
       throw new Error('checkUsername: ' + error.message);
     }
@@ -133,26 +157,11 @@ const useUser = () => {
         headers: {'x-access-token': token},
       });
     } catch (error) {
-      throw new Error('getUserById', error.message);
+      throw new Error('getUserById, ' + error.message);
     }
   };
-  return {getUserByToken, postUser, checkUsername, getUserById};
-};
 
-const modifyUser = async (data, token) => {
-  const options = {
-    method: 'put',
-    headers: {
-      'x-access-token': token,
-      'Content-type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  };
-  try {
-    return await doFetch(baseUrl + '/users', options);
-  } catch (error) {
-    throw new Error('modifyUser' + error.message);
-  }
+  return {getUserByToken, postUser, checkUsername, getUserById};
 };
 
 const useTag = () => {
@@ -160,7 +169,7 @@ const useTag = () => {
     try {
       return await doFetch(baseUrl + 'tags/' + tag);
     } catch (error) {
-      throw new Error('getFilesByTag', error.message);
+      throw new Error('getFilesByTag, ' + error.message);
     }
   };
 
@@ -169,14 +178,14 @@ const useTag = () => {
       method: 'post',
       headers: {
         'x-access-token': token,
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
     };
     try {
       return await doFetch(baseUrl + 'tags', options);
     } catch (error) {
-      throw new Error('postTag' + error.message);
+      throw new Error('postTag: ' + error.message);
     }
   };
   return {getFilesByTag, postTag};
@@ -188,24 +197,26 @@ const useFavourite = () => {
       method: 'post',
       headers: {
         'x-access-token': token,
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({file_id: fileId}),
     };
     try {
       return await doFetch(baseUrl + 'favourites', options);
     } catch (error) {
-      throw new Error('postFavourite ' + error.message);
+      throw new Error('posFavourite: ' + error.message);
     }
   };
   const getFavouritesByFileId = async (fileId) => {
     try {
       return await doFetch(baseUrl + 'favourites/file/' + fileId);
     } catch (error) {
-      throw new Error('getFavouritesByFileId', error.message);
+      throw new Error('getFavouriterByFileId error, ' + error.message);
     }
   };
-  const getFavouritesByUser = async (token) => {};
+  const getFavouritesByUser = async (token) => {
+    // TODO: implement this
+  };
   const deleteFavourite = async (fileId, token) => {
     const options = {
       method: 'delete',
@@ -216,15 +227,16 @@ const useFavourite = () => {
     try {
       return await doFetch(baseUrl + 'favourites/file/' + fileId, options);
     } catch (error) {
-      throw new Error('deleteFavourite error' + error.message);
+      throw new Error('deleteFavourite error, ' + error.message);
     }
   };
+
   return {
     postFavourite,
-    getFavouritesByUser,
     getFavouritesByFileId,
+    getFavouritesByUser,
     deleteFavourite,
   };
 };
 
-export {useMedia, useAuthentication, useUser, useTag, modifyUser, useFavourite};
+export {useMedia, useAuthentication, useUser, useTag, useFavourite};

@@ -5,7 +5,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
 import {Button} from 'react-native';
 import {MainContext} from '../contexts/MainContext';
-import {modifyUser, useTag, checkUsername} from '../hooks/ApiHooks';
+import {useTag, checkUsername} from '../hooks/ApiHooks';
 import {uploadsUrl} from '../utils/variables';
 
 const Profile = ({navigation}) => {
@@ -28,20 +28,6 @@ const Profile = ({navigation}) => {
       setAvatar(avatarArray.pop().filename);
     } catch (error) {
       console.log('user avatar fetch failed', error.message);
-    }
-  };
-
-  const updateProfile = async (data) => {
-    const formData = new FormData();
-    formData.append('username', data.username);
-    formData.append('email', data.email);
-    console.log('form data', formData);
-    try {
-      const token = await AsyncStorage.getItem('userToken');
-      const result = await modifyUser(formData, token);
-      console.log('result', result);
-    } catch (error) {
-      console.error('update profile failed', error);
     }
   };
 
@@ -114,7 +100,6 @@ const Profile = ({navigation}) => {
         )}
         name="email"
       />
-      <Button title="Edit Profile" onPress={updateProfile()} />
       <Button
         title="My Files"
         onPress={() => {
