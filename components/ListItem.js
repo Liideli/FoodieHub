@@ -30,7 +30,7 @@ const ListItem = ({singleMedia, navigation}) => {
           width={width / 2}
           rounded="lg"
           overflow="hidden"
-          borderColor="coolGray.200"
+          borderColor="#FFC56D"
           borderWidth="2"
           _dark={{
             borderColor: 'coolGray.600',
@@ -52,13 +52,12 @@ const ListItem = ({singleMedia, navigation}) => {
               />
             </AspectRatio>
           </Box>
-          <Stack p="4" space={3} overflow="hidden">
-            <Stack space={2}>
-              <Heading size="md" ml="-1">
+          <Stack p="4" space={0} overflow="hidden">
+            <Stack alignItems="center">
+              <Heading size="md" fontFamily="JudsonRegular">
                 {item.title}
               </Heading>
             </Stack>
-            <Text fontWeight="400">{item.description}</Text>
             <HStack
               alignItems="center"
               space={4}
@@ -72,6 +71,7 @@ const ListItem = ({singleMedia, navigation}) => {
                       color: 'warmGray.200',
                     }}
                     fontWeight="400"
+                    fontFamily="JudsonItalic"
                   >
                     {user.username}
                   </Text>
