@@ -9,3 +9,8 @@ FoodieHub is a social media platform for food enthusiasts to connect, share and 
 - Recipes List
 - Upload Recipe
 - Profile
+
+## Contributors
+- [Roope Laine]
+- [Emil Suuronen]
+- [Tuomas Heikkilä]
