@@ -64,7 +64,7 @@ const ListItem = ({singleMedia, navigation}) => {
               justifyContent="space-between"
             >
               <HStack alignItems="center">
-                {item.user_id === user.user_id && (
+                {item.user_id === user.user_id ? (
                   <Text
                     color="coolGray.600"
                     _dark={{
@@ -74,6 +74,17 @@ const ListItem = ({singleMedia, navigation}) => {
                     fontFamily="JudsonItalic"
                   >
                     {user.username}
+                  </Text>
+                ) : (
+                  <Text
+                    color="coolGray.600"
+                    _dark={{
+                      color: 'warmGray.200',
+                    }}
+                    fontWeight="400"
+                    fontFamily="JudsonItalic"
+                  >
+                    username
                   </Text>
                 )}
               </HStack>
