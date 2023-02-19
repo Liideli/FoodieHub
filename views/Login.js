@@ -1,12 +1,13 @@
+/* eslint-disable react/no-unescaped-entities */
 import React, {useContext, useEffect, useState} from 'react';
-import {Keyboard, ScrollView, TouchableOpacity} from 'react-native';
+import {Keyboard} from 'react-native';
 import PropTypes from 'prop-types';
 import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useUser} from '../hooks/ApiHooks';
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
-import {Button, Card, Text} from '@rneui/base';
+import {Box, Center, HStack, VStack, Link, ScrollView} from 'native-base';
 
 const Login = ({navigation}) => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
@@ -32,24 +33,53 @@ const Login = ({navigation}) => {
   }, []);
 
   return (
-    <ScrollView>
-      <TouchableOpacity onPress={() => Keyboard.dismiss()} activeOpacity={1}>
+    <ScrollView bg={['#FFC56D']}>
+      <Center h="100%" onPress={() => Keyboard.dismiss()}>
         {toggleForm ? <LoginForm /> : <RegisterForm />}
-        <Card>
-          <Text>
-            {toggleForm
-              ? 'No account yet? Please register.'
-              : 'Already have an account? Please login.'}
-          </Text>
-          <Button
-            type="outline"
-            title={toggleForm ? 'Go to register' : 'Go to login'}
-            onPress={() => {
-              setToggleForm(!toggleForm);
-            }}
-          />
-        </Card>
-      </TouchableOpacity>
+        <Box>
+          <VStack pb="20">
+            <HStack justifyContent="center">
+              {toggleForm ? (
+                <Link
+                  type="outline"
+                  title="Sign Up"
+                  onPress={() => {
+                    setToggleForm(!toggleForm);
+                  }}
+                  _text={{
+                    fontFamily: 'JudsonRegular',
+                    color: 'indigo.500',
+                    fontWeight: 'medium',
+                    fontSize: 'md',
+                  }}
+                  href="#"
+                >
+                  {' '}
+                  Sign Up
+                </Link>
+              ) : (
+                <Link
+                  type="outline"
+                  title="Sign In"
+                  onPress={() => {
+                    setToggleForm(!toggleForm);
+                  }}
+                  _text={{
+                    fontFamily: 'JudsonRegular',
+                    color: 'indigo.500',
+                    fontWeight: 'medium',
+                    fontSize: 'md',
+                  }}
+                  href="#"
+                >
+                  {' '}
+                  Sign In
+                </Link>
+              )}
+            </HStack>
+          </VStack>
+        </Box>
+      </Center>
     </ScrollView>
   );
 };
