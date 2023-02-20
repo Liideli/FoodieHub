@@ -1,33 +1,26 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Card, Icon, Input, ListItem} from '@rneui/base';
-import PropTypes from 'prop-types';
 import React, {useContext, useEffect, useState} from 'react';
-import {Controller, useForm} from 'react-hook-form';
-import {Button} from 'react-native';
 import {MainContext} from '../contexts/MainContext';
-import {useTag, checkUsername} from '../hooks/ApiHooks';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useTag} from '../hooks/ApiHooks';
 import {uploadsUrl} from '../utils/variables';
+import List from '../components/List';
+import {View, Text, Button, KeyboardAvoidingView, Avatar} from 'native-base';
+import UpdateForm from '../components/UpdateForm';
+import PropTypes from 'prop-types';
 
 const Profile = ({navigation}) => {
   const {getFilesByTag} = useTag();
   const {setIsLoggedIn, user, setUser} = useContext(MainContext);
   const [avatar, setAvatar] = useState('');
-  const {
-    control,
-    formState: {errors},
-  } = useForm({
-    defaultValues: {
-      username: '',
-      password: '',
-    },
-  });
+  const [toggleProfile, setToggleProfile] = useState(true);
+  const [toggleRecipes, setToggleRecipes] = useState(true);
 
   const loadAvatar = async () => {
     try {
       const avatarArray = await getFilesByTag('avatar_' + user.user_id);
       setAvatar(avatarArray.pop().filename);
     } catch (error) {
-      console.log('user avatar fetch failed', error.message);
+      console.error('user avatar fetch failed', error.message);
     }
   };
 
@@ -35,91 +28,132 @@ const Profile = ({navigation}) => {
     loadAvatar();
   }, []);
 
-  const checkUser = async (username) => {
-    try {
-      const userAvailable = await checkUsername(username);
-      console.log('checkUser', userAvailable);
-      return userAvailable || 'Username is already taken';
-    } catch (error) {
-      console.error('checkUser', error.message);
-    }
-  };
-
   return (
-    <Card>
-      <Card.Title>{user.username}</Card.Title>
-      <Card.Image source={{uri: uploadsUrl + avatar}} />
-      <ListItem>
-        <Icon name="email" />
-        <ListItem.Title>{user.email}</ListItem.Title>
-      </ListItem>
-      <ListItem>
-        <Icon name="badge" />
-        <ListItem.Title>{user.full_name}</ListItem.Title>
-      </ListItem>
-      <Controller
-        control={control}
-        rules={{
-          required: {value: true, message: 'This is required'},
-          minLength: {
-            value: 3,
-            message: 'Username min length is 3 characters.',
-          },
-          validate: checkUser,
-        }}
-        render={({field: {onChange, onBlur, value}}) => (
-          <Input
-            placeholder="Username"
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-            autoCapitalize="none"
-            errorMessage={errors.username && errors.username.message}
-          />
+    <KeyboardAvoidingView
+      backgroundColor="#FFFFFF"
+      display="flex"
+      height="100%"
+    >
+      {toggleProfile ? (
+        <View
+          width="100%"
+          height="25%"
+          display="flex"
+          flexDirection="row"
+          backgroundColor="#FFC56D"
+        >
+          <View
+            display="flex"
+            alignItems="center"
+            justifyContent="flex-start"
+            width="75%"
+            flexDirection="row"
+            marginY={5}
+          >
+            <Avatar
+              size="2xl"
+              borderWidth={1}
+              borderColor={'black'}
+              marginX={5}
+              source={{uri: uploadsUrl + avatar}}
+              alt="User avatar"
+            />
+            <Text fontSize="2xl">{user.username}</Text>
+          </View>
+          <View
+            display="flex"
+            width="25%"
+            borderRadius={10}
+            alignSelf="flex-end"
+            padding={2}
+          >
+            <Button
+              backgroundColor="#FE5D26"
+              borderRadius={10}
+              _text={{
+                color: 'black',
+              }}
+              onPress={async () => {
+                console.log('Logging out!');
+                setUser({});
+                setIsLoggedIn(false);
+                try {
+                  await AsyncStorage.clear();
+                } catch (e) {
+                  console.log('Clearning async storage failed', e);
+                }
+              }}
+            >
+              Log Out
+            </Button>
+          </View>
+        </View>
+      ) : (
+        <View backgroundColor="#FFC56D">
+          <UpdateForm />
+        </View>
+      )}
+      <View display="flex" flexDirection="row">
+        <View width="33.3%">
+          <Button
+            borderRadius={0}
+            backgroundColor="#FE5D26"
+            borderWidth={1}
+            borderLeftWidth={0}
+            borderColor="black"
+            _text={{
+              color: 'black',
+            }}
+            onPress={() => {
+              setToggleRecipes(true);
+            }}
+          >
+            My recipes
+          </Button>
+        </View>
+        <View width="33.3%">
+          <Button
+            borderRadius={0}
+            backgroundColor="#FE5D26"
+            borderWidth={1}
+            borderLeftWidth={0}
+            borderColor="black"
+            _text={{
+              color: 'black',
+            }}
+            onPress={() => {
+              setToggleRecipes(false);
+            }}
+          >
+            My likes
+          </Button>
+        </View>
+        <View width="33.3%">
+          <Button
+            borderRadius={0}
+            backgroundColor="#FE5D26"
+            borderWidth={1}
+            borderLeftWidth={0}
+            borderColor="black"
+            _text={{
+              color: 'black',
+            }}
+            onPress={() => {
+              setToggleProfile(!toggleProfile);
+            }}
+          >
+            {toggleProfile ? 'Update user' : 'Back to profile'}
+          </Button>
+        </View>
+      </View>
+      <View>
+        {toggleRecipes ? (
+          <List navigation={navigation} myFilesOnly={true} />
+        ) : (
+          <View></View>
         )}
-        name="username"
-      />
-      <Controller
-        control={control}
-        rules={{
-          required: {value: true, message: 'email is required'},
-          pattern: {
-            value: /^[a-z0-9.-]{1,64}@[a-z0-9.-]{3,64}/i,
-            message: 'Must be a valid email.',
-          },
-        }}
-        render={({field: {onChange, onBlur, value}}) => (
-          <Input
-            placeholder="Email"
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-            autoCapitalize="none"
-            errorMessage={errors.email && errors.email.message}
-          />
-        )}
-        name="email"
-      />
-      <Button
-        title="My Files"
-        onPress={() => {
-          navigation.navigate('MyFiles');
-        }}
-      />
-      <Button
-        title="Logout!"
-        onPress={async () => {
-          console.log('Logging out!');
-          setUser({});
-          setIsLoggedIn(false);
-          try {
-            await AsyncStorage.clear();
-          } catch (error) {
-            console.warn('clearing asyncstorage failed', error);
-          }
-        }}
-      />
-    </Card>
+      </View>
+    </KeyboardAvoidingView>
   );
 };
 

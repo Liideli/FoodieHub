@@ -142,6 +142,22 @@ const useUser = () => {
     }
   };
 
+  const putUser = async (userData) => {
+    const options = {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userData),
+    };
+    try {
+      console.log(':DDDD', baseUrl + 'users', options);
+      return await doFetch(baseUrl + 'users', options);
+    } catch (error) {
+      throw new Error('putUser: ' + error.message);
+    }
+  };
+
   const checkUsername = async (username) => {
     try {
       const result = await doFetch(baseUrl + 'users/username/' + username);
@@ -161,7 +177,7 @@ const useUser = () => {
     }
   };
 
-  return {getUserByToken, postUser, checkUsername, getUserById};
+  return {getUserByToken, postUser, putUser, checkUsername, getUserById};
 };
 
 const useTag = () => {
