@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useAuthentication} from '../hooks/ApiHooks';
@@ -18,7 +18,7 @@ import {
 const LoginForm = (props) => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
   const {postLogin} = useAuthentication();
-  const [show, setShow] = React.useState(false);
+  const [show, setShow] = useState(false);
 
   const {
     control,
@@ -43,7 +43,7 @@ const LoginForm = (props) => {
 
   return (
     <Center w="100%" bg={['#FFC56D']}>
-      <Box safeArea pr="6" pl="6" w="100%" backgroundColor="#FFC56D">
+      <Box safeArea pr="6" pl="6" w="100%">
         <Heading
           fontFamily="JudsonRegular"
           size="2xl"
@@ -58,9 +58,6 @@ const LoginForm = (props) => {
         <Heading
           fontFamily="JudsonRegular"
           mt="1"
-          _dark={{
-            color: 'warmGray.200',
-          }}
           color="coolGray.600"
           fontWeight="medium"
           size="md"
@@ -90,7 +87,7 @@ const LoginForm = (props) => {
                 />
               )}
               name="username"
-              rules={{required: 'Field is required', minLength: 3}}
+              rules={{required: 'Field is required.'}}
               defaultValue=""
             />
             <FormControl.ErrorMessage>
@@ -123,7 +120,7 @@ const LoginForm = (props) => {
                 />
               )}
               name="password"
-              rules={{required: 'Field is required', minLength: 3}}
+              rules={{required: 'Field is required.'}}
               defaultValue=""
             />
             <FormControl.ErrorMessage>
@@ -131,9 +128,8 @@ const LoginForm = (props) => {
             </FormControl.ErrorMessage>
           </FormControl>
           <Button
-            backgroundColor="#FE5D26"
             mt="2"
-            colorScheme="indigo"
+            colorScheme="orange"
             onPress={handleSubmit(logIn)}
             _text={{
               fontFamily: 'JudsonRegular',

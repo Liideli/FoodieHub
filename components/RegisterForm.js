@@ -59,15 +59,12 @@ const RegisterForm = (props) => {
 
   return (
     <Center w="100%" bg={['#FFC56D']}>
-      <Box safeArea pr="6" pl="6" w="100%" backgroundColor="#FFC56D">
+      <Box safeArea pr="6" pl="6" w="100%">
         <Heading
           fontFamily="JudsonRegular"
           size="2xl"
           fontWeight="600"
           color="coolGray.800"
-          _dark={{
-            color: 'warmGray.50',
-          }}
         >
           Welcome
         </Heading>
@@ -271,9 +268,8 @@ const RegisterForm = (props) => {
             </FormControl.ErrorMessage>
           </FormControl>
           <Button
-            backgroundColor="#FE5D26"
             mt="2"
-            colorScheme="indigo"
+            colorScheme="orange"
             onPress={handleSubmit(register)}
             _text={{
               fontFamily: 'JudsonRegular',
