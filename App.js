@@ -1,21 +1,33 @@
 import {StatusBar} from 'expo-status-bar';
 import {MainProvider} from './contexts/MainContext';
 import Navigator from './navigators/Navigator';
-import {NativeBaseProvider} from 'native-base';
-import {useFonts} from 'expo-font';
+import {extendTheme, NativeBaseProvider} from 'native-base';
 
 const App = () => {
-  const [loaded] = useFonts({
-    JudsonRegular: require('./assets/fonts/Judson-Regular.ttf'),
-    JudsonItalic: require('./assets/fonts/Judson-Italic.ttf'),
-    JudsonBold: require('./assets/fonts/Judson-Bold.ttf'),
+  const theme = extendTheme({
+    components: {
+      Button: {
+        defaultProps: {
+          backgroundColor: '#FE5D26',
+          borderRadius: 10,
+          _text: {
+            color: 'black',
+          },
+        },
+      },
+      Input: {
+        defaultProps: {
+          backgroundColor: 'white',
+          focusOutlineColor: '#FE5D26',
+        },
+      },
+    },
+    config: {
+      initialColorMode: 'dark',
+    },
   });
-
-  if (!loaded) {
-    return null;
-  }
   return (
-    <NativeBaseProvider>
+    <NativeBaseProvider theme={theme}>
       <MainProvider>
         <Navigator />
         <StatusBar style="auto" />

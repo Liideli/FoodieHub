@@ -68,11 +68,6 @@ const Profile = ({navigation}) => {
             padding={2}
           >
             <Button
-              backgroundColor="#FE5D26"
-              borderRadius={10}
-              _text={{
-                color: 'black',
-              }}
               onPress={async () => {
                 console.log('Logging out!');
                 setUser({});
@@ -97,13 +92,9 @@ const Profile = ({navigation}) => {
         <View width="33.3%">
           <Button
             borderRadius={0}
-            backgroundColor="#FE5D26"
             borderWidth={1}
             borderLeftWidth={0}
             borderColor="black"
-            _text={{
-              color: 'black',
-            }}
             onPress={() => {
               setToggleRecipes(true);
             }}
@@ -114,13 +105,9 @@ const Profile = ({navigation}) => {
         <View width="33.3%">
           <Button
             borderRadius={0}
-            backgroundColor="#FE5D26"
             borderWidth={1}
             borderLeftWidth={0}
             borderColor="black"
-            _text={{
-              color: 'black',
-            }}
             onPress={() => {
               setToggleRecipes(false);
             }}
@@ -131,13 +118,9 @@ const Profile = ({navigation}) => {
         <View width="33.3%">
           <Button
             borderRadius={0}
-            backgroundColor="#FE5D26"
             borderWidth={1}
             borderLeftWidth={0}
             borderColor="black"
-            _text={{
-              color: 'black',
-            }}
             onPress={() => {
               setToggleProfile(!toggleProfile);
             }}
