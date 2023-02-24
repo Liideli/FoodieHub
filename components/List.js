@@ -5,8 +5,8 @@ import ListItem from './ListItem';
 import PropTypes from 'prop-types';
 import {Heading, HStack, Spinner} from 'native-base';
 
-const List = ({navigation, myFilesOnly = false}) => {
-  const {mediaArray} = useMedia(myFilesOnly);
+const List = ({navigation, myFilesOnly = false, MyFavouritesOnly = false}) => {
+  const {mediaArray} = useMedia(myFilesOnly, MyFavouritesOnly);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -58,6 +58,7 @@ const List = ({navigation, myFilesOnly = false}) => {
 List.propTypes = {
   navigation: PropTypes.object.isRequired,
   myFilesOnly: PropTypes.bool,
+  MyFavouritesOnly: PropTypes.bool,
 };
 
 export default List;

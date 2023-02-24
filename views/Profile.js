@@ -150,7 +150,9 @@ const Profile = ({navigation}) => {
         {toggleRecipes ? (
           <List navigation={navigation} myFilesOnly={true} />
         ) : (
-          <View></View>
+          <View>
+            <List navigation={navigation} MyFavouritesOnly={true} />
+          </View>
         )}
       </View>
     </KeyboardAvoidingView>

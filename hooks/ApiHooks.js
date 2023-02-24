@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useContext, useEffect, useState} from 'react';
 import {MainContext} from '../contexts/MainContext';
 import {appId, baseUrl} from '../utils/variables';
@@ -14,7 +15,7 @@ const doFetch = async (url, options) => {
   return json;
 };
 
-const useMedia = (myFilesOnly) => {
+const useMedia = (myFilesOnly, myFavouritesOnly) => {
   const [mediaArray, setMediaArray] = useState([]);
   const {update, user} = useContext(MainContext);
 
@@ -22,10 +23,16 @@ const useMedia = (myFilesOnly) => {
     try {
       // const response = await fetch(baseUrl + 'media');
       // const json = await response.json();
+      const userToken = await AsyncStorage.getItem('userToken');
       let json = await useTag().getFilesByTag(appId);
       // keep users files if MyFilesOnly
       if (myFilesOnly) {
         json = json.filter((file) => file.user_id === user.user_id);
+      }
+
+      if (myFavouritesOnly) {
+        const favourites = await useFavourite().getFavouritesByUser(userToken);
+        json = favourites;
       }
 
       json.reverse();
@@ -151,7 +158,6 @@ const useUser = () => {
       body: JSON.stringify(userData),
     };
     try {
-      console.log(':DDDD', baseUrl + 'users', options);
       return await doFetch(baseUrl + 'users', options);
     } catch (error) {
       throw new Error('putUser: ' + error.message);
@@ -231,7 +237,17 @@ const useFavourite = () => {
     }
   };
   const getFavouritesByUser = async (token) => {
-    // TODO: implement this
+    const options = {
+      method: 'get',
+      headers: {
+        'x-access-token': token,
+      },
+    };
+    try {
+      return await doFetch(baseUrl + 'favourites', options);
+    } catch (error) {
+      throw new Error('getFavouritesByUser error, ' + error.message);
+    }
   };
   const deleteFavourite = async (fileId, token) => {
     const options = {
