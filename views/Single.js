@@ -10,7 +10,7 @@ import {MainContext} from '../contexts/MainContext';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import {Image} from '@rneui/base';
 
-const Single = ({route}) => {
+const Single = ({route, navigation}) => {
   // console.log(route.params);
   const {
     title,
@@ -57,23 +57,23 @@ const Single = ({route}) => {
     try {
       const token = await AsyncStorage.getItem('userToken');
       await postFavourite(fileId, token);
-      setUserLikesIt(true);
-      getLikes();
-    } catch (error) {
-      // note: you cannot like same file multiple times
-      // console.log(error);
-    }
-  };
-  const dislikeFile = async () => {
-    try {
-      const token = await AsyncStorage.getItem('userToken');
-      await deleteFavourite(fileId, token);
-      setUserLikesIt(false);
       getLikes();
     } catch (error) {
       // note: you cannot like same file multiple times
       console.log(error);
     }
+    setUserLikesIt(true);
+  };
+  const dislikeFile = async () => {
+    try {
+      const token = await AsyncStorage.getItem('userToken');
+      await deleteFavourite(fileId, token);
+      getLikes();
+    } catch (error) {
+      // note: you cannot like same file multiple times
+      console.log(error);
+    }
+    setUserLikesIt(false);
   };
 
   const unlock = async () => {
@@ -194,6 +194,7 @@ const Single = ({route}) => {
 
 Single.propTypes = {
   route: PropTypes.object,
+  navigation: PropTypes.object,
 };
 
 export default Single;
