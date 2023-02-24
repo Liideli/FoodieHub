@@ -1,11 +1,13 @@
 import PropTypes from 'prop-types';
 import {uploadsUrl} from '../utils/variables';
 import {Dimensions} from 'react-native';
-import {useState, useEffect, useContext} from 'react';
+import {useState, useEffect, useContext, useCallback} from 'react';
 import {useFavourite, useUser} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
 import {AntDesign} from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useFocusEffect} from '@react-navigation/native';
+
 import {
   AspectRatio,
   Box,
@@ -15,19 +17,20 @@ import {
   Text,
   HStack,
   Pressable,
+  PresenceTransition,
 } from 'native-base';
 
 const ListItem = ({singleMedia, navigation}) => {
+  const {user_id: userId, file_id: fileId} = singleMedia;
   const [owner, setOwner] = useState({});
   const {user} = useContext(MainContext);
   const {getUserById} = useUser();
-  const [likes, setLikes] = useState([]);
   const [userLikesIt, setUserLikesIt] = useState(false);
   const {getFavouritesByFileId, postFavourite, deleteFavourite} =
     useFavourite();
   const item = singleMedia;
-  const {user_id: userId, file_id: fileId} = singleMedia;
   const width = Dimensions.get('window').width;
+  const [transition, setTransition] = useState(false);
 
   const getOwner = async () => {
     const token = await AsyncStorage.getItem('userToken');
@@ -37,17 +40,13 @@ const ListItem = ({singleMedia, navigation}) => {
   };
 
   const getLikes = async () => {
-    const likes = await getFavouritesByFileId(fileId);
-    // console.log('likes', likes, 'user', user);
-    setLikes(likes);
+    const userLikes = await getFavouritesByFileId(fileId);
+    // console.log('likes', userLikes, 'user', user);
     // check if the current user id is included in the 'likes' array and
     // set the 'userLikesIt' state accordingly
-    for (const like of likes) {
-      if (like.userId === user.userId) {
+    for (const like of userLikes) {
+      if (like.user_id === user.user_id) {
         setUserLikesIt(true);
-        break;
-      } else {
-        setUserLikesIt(false);
         break;
       }
     }
@@ -57,29 +56,36 @@ const ListItem = ({singleMedia, navigation}) => {
     try {
       const token = await AsyncStorage.getItem('userToken');
       await postFavourite(fileId, token);
-      setUserLikesIt(true);
       getLikes();
     } catch (error) {
       // note: you cannot like same file multiple times
-      // console.log(error);
     }
+    setUserLikesIt(true);
   };
   const dislikeFile = async () => {
     try {
       const token = await AsyncStorage.getItem('userToken');
       await deleteFavourite(fileId, token);
-      setUserLikesIt(false);
       getLikes();
     } catch (error) {
       // note: you cannot like same file multiple times
       console.log(error);
     }
+    setUserLikesIt(false);
   };
 
   useEffect(() => {
     getOwner();
     getLikes();
+    setTransition(true);
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      getOwner();
+      getLikes();
+    }, [])
+  );
 
   return (
     <Pressable
@@ -92,18 +98,10 @@ const ListItem = ({singleMedia, navigation}) => {
           width={width / 2}
           rounded="lg"
           overflow="hidden"
-          borderColor="#FFC56D"
+          borderColor="#fff"
           borderWidth="4"
-          _dark={{
-            borderColor: 'coolGray.600',
-            backgroundColor: 'gray.700',
-          }}
-          _web={{
-            shadow: 2,
-            borderWidth: 0,
-          }}
           _light={{
-            backgroundColor: 'gray.50',
+            backgroundColor: 'gray.200',
           }}
         >
           <Box>
@@ -114,35 +112,46 @@ const ListItem = ({singleMedia, navigation}) => {
               />
             </AspectRatio>
           </Box>
-          <Stack p="4" space={0} overflow="hidden">
-            <Stack alignItems="center">
-              <Heading size="md" fontFamily="JudsonRegular">
-                {item.title}
-              </Heading>
+          <PresenceTransition
+            visible={transition}
+            initial={{
+              opacity: 0,
+            }}
+            animate={{
+              opacity: 1,
+              transition: {
+                duration: 400,
+              },
+            }}
+          >
+            <Stack
+              p="2"
+              space={0}
+              overflow="hidden"
+              backgroundColor="light.300"
+            >
+              <Stack alignItems="center">
+                <Heading size="md" color="black" fontFamily="JudsonRegular">
+                  {item.title}
+                </Heading>
+              </Stack>
+              <HStack alignItems="center" justifyContent="space-between">
+                <Text color="coolGray.600" fontFamily="JudsonItalic">
+                  By: {owner.username}
+                </Text>
+                {userLikesIt ? (
+                  <AntDesign
+                    name="heart"
+                    size={24}
+                    color="red"
+                    onPress={dislikeFile}
+                  />
+                ) : (
+                  <AntDesign name="hearto" size={24} onPress={likeFile} />
+                )}
+              </HStack>
             </Stack>
-            <HStack alignItems="center" justifyContent="space-between">
-              <Text
-                color="coolGray.600"
-                _dark={{
-                  color: 'warmGray.200',
-                }}
-                fontWeight="400"
-                fontFamily="JudsonItalic"
-              >
-                {owner.username}
-              </Text>
-              {userLikesIt ? (
-                <AntDesign
-                  name="heart"
-                  size={24}
-                  color="red"
-                  onPress={dislikeFile}
-                />
-              ) : (
-                <AntDesign name="hearto" size={24} onPress={likeFile} />
-              )}
-            </HStack>
-          </Stack>
+          </PresenceTransition>
         </Box>
       </Box>
     </Pressable>
@@ -152,6 +161,7 @@ const ListItem = ({singleMedia, navigation}) => {
 ListItem.propTypes = {
   singleMedia: PropTypes.object,
   navigation: PropTypes.object,
+  children: PropTypes.object,
 };
 
 export default ListItem;

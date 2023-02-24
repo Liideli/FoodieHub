@@ -1,8 +1,10 @@
 import React, {useContext} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
+import PropTypes from 'prop-types';
 import Home from '../views/Home';
 import Single from '../views/Single';
+import Search from '../views/Search';
 import MyFiles from '../views/MyFiles';
 import Profile from '../views/Profile';
 import Login from '../views/Login';
@@ -11,18 +13,38 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {MainContext} from '../contexts/MainContext';
 import {Icon} from '@rneui/base';
 import Modify from '../views/Modify';
+import {Feather} from '@expo/vector-icons';
+import {AntDesign} from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
-const TabScreen = () => {
+const TabScreen = ({navigation}) => {
   return (
     <Tab.Navigator>
       <Tab.Screen
-        name="FoodieHub"
+        name="Home"
         component={Home}
         options={{
           tabBarIcon: (color) => <Icon name="home" color={color} />,
+          title: 'FoodieHub',
+          headerTitleStyle: {
+            fontFamily: 'JudsonRegular',
+            fontSize: '24px',
+          },
+          headerLeft: () => <Feather name="menu" size={24} color="black" />,
+          headerLeftContainerStyle: {paddingLeft: 10},
+          headerRight: () => (
+            <AntDesign
+              name="search1"
+              size={24}
+              color="black"
+              onPress={() => {
+                navigation.navigate('Search');
+              }}
+            />
+          ),
+          headerRightContainerStyle: {paddingRight: 10},
         }}
       />
       <Tab.Screen
@@ -30,6 +52,10 @@ const TabScreen = () => {
         component={Upload}
         options={{
           tabBarIcon: (color) => <Icon name="cloud-upload" color={color} />,
+          headerTitleStyle: {
+            fontFamily: 'JudsonRegular',
+            fontSize: '24px',
+          },
         }}
       />
       <Tab.Screen
@@ -37,6 +63,10 @@ const TabScreen = () => {
         component={Profile}
         options={{
           tabBarIcon: (color) => <Icon name="person" color={color} />,
+          headerTitleStyle: {
+            fontFamily: 'JudsonRegular',
+            fontSize: '24px',
+          },
         }}
       />
     </Tab.Navigator>
@@ -55,6 +85,16 @@ const StackScreen = () => {
             options={{headerShown: false}}
           />
           <Stack.Screen name="Single" component={Single} />
+          <Stack.Screen
+            name="Search"
+            options={{
+              headerTitleStyle: {
+                fontFamily: 'JudsonRegular',
+                fontSize: '24px',
+              },
+            }}
+            component={Search}
+          />
           <Stack.Screen name="MyFiles" component={MyFiles} />
           <Stack.Screen name="Modify" component={Modify} />
         </>
@@ -71,6 +111,10 @@ const Navigator = () => {
       <StackScreen />
     </NavigationContainer>
   );
+};
+
+TabScreen.propTypes = {
+  navigation: PropTypes.object,
 };
 
 export default Navigator;
