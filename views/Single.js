@@ -1,14 +1,12 @@
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {uploadsUrl} from '../utils/variables';
 import PropTypes from 'prop-types';
-import {Text, Card, ListItem, Icon} from '@rneui/themed';
-import {Video} from 'expo-av';
-import {Modal, ScrollView} from 'react-native';
 import {useFavourite, useUser} from '../hooks/ApiHooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {MainContext} from '../contexts/MainContext';
 import * as ScreenOrientation from 'expo-screen-orientation';
-import {Image} from '@rneui/base';
+import { AspectRatio, Box, Center, Heading, HStack, Image, ScrollView, Stack, Text } from "native-base";
+import { Icon } from "@rneui/themed";
 
 const Single = ({route, navigation}) => {
   // console.log(route.params);
@@ -124,70 +122,53 @@ const Single = ({route, navigation}) => {
   return (
     <>
       <ScrollView>
-        <Card>
-          <Card.Title>{title}</Card.Title>
-          <Card.Divider />
-          {type === 'image' ? (
-            <Card.Image
-              onPress={() => setModalVisible(true)}
-              source={{uri: uploadsUrl + filename}}
-            />
-          ) : (
-            <Video
-              ref={video}
-              source={{uri: uploadsUrl + filename}}
-              style={{width: '100%', height: 200}}
-              resizeMode="cover"
-              useNativeControls
-              onError={(error) => {
-                console.log(error);
-              }}
-              isLooping
-            />
-          )}
-          <Card.Divider />
-          {description && (
-            <ListItem>
-              <Text>{description}</Text>
-            </ListItem>
-          )}
-          <ListItem>
-            <Icon name="schedule" />
-            <Text>{new Date(timeAdded).toLocaleString('fi-FI')}</Text>
-            <Icon name="save" />
-            <Text>{(filesize / 1000000).toFixed(2)} MB</Text>
-          </ListItem>
-          <ListItem>
-            <Icon name="person" />
-            <Text>
-              {owner.username} ({owner.full_name})
-            </Text>
-          </ListItem>
-          <ListItem>
-            {userLikesIt ? (
-              <Icon name="favorite" color="red" onPress={dislikeFile} />
-            ) : (
-              <Icon name="favorite-border" onPress={likeFile} />
-            )}
-            <Text>Total likes: {likes.length}</Text>
-          </ListItem>
-        </Card>
+        <Box alignItems="center">
+          <Box maxW="80" rounded="lg" overflow="hidden" borderColor="coolGray.200" borderWidth="1">
+            <Box>
+              <AspectRatio w="100%" ratio={16 / 9}>
+                <Image
+                  source={{uri: uploadsUrl + filename }}
+                  alt="recipeImage"
+                />
+              </AspectRatio>
+              <Center
+                _text={{
+                color: "white",
+                fontWeight: "700",
+                fontSize: "xs"
+              }} position="absolute" bottom="0" px="3" py="1.5" w="100%">
+                {title}
+              </Center>
+            </Box>
+            <Stack p="4" space={3}>
+              <Stack space={2}>
+                <Heading size="md" ml="-1">
+                  {title}
+                </Heading>
+                <Text fontSize="xs" fontWeight="500" ml="-0.5" mt="-1">
+                  {owner.username} ({owner.full_name})
+                </Text>
+                {userLikesIt ? (
+                  <Icon name="favorite" color="red" onPress={dislikeFile} />
+                ) : (
+                  <Icon name="favorite-border" onPress={likeFile} />
+                )}
+                <Text>Total likes: {likes.length}</Text>
+              </Stack>
+              <Text color="black" fontWeight="400">
+                {description}
+              </Text>
+              <HStack alignItems="center" space={4} justifyContent="space-between">
+                <HStack alignItems="center">
+                  <Text color="black" fontWeight="400">
+                    {new Date(timeAdded).toLocaleString('fi-FI')}
+                  </Text>
+                </HStack>
+              </HStack>
+            </Stack>
+          </Box>
+        </Box>
       </ScrollView>
-      <Modal
-        visible={modalVisible}
-        style={{flex: 1}}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}
-        supportedOrientations={['portrait', 'landscape']}
-      >
-        <Image
-          resizeMode="contain"
-          onPress={() => setModalVisible(false)}
-          style={{height: '100%'}}
-          source={{uri: uploadsUrl + filename}}
-        />
-      </Modal>
     </>
   );
 };

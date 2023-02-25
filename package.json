@@ -18,17 +18,20 @@
     "@rneui/themed": "^4.0.0-rc.7",
     "eslint-plugin-react-native": "^4.0.0",
     "expo": "~47.0.12",
-    "expo-av": "~13.0.2",
+    "expo-av": "~13.0.3",
     "expo-image-picker": "~14.0.2",
     "expo-screen-orientation": "~5.0.1",
     "expo-status-bar": "~1.4.2",
     "native-base": "^3.4.25",
     "react": "18.1.0",
+    "react-dom": "^18.2.0",
     "react-hook-form": "^7.42.1",
     "react-native": "0.70.5",
     "react-native-safe-area-context": "^4.4.1",
     "react-native-screens": "~3.18.0",
-    "react-native-svg": "13.4.0"
+    "react-native-svg": "13.4.0",
+    "react-native-web": "^0.18.12",
+    "expo-dev-client": "~2.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.12",
