@@ -48,12 +48,9 @@ const LoginForm = (props) => {
           fontFamily="JudsonRegular"
           size="2xl"
           fontWeight="600"
-          color="coolGray.800"
-          _dark={{
-            color: 'warmGray.50',
-          }}
+          color="black"
         >
-          Welcome
+          Welcome!
         </Heading>
         <Heading
           fontFamily="JudsonRegular"
@@ -62,7 +59,7 @@ const LoginForm = (props) => {
           fontWeight="medium"
           size="md"
         >
-          Login to continue!
+          Login to continue.
         </Heading>
 
         <VStack space={3} mt="5">
@@ -79,7 +76,6 @@ const LoginForm = (props) => {
               control={control}
               render={({field: {onChange, onBlur, value}}) => (
                 <Input
-                  variant="filled"
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
@@ -107,10 +103,9 @@ const LoginForm = (props) => {
               control={control}
               render={({field: {onChange, onBlur, value}}) => (
                 <Input
-                  variant="filled"
                   type={show ? 'text' : 'password'}
                   InputRightElement={
-                    <Pressable onPress={() => setShow(!show)}>
+                    <Pressable onPress={() => setShow(!show)} pr="1">
                       <Entypo name={show ? 'eye' : 'eye-with-line'} size={24} />
                     </Pressable>
                   }

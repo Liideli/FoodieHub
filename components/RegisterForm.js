@@ -64,21 +64,18 @@ const RegisterForm = (props) => {
           fontFamily="JudsonRegular"
           size="2xl"
           fontWeight="600"
-          color="coolGray.800"
+          color="black"
         >
-          Welcome
+          Welcome!
         </Heading>
         <Heading
           fontFamily="JudsonRegular"
-          mt="1"
-          _dark={{
-            color: 'warmGray.200',
-          }}
           color="coolGray.600"
+          mt="1"
           fontWeight="medium"
           size="md"
         >
-          Register to continue!
+          Register to continue.
         </Heading>
 
         <VStack space={3} mt="5">
@@ -102,7 +99,6 @@ const RegisterForm = (props) => {
               }}
               render={({field: {onChange, onBlur, value}}) => (
                 <Input
-                  variant="filled"
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
@@ -165,7 +161,6 @@ const RegisterForm = (props) => {
               }}
               render={({field: {onChange, onBlur, value}}) => (
                 <Input
-                  variant="filled"
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
@@ -204,13 +199,12 @@ const RegisterForm = (props) => {
               }}
               render={({field: {onChange, onBlur, value}}) => (
                 <Input
-                  variant="filled"
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
                   type={show ? 'text' : 'password'}
                   InputRightElement={
-                    <Pressable onPress={() => setShow(!show)}>
+                    <Pressable onPress={() => setShow(!show)} pr="1">
                       <Entypo name={show ? 'eye' : 'eye-with-line'} size={24} />
                     </Pressable>
                   }
@@ -248,10 +242,9 @@ const RegisterForm = (props) => {
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
-                  variant="filled"
                   type={showTwo ? 'text' : 'password'}
                   InputRightElement={
-                    <Pressable onPress={() => setShowTwo(!showTwo)}>
+                    <Pressable onPress={() => setShowTwo(!showTwo)} pr="1">
                       <Entypo
                         name={showTwo ? 'eye' : 'eye-with-line'}
                         size={24}

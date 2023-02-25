@@ -10,6 +10,7 @@ import RegisterForm from '../components/RegisterForm';
 import {
   Box,
   Center,
+  Divider,
   HStack,
   VStack,
   Link,
@@ -22,13 +23,18 @@ const Login = ({navigation}) => {
   const {getUserByToken} = useUser();
   const [toggleForm, setToggleForm] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const onRefresh = useCallback(() => {
-    setRefreshing(true);
+    setLoading(true);
     setTimeout(() => {
-      setRefreshing(false);
-    }, 500);
-  }, []);
+      setTimeout(() => {
+        setRefreshing(true);
+        setRefreshing(false);
+      }, 250);
+      setLoading(false);
+    }, 700);
+  }, [refreshing]);
 
   const checkToken = async () => {
     try {
@@ -51,63 +57,72 @@ const Login = ({navigation}) => {
   return (
     <KeyboardAvoidingView
       style={{flex: 1}}
+      bg={['#FFC56D']}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <ScrollView
-        bg={['#FFC56D']}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
-        <Center safeArea>
-          {toggleForm ? <LoginForm /> : <RegisterForm />}
-          <Box>
-            <VStack>
+      {!refreshing && (
+        <ScrollView
+          mt="10"
+          bg={['#FFC56D']}
+          refreshControl={
+            <RefreshControl refreshing={loading} onRefresh={onRefresh} />
+          }
+        >
+          <Center safeArea>
+            {toggleForm ? <LoginForm /> : <RegisterForm />}
+            <Box>
               <HStack justifyContent="center">
-                {toggleForm ? (
-                  <Link
-                    mb={100}
-                    type="outline"
-                    title="Sign Up"
-                    onPress={() => {
-                      setToggleForm(!toggleForm);
-                    }}
-                    _text={{
-                      fontFamily: 'JudsonRegular',
-                      color: 'indigo.500',
-                      fontWeight: 'medium',
-                      fontSize: 'md',
-                    }}
-                    href="#"
-                  >
-                    {' '}
-                    Sign Up
-                  </Link>
-                ) : (
-                  <Link
-                    mb={100}
-                    type="outline"
-                    title="Sign In"
-                    onPress={() => {
-                      setToggleForm(!toggleForm);
-                    }}
-                    _text={{
-                      fontFamily: 'JudsonRegular',
-                      color: 'indigo.500',
-                      fontWeight: 'medium',
-                      fontSize: 'md',
-                    }}
-                    href="#"
-                  >
-                    {' '}
-                    Sign In
-                  </Link>
-                )}
+                <VStack w="90%">
+                  <Divider />
+                  <Center>
+                    {toggleForm ? (
+                      <Link
+                        mb="100"
+                        mt="6"
+                        type="outline"
+                        title="Sign Up"
+                        onPress={() => {
+                          setToggleForm(!toggleForm);
+                        }}
+                        _text={{
+                          fontFamily: 'JudsonRegular',
+                          color: 'indigo.500',
+                          fontWeight: 'medium',
+                          fontSize: 'md',
+                        }}
+                        href="#"
+                      >
+                        {' '}
+                        Sign Up
+                      </Link>
+                    ) : (
+                      <Link
+                        mb="100"
+                        mt="6"
+                        type="outline"
+                        title="Sign In"
+                        onPress={() => {
+                          setToggleForm(!toggleForm);
+                        }}
+                        _text={{
+                          fontFamily: 'JudsonRegular',
+                          color: 'indigo.500',
+                          fontWeight: 'medium',
+                          fontSize: 'md',
+                        }}
+                        href="#"
+                      >
+                        {' '}
+                        Sign In
+                      </Link>
+                    )}
+                  </Center>
+                </VStack>
               </HStack>
-            </VStack>
-          </Box>
-        </Center>
-      </ScrollView>
+            </Box>
+          </Center>
+        </ScrollView>
+      )}
     </KeyboardAvoidingView>
   );
 };
