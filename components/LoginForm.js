@@ -129,7 +129,6 @@ const LoginForm = (props) => {
           </FormControl>
           <Button
             mt="2"
-            colorScheme="orange"
             onPress={handleSubmit(logIn)}
             _text={{
               fontFamily: 'JudsonRegular',

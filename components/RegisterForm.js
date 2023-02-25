@@ -269,7 +269,6 @@ const RegisterForm = (props) => {
           </FormControl>
           <Button
             mt="2"
-            colorScheme="orange"
             onPress={handleSubmit(register)}
             _text={{
               fontFamily: 'JudsonRegular',

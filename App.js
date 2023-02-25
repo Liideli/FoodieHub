@@ -9,7 +9,7 @@ const App = () => {
     components: {
       Button: {
         defaultProps: {
-          backgroundColor: '#FE5D26',
+          colorScheme: 'orange',
           borderRadius: 10,
           _text: {
             color: 'black',
@@ -18,11 +18,9 @@ const App = () => {
       },
       Input: {
         defaultProps: {
+          color: 'black',
           backgroundColor: 'white',
           focusOutlineColor: '#FE5D26',
-          _text: {
-            color: 'black',
-          },
         },
       },
     },
