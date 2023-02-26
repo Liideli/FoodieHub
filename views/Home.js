@@ -1,45 +1,16 @@
-import React, {useState, useCallback} from 'react';
-import {
-  StyleSheet,
-  SafeAreaView,
-  ScrollView,
-  RefreshControl,
-  View,
-} from 'react-native';
+import React from 'react';
+import {StyleSheet} from 'react-native';
+import {View} from 'native-base';
 import List from '../components/List';
 import PropTypes from 'prop-types';
-import {LogBox} from 'react-native';
+// import {LogBox} from 'react-native';
 
 const Home = ({navigation}) => {
-  const [refreshing, setRefreshing] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
-
-  const onRefresh = useCallback(() => {
-    setLoading(true);
-    setTimeout(() => {
-      setTimeout(() => {
-        setRefreshing(true);
-        setRefreshing(false);
-      }, 500);
-      setLoading(false);
-    }, 0);
-  }, [refreshing]);
+  //  LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
 
   return (
     <View style={styles.container}>
-      {!refreshing && (
-        <ScrollView
-          refreshControl={
-            <RefreshControl refreshing={loading} onRefresh={onRefresh} />
-          }
-        >
-          <SafeAreaView style={styles.container}>
-            <List navigation={navigation} />
-          </SafeAreaView>
-        </ScrollView>
-      )}
+      <List navigation={navigation} />
     </View>
   );
 };

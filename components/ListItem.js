@@ -40,11 +40,11 @@ const ListItem = ({singleMedia, navigation}) => {
   };
 
   const getLikes = async () => {
-    const userLikes = await getFavouritesByFileId(fileId);
+    const likes = await getFavouritesByFileId(fileId);
     // console.log('likes', userLikes, 'user', user);
     // check if the current user id is included in the 'likes' array and
     // set the 'userLikesIt' state accordingly
-    for (const like of userLikes) {
+    for (const like of likes) {
       if (like.user_id === user.user_id) {
         setUserLikesIt(true);
         break;

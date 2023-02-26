@@ -1,13 +1,25 @@
-import React, {useEffect, useState} from 'react';
-import {FlatList} from 'react-native';
+import React, {useEffect, useState, useCallback, useContext} from 'react';
+import {FlatList, RefreshControl} from 'react-native';
 import {useMedia} from '../hooks/ApiHooks';
 import ListItem from './ListItem';
 import PropTypes from 'prop-types';
 import {PresenceTransition} from 'native-base';
+import {MainContext} from '../contexts/MainContext';
 
 const List = ({navigation, myFilesOnly = false, MyFavouritesOnly = false}) => {
   const {mediaArray} = useMedia(myFilesOnly, MyFavouritesOnly);
   const [transition, setTransition] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const {refreshing, setRefreshing} = useContext(MainContext);
+
+  const onRefresh = useCallback(() => {
+    setLoading(true);
+    setTimeout(() => {
+      setRefreshing(false);
+      setRefreshing(true);
+    }, 0);
+    setLoading(false);
+  }, [refreshing]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -24,19 +36,23 @@ const List = ({navigation, myFilesOnly = false, MyFavouritesOnly = false}) => {
       animate={{
         opacity: 1,
         transition: {
-          duration: 400,
+          duration: 600,
         },
       }}
     >
-      <FlatList
-        numColumns={2}
-        columnWrapperStyle={{justifyContent: 'space-between'}}
-        data={mediaArray}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({item}) => (
-          <ListItem navigation={navigation} singleMedia={item} />
-        )}
-      />
+      {refreshing && (
+        <FlatList
+          numColumns={2}
+          renderItem={({item}) => (
+            <ListItem navigation={navigation} singleMedia={item} />
+          )}
+          refreshControl={
+            <RefreshControl refreshing={loading} onRefresh={onRefresh} />
+          }
+          data={mediaArray}
+          keyExtractor={(item, index) => index.toString()}
+        />
+      )}
     </PresenceTransition>
   );
 };

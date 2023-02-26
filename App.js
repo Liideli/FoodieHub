@@ -3,10 +3,8 @@ import {MainProvider} from './contexts/MainContext';
 import Navigator from './navigators/Navigator';
 import {extendTheme, NativeBaseProvider} from 'native-base';
 import {useFonts} from 'expo-font';
-import {LogBox} from 'react-native';
 
 const App = () => {
-  LogBox.ignoreAllLogs();
   const theme = extendTheme({
     components: {
       Button: {
