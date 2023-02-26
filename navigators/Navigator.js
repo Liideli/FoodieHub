@@ -28,10 +28,6 @@ const TabScreen = ({navigation}) => {
         options={{
           tabBarIcon: (color) => <Icon name="home" color={color} />,
           title: 'FoodieHub',
-          headerTitleStyle: {
-            fontFamily: 'JudsonRegular',
-            fontSize: '24px',
-          },
           headerLeft: () => <Feather name="menu" size={24} color="black" />,
           headerLeftContainerStyle: {paddingLeft: 10},
           headerRight: () => (
@@ -52,10 +48,6 @@ const TabScreen = ({navigation}) => {
         component={Upload}
         options={{
           tabBarIcon: (color) => <Icon name="cloud-upload" color={color} />,
-          headerTitleStyle: {
-            fontFamily: 'JudsonRegular',
-            fontSize: '24px',
-          },
         }}
       />
       <Tab.Screen
@@ -63,10 +55,6 @@ const TabScreen = ({navigation}) => {
         component={Profile}
         options={{
           tabBarIcon: (color) => <Icon name="person" color={color} />,
-          headerTitleStyle: {
-            fontFamily: 'JudsonRegular',
-            fontSize: '24px',
-          },
         }}
       />
     </Tab.Navigator>
@@ -85,16 +73,7 @@ const StackScreen = () => {
             options={{headerShown: false}}
           />
           <Stack.Screen name="Single" component={Single} />
-          <Stack.Screen
-            name="Search"
-            options={{
-              headerTitleStyle: {
-                fontFamily: 'JudsonRegular',
-                fontSize: '24px',
-              },
-            }}
-            component={Search}
-          />
+          <Stack.Screen name="Search" component={Search} />
           <Stack.Screen name="MyFiles" component={MyFiles} />
           <Stack.Screen name="Modify" component={Modify} />
         </>
