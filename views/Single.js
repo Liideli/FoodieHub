@@ -5,7 +5,7 @@ import {useFavourite, useUser} from '../hooks/ApiHooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {MainContext} from '../contexts/MainContext';
 import * as ScreenOrientation from 'expo-screen-orientation';
-import { AspectRatio, Box, Center, Heading, HStack, Image, ScrollView, Stack, Text } from "native-base";
+import { AspectRatio, Box, Center, Fab, HStack, Image, ScrollView, Stack, Text, useToast } from "native-base";
 import { Icon } from "@rneui/themed";
 
 const Single = ({route, navigation}) => {
@@ -27,6 +27,7 @@ const Single = ({route, navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const {user} = useContext(MainContext);
   const {getUserById} = useUser();
+  const toast = useToast();
   const {getFavouritesByFileId, postFavourite, deleteFavourite} =
     useFavourite();
 
@@ -122,8 +123,8 @@ const Single = ({route, navigation}) => {
   return (
     <>
       <ScrollView>
-        <Box alignItems="center">
-          <Box maxW="80" rounded="lg" overflow="hidden" borderColor="coolGray.200" borderWidth="1">
+        <Box alignItems="center" mt="12px">
+          <Box maxW="80" rounded="lg" overflow="hidden" borderColor="coolGray.200" borderWidth="1" bg="#FFC56D">
             <Box>
               <AspectRatio w="100%" ratio={16 / 9}>
                 <Image
@@ -131,36 +132,30 @@ const Single = ({route, navigation}) => {
                   alt="recipeImage"
                 />
               </AspectRatio>
-              <Center
-                _text={{
-                color: "white",
-                fontWeight: "700",
-                fontSize: "xs"
-              }} position="absolute" bottom="0" px="3" py="1.5" w="100%">
-                {title}
-              </Center>
+              <HStack>
+                <Center
+                  _text={{
+                  color: "white",
+                  fontWeight: "700",
+                  fontSize: "md"
+                }} position="absolute" bottom="0" px="3" py="1.5" w="100%" bg="primary.black:alpha.60">
+                  {title}
+                </Center>
+              </HStack>
             </Box>
             <Stack p="4" space={3}>
               <Stack space={2}>
-                <Heading size="md" ml="-1">
-                  {title}
-                </Heading>
                 <Text fontSize="xs" fontWeight="500" ml="-0.5" mt="-1">
-                  {owner.username} ({owner.full_name})
+                   recipe by: {owner.full_name} {owner.username}
                 </Text>
-                {userLikesIt ? (
-                  <Icon name="favorite" color="red" onPress={dislikeFile} />
-                ) : (
-                  <Icon name="favorite-border" onPress={likeFile} />
-                )}
                 <Text>Total likes: {likes.length}</Text>
               </Stack>
-              <Text color="black" fontWeight="400">
+              <Text color="white" fontWeight="400">
                 {description}
               </Text>
               <HStack alignItems="center" space={4} justifyContent="space-between">
                 <HStack alignItems="center">
-                  <Text color="black" fontWeight="400">
+                  <Text color="white" fontWeight="400">
                     {new Date(timeAdded).toLocaleString('fi-FI')}
                   </Text>
                 </HStack>
@@ -169,6 +164,17 @@ const Single = ({route, navigation}) => {
           </Box>
         </Box>
       </ScrollView>
+      <Center position="absolute" bottom="30px" right="30px" h="50px" w="50px" borderRadius="full" overflow="hidden" borderColor="coolGray.200" borderWidth="1" bg="#ff7300">
+        {userLikesIt ? (
+          <Icon name="favorite" color="red" onPress={() => {dislikeFile(); toast.show({
+            description: "Removed from favorites"
+          })}} />
+        ) : (
+          <Icon name="favorite-border" onPress={() => {likeFile(); toast.show({
+            description: "Added to favorites"
+          })}} />
+        )}
+      </Center>
     </>
   );
 };
