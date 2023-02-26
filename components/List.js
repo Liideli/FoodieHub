@@ -10,7 +10,7 @@ const List = ({navigation, myFilesOnly = false, MyFavouritesOnly = false}) => {
   const {mediaArray} = useMedia(myFilesOnly, MyFavouritesOnly);
   const [transition, setTransition] = useState(false);
   const [loading, setLoading] = useState(false);
-  const {refreshing, setRefreshing} = useContext(MainContext);
+  const {setRefreshing} = useContext(MainContext);
 
   const onRefresh = useCallback(() => {
     setLoading(true);
@@ -19,7 +19,7 @@ const List = ({navigation, myFilesOnly = false, MyFavouritesOnly = false}) => {
       setRefreshing(true);
     }, 0);
     setLoading(false);
-  }, [refreshing]);
+  }, []);
 
   useEffect(() => {
     setTimeout(() => {
@@ -40,19 +40,17 @@ const List = ({navigation, myFilesOnly = false, MyFavouritesOnly = false}) => {
         },
       }}
     >
-      {refreshing && (
-        <FlatList
-          numColumns={2}
-          renderItem={({item}) => (
-            <ListItem navigation={navigation} singleMedia={item} />
-          )}
-          refreshControl={
-            <RefreshControl refreshing={loading} onRefresh={onRefresh} />
-          }
-          data={mediaArray}
-          keyExtractor={(item, index) => index.toString()}
-        />
-      )}
+      <FlatList
+        numColumns={2}
+        renderItem={({item}) => (
+          <ListItem navigation={navigation} singleMedia={item} />
+        )}
+        refreshControl={
+          <RefreshControl refreshing={loading} onRefresh={onRefresh} />
+        }
+        data={mediaArray}
+        keyExtractor={(item, index) => index.toString()}
+      />
     </PresenceTransition>
   );
 };
