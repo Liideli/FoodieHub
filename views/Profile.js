@@ -4,7 +4,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useTag} from '../hooks/ApiHooks';
 import {uploadsUrl} from '../utils/variables';
 import List from '../components/List';
-import {View, Text, Button, KeyboardAvoidingView, Avatar} from 'native-base';
+import {
+  View,
+  Text,
+  Button,
+  KeyboardAvoidingView,
+  Avatar,
+  Modal,
+  FormControl,
+} from 'native-base';
 import UpdateForm from '../components/UpdateForm';
 import PropTypes from 'prop-types';
 
@@ -14,6 +22,7 @@ const Profile = ({navigation}) => {
   const [avatar, setAvatar] = useState('');
   const [toggleProfile, setToggleProfile] = useState(true);
   const [toggleRecipes, setToggleRecipes] = useState(true);
+  const [showModal, setShowModal] = useState(false);
 
   const loadAvatar = async () => {
     try {
@@ -34,65 +43,59 @@ const Profile = ({navigation}) => {
       display="flex"
       height="100%"
     >
-      {toggleProfile ? (
+      <View
+        width="100%"
+        height="25%"
+        display="flex"
+        flexDirection="row"
+        backgroundColor="#FFC56D"
+      >
         <View
-          width="100%"
-          height="25%"
           display="flex"
+          alignItems="center"
+          justifyContent="flex-start"
+          width="75%"
           flexDirection="row"
-          backgroundColor="#FFC56D"
+          marginY={5}
         >
-          <View
-            display="flex"
-            alignItems="center"
-            justifyContent="flex-start"
-            width="75%"
-            flexDirection="row"
-            marginY={5}
-          >
-            <Avatar
-              size="2xl"
-              borderWidth={1}
-              borderColor={'black'}
-              marginX={5}
-              source={{uri: uploadsUrl + avatar}}
-              alt="User avatar"
-            />
-            <Text fontSize="2xl">{user.username}</Text>
-          </View>
-          <View
-            display="flex"
-            width="25%"
+          <Avatar
+            size="2xl"
+            borderWidth={1}
+            borderColor={'black'}
+            marginX={5}
+            source={{uri: uploadsUrl + avatar}}
+            alt="User avatar"
+          />
+          <Text fontSize="2xl">{user.username}</Text>
+        </View>
+        <View
+          display="flex"
+          width="25%"
+          borderRadius={10}
+          alignSelf="flex-end"
+          padding={2}
+        >
+          <Button
+            backgroundColor="#FE5D26"
             borderRadius={10}
-            alignSelf="flex-end"
-            padding={2}
+            _text={{
+              color: 'black',
+            }}
+            onPress={async () => {
+              console.log('Logging out!');
+              setUser({});
+              setIsLoggedIn(false);
+              try {
+                await AsyncStorage.clear();
+              } catch (e) {
+                console.log('Clearning async storage failed', e);
+              }
+            }}
           >
-            <Button
-              backgroundColor="#FE5D26"
-              borderRadius={10}
-              _text={{
-                color: 'black',
-              }}
-              onPress={async () => {
-                console.log('Logging out!');
-                setUser({});
-                setIsLoggedIn(false);
-                try {
-                  await AsyncStorage.clear();
-                } catch (e) {
-                  console.log('Clearning async storage failed', e);
-                }
-              }}
-            >
-              Log Out
-            </Button>
-          </View>
+            Log Out
+          </Button>
         </View>
-      ) : (
-        <View backgroundColor="#FFC56D">
-          <UpdateForm />
-        </View>
-      )}
+      </View>
       <View display="flex" flexDirection="row">
         <View width="33.3%">
           <Button
@@ -138,12 +141,28 @@ const Profile = ({navigation}) => {
             _text={{
               color: 'black',
             }}
-            onPress={() => {
-              setToggleProfile(!toggleProfile);
-            }}
+            onPress={() => setShowModal(true)}
           >
-            {toggleProfile ? 'Update user' : 'Back to profile'}
+            Update profile
           </Button>
+          <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+            <Modal.Content maxWidth="400px">
+              <Modal.CloseButton />
+              <Modal.Header>Update user information</Modal.Header>
+              <Modal.Body>
+                <UpdateForm />
+              </Modal.Body>
+              <Modal.Footer>
+                <Button
+                  onPress={() => {
+                    setShowModal(false);
+                  }}
+                >
+                  Close
+                </Button>
+              </Modal.Footer>
+            </Modal.Content>
+          </Modal>
         </View>
       </View>
       <View>
