@@ -1,9 +1,11 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useTag} from '../hooks/ApiHooks';
+import {useTag, useUser} from '../hooks/ApiHooks';
 import {uploadsUrl} from '../utils/variables';
 import List from '../components/List';
+import {Alert} from 'react-native';
+import {Controller, useForm} from 'react-hook-form';
 import {
   View,
   Text,
@@ -11,16 +13,26 @@ import {
   KeyboardAvoidingView,
   Avatar,
   Modal,
-  FormControl,
+  Input,
 } from 'native-base';
-import UpdateForm from '../components/UpdateForm';
 import PropTypes from 'prop-types';
 
 const Profile = ({navigation}) => {
+  const {putUser} = useUser();
+  const {
+    control,
+    handleSubmit,
+    formState: {errors},
+  } = useForm({
+    defaultValues: {
+      username: '',
+      password: '',
+      email: '',
+    },
+  });
   const {getFilesByTag} = useTag();
   const {setIsLoggedIn, user, setUser} = useContext(MainContext);
   const [avatar, setAvatar] = useState('');
-  const [toggleProfile, setToggleProfile] = useState(true);
   const [toggleRecipes, setToggleRecipes] = useState(true);
   const [showModal, setShowModal] = useState(false);
 
@@ -30,6 +42,31 @@ const Profile = ({navigation}) => {
       setAvatar(avatarArray.pop().filename);
     } catch (error) {
       console.error('user avatar fetch failed', error.message);
+    }
+  };
+
+  const UpdateUser = async (updatedData) => {
+    const {getUserByToken} = useUser();
+    const userToken = await AsyncStorage.getItem('userToken');
+    console.log('userToken:', userToken);
+    const userData = await getUserByToken(userToken);
+    console.log('userdata:', userData);
+    try {
+      if (updatedData.username === '') {
+        updatedData.username = userData.username;
+      }
+      if (updatedData.email === '') {
+        updatedData.email = userData.email;
+      }
+      updatedData.token = userToken;
+      console.log('UpdateUser button pressed', updatedData);
+      const updateResult = await putUser(updatedData);
+      console.log('updated result', updateResult);
+      Alert.alert('User information updated', '', [
+        {text: 'Close', onPress: () => setShowModal(false)},
+      ]);
+    } catch (error) {
+      console.error('UpdateUser', error);
     }
   };
 
@@ -52,9 +89,9 @@ const Profile = ({navigation}) => {
       >
         <View
           display="flex"
+          width="75%"
           alignItems="center"
           justifyContent="flex-start"
-          width="75%"
           flexDirection="row"
           marginY={5}
         >
@@ -66,7 +103,95 @@ const Profile = ({navigation}) => {
             source={{uri: uploadsUrl + avatar}}
             alt="User avatar"
           />
-          <Text fontSize="2xl">{user.username}</Text>
+          <View width="40%">
+            <Text fontSize="2xl">{user.username}</Text>
+          </View>
+          <View display="flex">
+            <Button marginLeft={2} onPress={() => setShowModal(true)}>
+              Update profile
+            </Button>
+            <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+              <Modal.Content maxWidth="400px">
+                <Modal.CloseButton />
+                <Modal.Header>Update user information</Modal.Header>
+                <Modal.Body>
+                  <View
+                    display="flex"
+                    alignSelf="center"
+                    width="80%"
+                    borderRadius={20}
+                    margin={10}
+                  >
+                    <Controller
+                      control={control}
+                      // rules={{required: {value: true, message: 'is required'}}}
+                      render={({field: {onChange, onBlur, value}}) => (
+                        <Input
+                          placeholder="New username"
+                          onBlur={onBlur}
+                          onChangeText={onChange}
+                          value={value}
+                          type="text"
+                          errorMessage={
+                            errors.username && errors.username.message
+                          }
+                        />
+                      )}
+                      name="username"
+                    />
+                    <Controller
+                      control={control}
+                      rules={{
+                        required: {
+                          value: true,
+                          minLength: 5,
+                          message: 'Password must be at lest 5 letters',
+                        },
+                      }}
+                      render={({field: {onChange, onBlur, value}}) => (
+                        <Input
+                          placeholder="New password"
+                          onBlur={onBlur}
+                          onChangeText={onChange}
+                          value={value}
+                          type="password"
+                          errorMessage={
+                            errors.password && errors.password.message
+                          }
+                        />
+                      )}
+                      name="password"
+                    />
+                    <Controller
+                      control={control}
+                      render={({field: {onChange, onBlur, value}}) => (
+                        <Input
+                          placeholder="New email"
+                          onBlur={onBlur}
+                          onChangeText={onChange}
+                          value={value}
+                          type="text"
+                        />
+                      )}
+                      name="email"
+                    />
+                  </View>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button.Group space={2}>
+                    <Button
+                      onPress={() => {
+                        setShowModal(false);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                    <Button onPress={handleSubmit(UpdateUser)}>Save</Button>
+                  </Button.Group>
+                </Modal.Footer>
+              </Modal.Content>
+            </Modal>
+          </View>
         </View>
         <View
           display="flex"
@@ -76,11 +201,6 @@ const Profile = ({navigation}) => {
           padding={2}
         >
           <Button
-            backgroundColor="#FE5D26"
-            borderRadius={10}
-            _text={{
-              color: 'black',
-            }}
             onPress={async () => {
               console.log('Logging out!');
               setUser({});
@@ -97,16 +217,12 @@ const Profile = ({navigation}) => {
         </View>
       </View>
       <View display="flex" flexDirection="row">
-        <View width="33.3%">
+        <View width="50%">
           <Button
             borderRadius={0}
-            backgroundColor="#FE5D26"
             borderWidth={1}
             borderLeftWidth={0}
             borderColor="black"
-            _text={{
-              color: 'black',
-            }}
             onPress={() => {
               setToggleRecipes(true);
             }}
@@ -114,55 +230,18 @@ const Profile = ({navigation}) => {
             My recipes
           </Button>
         </View>
-        <View width="33.3%">
+        <View width="50%">
           <Button
             borderRadius={0}
-            backgroundColor="#FE5D26"
             borderWidth={1}
             borderLeftWidth={0}
             borderColor="black"
-            _text={{
-              color: 'black',
-            }}
             onPress={() => {
               setToggleRecipes(false);
             }}
           >
             My likes
           </Button>
-        </View>
-        <View width="33.3%">
-          <Button
-            borderRadius={0}
-            backgroundColor="#FE5D26"
-            borderWidth={1}
-            borderLeftWidth={0}
-            borderColor="black"
-            _text={{
-              color: 'black',
-            }}
-            onPress={() => setShowModal(true)}
-          >
-            Update profile
-          </Button>
-          <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
-            <Modal.Content maxWidth="400px">
-              <Modal.CloseButton />
-              <Modal.Header>Update user information</Modal.Header>
-              <Modal.Body>
-                <UpdateForm />
-              </Modal.Body>
-              <Modal.Footer>
-                <Button
-                  onPress={() => {
-                    setShowModal(false);
-                  }}
-                >
-                  Close
-                </Button>
-              </Modal.Footer>
-            </Modal.Content>
-          </Modal>
         </View>
       </View>
       <View>
