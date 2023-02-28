@@ -1,8 +1,11 @@
 import PropTypes from 'prop-types';
 import {uploadsUrl} from '../utils/variables';
 import {Dimensions} from 'react-native';
+import {useState, useEffect, useContext} from 'react';
+import {useFavourite, useUser} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
-import {useContext} from 'react';
+import {AntDesign} from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   AspectRatio,
   Box,
@@ -15,9 +18,68 @@ import {
 } from 'native-base';
 
 const ListItem = ({singleMedia, navigation}) => {
-  const item = singleMedia;
-  const width = Dimensions.get('window').width;
+  const [owner, setOwner] = useState({});
   const {user} = useContext(MainContext);
+  const {getUserById} = useUser();
+  const [likes, setLikes] = useState([]);
+  const [userLikesIt, setUserLikesIt] = useState(false);
+  const {getFavouritesByFileId, postFavourite, deleteFavourite} =
+    useFavourite();
+  const item = singleMedia;
+  const {user_id: userId, file_id: fileId} = singleMedia;
+  const width = Dimensions.get('window').width;
+
+  const getOwner = async () => {
+    const token = await AsyncStorage.getItem('userToken');
+    const owner = await getUserById(userId, token);
+    // console.log('getOwner', owner);
+    setOwner(owner);
+  };
+
+  const getLikes = async () => {
+    const likes = await getFavouritesByFileId(fileId);
+    // console.log('likes', likes, 'user', user);
+    setLikes(likes);
+    // check if the current user id is included in the 'likes' array and
+    // set the 'userLikesIt' state accordingly
+    for (const like of likes) {
+      if (like.userId === user.userId) {
+        setUserLikesIt(true);
+        break;
+      } else {
+        setUserLikesIt(false);
+        break;
+      }
+    }
+  };
+
+  const likeFile = async () => {
+    try {
+      const token = await AsyncStorage.getItem('userToken');
+      await postFavourite(fileId, token);
+      setUserLikesIt(true);
+      getLikes();
+    } catch (error) {
+      // note: you cannot like same file multiple times
+      // console.log(error);
+    }
+  };
+  const dislikeFile = async () => {
+    try {
+      const token = await AsyncStorage.getItem('userToken');
+      await deleteFavourite(fileId, token);
+      setUserLikesIt(false);
+      getLikes();
+    } catch (error) {
+      // note: you cannot like same file multiple times
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getOwner();
+    getLikes();
+  }, []);
 
   return (
     <Pressable
@@ -30,8 +92,8 @@ const ListItem = ({singleMedia, navigation}) => {
           width={width / 2}
           rounded="lg"
           overflow="hidden"
-          borderColor="coolGray.200"
-          borderWidth="2"
+          borderColor="#FFC56D"
+          borderWidth="4"
           _dark={{
             borderColor: 'coolGray.600',
             backgroundColor: 'gray.700',
@@ -52,31 +114,33 @@ const ListItem = ({singleMedia, navigation}) => {
               />
             </AspectRatio>
           </Box>
-          <Stack p="4" space={3} overflow="hidden">
-            <Stack space={2}>
-              <Heading size="md" ml="-1">
+          <Stack p="4" space={0} overflow="hidden">
+            <Stack alignItems="center">
+              <Heading size="md" fontFamily="JudsonRegular">
                 {item.title}
               </Heading>
             </Stack>
-            <Text fontWeight="400">{item.description}</Text>
-            <HStack
-              alignItems="center"
-              space={4}
-              justifyContent="space-between"
-            >
-              <HStack alignItems="center">
-                {item.user_id === user.user_id && (
-                  <Text
-                    color="coolGray.600"
-                    _dark={{
-                      color: 'warmGray.200',
-                    }}
-                    fontWeight="400"
-                  >
-                    {user.username}
-                  </Text>
-                )}
-              </HStack>
+            <HStack alignItems="center" justifyContent="space-between">
+              <Text
+                color="coolGray.600"
+                _dark={{
+                  color: 'warmGray.200',
+                }}
+                fontWeight="400"
+                fontFamily="JudsonItalic"
+              >
+                {owner.username}
+              </Text>
+              {userLikesIt ? (
+                <AntDesign
+                  name="heart"
+                  size={24}
+                  color="red"
+                  onPress={dislikeFile}
+                />
+              ) : (
+                <AntDesign name="hearto" size={24} onPress={likeFile} />
+              )}
             </HStack>
           </Stack>
         </Box>

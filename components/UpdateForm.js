@@ -49,6 +49,9 @@ const Update = () => {
       borderRadius={20}
       margin={10}
     >
+      <Text bold textAlign="center" color="black">
+        Update user information
+      </Text>
       <Controller
         control={control}
         // rules={{required: {value: true, message: 'is required'}}}
@@ -59,8 +62,6 @@ const Update = () => {
             onChangeText={onChange}
             value={value}
             type="text"
-            backgroundColor="white"
-            focusOutlineColor="#FE5D26"
             errorMessage={errors.username && errors.username.message}
           />
         )}
@@ -82,8 +83,6 @@ const Update = () => {
             onChangeText={onChange}
             value={value}
             type="password"
-            backgroundColor="white"
-            focusOutlineColor="#FE5D26"
             errorMessage={errors.password && errors.password.message}
           />
         )}
@@ -98,22 +97,11 @@ const Update = () => {
             onChangeText={onChange}
             value={value}
             type="text"
-            backgroundColor="white"
-            focusOutlineColor="#FE5D26"
           />
         )}
         name="email"
       />
-      <Button
-        backgroundColor="#FE5D26"
-        borderRadius={10}
-        _text={{
-          color: 'black',
-        }}
-        onPress={handleSubmit(UpdateUser)}
-      >
-        Update
-      </Button>
+      <Button onPress={handleSubmit(UpdateUser)}>Update</Button>
     </View>
   );
 };
