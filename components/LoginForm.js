@@ -13,12 +13,14 @@ import {
   Input,
   Button,
   Pressable,
+  useToast,
 } from 'native-base';
 
 const LoginForm = (props) => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
   const {postLogin} = useAuthentication();
   const [show, setShow] = useState(false);
+  const toast = useToast();
 
   const {
     control,
@@ -28,7 +30,6 @@ const LoginForm = (props) => {
 
   const logIn = async (loginData) => {
     console.log('Login button pressed', loginData);
-    // const data = {username: 'roopekl', password: 'salasana123'};
     try {
       const loginResult = await postLogin(loginData);
       console.log('logIn', loginResult);
@@ -37,7 +38,10 @@ const LoginForm = (props) => {
       setIsLoggedIn(true);
     } catch (error) {
       console.error('logIn', error);
-      // TODO: notify user about failed login attempt
+      toast.show({
+        description: 'Wrong username or password!',
+        placement: 'top',
+      });
     }
   };
 
@@ -62,7 +66,7 @@ const LoginForm = (props) => {
           Login to continue.
         </Heading>
 
-        <VStack space={3} mt="5">
+        <VStack space="5" mt="5">
           <FormControl isInvalid={'username' in errors}>
             <FormControl.Label
               _text={{

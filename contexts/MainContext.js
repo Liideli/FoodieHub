@@ -7,6 +7,7 @@ const MainProvider = (props) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState({});
   const [update, setUpdate] = useState(true);
+  const [toggleForm, setToggleForm] = useState({});
   const [refreshing, setRefreshing] = useState({});
 
   return (
@@ -20,6 +21,8 @@ const MainProvider = (props) => {
         setUpdate,
         refreshing,
         setRefreshing,
+        toggleForm,
+        setToggleForm,
       }}
     >
       {props.children}

@@ -1,5 +1,6 @@
-import React from 'react';
+import React, {useContext, useState} from 'react';
 import {useUser} from '../hooks/ApiHooks';
+import {MainContext} from '../contexts/MainContext';
 import {Controller, useForm} from 'react-hook-form';
 import {Entypo} from '@expo/vector-icons';
 import {
@@ -11,14 +12,15 @@ import {
   Input,
   Button,
   Pressable,
+  useToast,
 } from 'native-base';
 
 const RegisterForm = (props) => {
-  // const {setIsLoggedIn} = useContext(MainContext);
-  // const {postLogin} = useAuthentication();
   const {postUser, checkUsername} = useUser();
-  const [show, setShow] = React.useState(false);
-  const [showTwo, setShowTwo] = React.useState(false);
+  const [show, setShow] = useState(false);
+  const [showTwo, setShowTwo] = useState(false);
+  const {toggleForm, setToggleForm} = useContext(MainContext);
+  const toast = useToast();
   const {
     control,
     getValues,
@@ -40,10 +42,15 @@ const RegisterForm = (props) => {
     console.log('Registering: ', registerData);
     try {
       const registerResult = await postUser(registerData);
+      setToggleForm(!toggleForm);
       console.log('registeration result', registerResult);
+      toast.show({
+        title: 'Register successful!',
+        description: 'Please login.',
+        placement: 'top',
+      });
     } catch (error) {
       console.error('register', error);
-      // TODO: notify user about failed registeration attempt
     }
   };
 
@@ -78,7 +85,7 @@ const RegisterForm = (props) => {
           Register to continue.
         </Heading>
 
-        <VStack space={3} mt="5">
+        <VStack space="5" mt="5">
           <FormControl isRequired isInvalid={'email' in errors}>
             <FormControl.Label
               _text={{
