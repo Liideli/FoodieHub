@@ -2,8 +2,8 @@
 FoodieHub is a social media platform for food enthusiasts to connect, share and discover new recipes.
 
 ### Built with React Native and NativeBase UI Kit.
-[React Native](https://reactnative.dev/)
-[NativeBase](https://nativebase.io/)
+- [React Native](https://reactnative.dev/)
+- [NativeBase](https://nativebase.io/)
 
 ## Features
 - Login
