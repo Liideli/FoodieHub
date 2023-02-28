@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {View, Text, Button, Input} from 'native-base';
+import {View, Button, Input} from 'native-base';
 import {Controller, useForm} from 'react-hook-form';
+import {Alert} from 'react-native';
 import {useUser} from '../hooks/ApiHooks';
 
 const Update = () => {
@@ -34,6 +35,7 @@ const Update = () => {
       console.log('UpdateUser button pressed', updatedData);
       const updateResult = await putUser(updatedData);
       console.log('updated result', updateResult);
+      Alert.alert('User information succesfully updated');
     } catch (error) {
       console.error('UpdateUser', error);
     }
