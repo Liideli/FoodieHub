@@ -40,7 +40,6 @@ const Single = ({route, navigation}) => {
 
   const getLikes = async () => {
     const likes = await getFavouritesByFileId(fileId);
-    // console.log('likes', likes, 'user', user);
     setLikes(likes);
     // check if the current user id is included in the 'likes' array and
     // set the 'userLikesIt' state accordingly

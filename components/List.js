@@ -24,7 +24,7 @@ const List = ({navigation, myFilesOnly = false, MyFavouritesOnly = false}) => {
   useEffect(() => {
     setTimeout(() => {
       setTransition(true);
-    }, 400);
+    }, 0);
   }, []);
 
   return (

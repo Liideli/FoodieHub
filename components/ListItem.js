@@ -35,18 +35,20 @@ const ListItem = ({singleMedia, navigation}) => {
   const getOwner = async () => {
     const token = await AsyncStorage.getItem('userToken');
     const owner = await getUserById(userId, token);
-    // console.log('getOwner', owner);
     setOwner(owner);
   };
 
   const getLikes = async () => {
     const likes = await getFavouritesByFileId(fileId);
-    // console.log('likes', userLikes, 'user', user);
     // check if the current user id is included in the 'likes' array and
     // set the 'userLikesIt' state accordingly
     for (const like of likes) {
       if (like.user_id === user.user_id) {
         setUserLikesIt(true);
+        break;
+      }
+      if (like.user_id !== user.user_id) {
+        setUserLikesIt(false);
         break;
       }
     }
