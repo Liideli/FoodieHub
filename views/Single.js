@@ -25,7 +25,7 @@ const Single = ({route, navigation}) => {
   const video = useRef(null);
   const [owner, setOwner] = useState({});
   const [likes, setLikes] = useState([]);
-  const [userLikesIt, setUserLikesIt] = useState(false);
+  const {userLikesIt, setUserLikesIt} = useContext(MainContext);
   const [modalVisible, setModalVisible] = useState(false);
   const {user} = useContext(MainContext);
   const {getUserById} = useUser();

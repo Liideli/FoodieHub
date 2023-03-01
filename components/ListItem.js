@@ -1,12 +1,11 @@
 import PropTypes from 'prop-types';
 import {uploadsUrl} from '../utils/variables';
 import {Dimensions} from 'react-native';
-import {useState, useEffect, useContext, useCallback} from 'react';
+import {useState, useEffect, useContext} from 'react';
 import {useFavourite, useUser} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
 import {AntDesign} from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useFocusEffect} from '@react-navigation/native';
 
 import {
   AspectRatio,
@@ -25,7 +24,7 @@ const ListItem = ({singleMedia, navigation}) => {
   const [owner, setOwner] = useState({});
   const {user} = useContext(MainContext);
   const {getUserById} = useUser();
-  const [userLikesIt, setUserLikesIt] = useState(false);
+  const {userLikesIt, setUserLikesIt} = useContext(MainContext);
   const {getFavouritesByFileId, postFavourite, deleteFavourite} =
     useFavourite();
   const item = singleMedia;
@@ -35,7 +34,6 @@ const ListItem = ({singleMedia, navigation}) => {
   const getOwner = async () => {
     const token = await AsyncStorage.getItem('userToken');
     const owner = await getUserById(userId, token);
-    // console.log('getOwner', owner);
     setOwner(owner);
   };
 
@@ -79,13 +77,6 @@ const ListItem = ({singleMedia, navigation}) => {
     getLikes();
     setTransition(true);
   }, []);
-
-  useFocusEffect(
-    useCallback(() => {
-      getOwner();
-      getLikes();
-    }, [])
-  );
 
   return (
     <Pressable
