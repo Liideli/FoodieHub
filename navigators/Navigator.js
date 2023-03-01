@@ -1,5 +1,6 @@
 import React, {useContext} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
 import PropTypes from 'prop-types';
 import Home from '../views/Home';
@@ -17,6 +18,7 @@ import {Feather} from '@expo/vector-icons';
 import {AntDesign} from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
+const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
 
 const TabScreen = ({navigation}) => {
@@ -28,8 +30,8 @@ const TabScreen = ({navigation}) => {
         options={{
           tabBarIcon: (color) => <Icon name="home" color={color} />,
           title: 'FoodieHub',
-          headerLeft: () => <Feather name="menu" size={24} color="black" />,
-          headerLeftContainerStyle: {paddingLeft: 10},
+          // headerLeft: () => <Feather name="menu" size={24} color="black" />,
+          // headerLeftContainerStyle: {paddingLeft: 10},
           headerRight: () => (
             <AntDesign
               name="search1"
@@ -61,6 +63,15 @@ const TabScreen = ({navigation}) => {
   );
 };
 
+const MyDrawer = () => {
+  return (
+    <Drawer.Navigator initialRouteName="Home">
+      <Drawer.Screen name="Home" component={Home} />
+      <Drawer.Screen name="Profile" component={Profile} />
+    </Drawer.Navigator>
+  );
+};
+
 const StackScreen = () => {
   const {isLoggedIn} = useContext(MainContext);
   return (
@@ -72,6 +83,7 @@ const StackScreen = () => {
             component={TabScreen}
             options={{headerShown: false}}
           />
+          {/* <Stack.Screen name="Drawer" component={MyDrawer} />*/}
           <Stack.Screen name="Single" component={Single} />
           <Stack.Screen name="Search" component={Search} />
           <Stack.Screen name="MyFiles" component={MyFiles} />
