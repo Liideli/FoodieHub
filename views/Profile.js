@@ -4,16 +4,17 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useTag, useUser} from '../hooks/ApiHooks';
 import {uploadsUrl} from '../utils/variables';
 import List from '../components/List';
-import {Alert} from 'react-native';
+import {Alert, Platform} from 'react-native';
+import {FontAwesome5} from '@expo/vector-icons';
 import {Controller, useForm} from 'react-hook-form';
 import {
-  View,
   Text,
   Button,
-  KeyboardAvoidingView,
+  Box,
   Avatar,
   Modal,
   Input,
+  KeyboardAvoidingView,
 } from 'native-base';
 import PropTypes from 'prop-types';
 
@@ -31,7 +32,7 @@ const Profile = ({navigation}) => {
     },
   });
   const {getFilesByTag} = useTag();
-  const {setIsLoggedIn, user, setUser} = useContext(MainContext);
+  const {user} = useContext(MainContext);
   const [avatar, setAvatar] = useState('');
   const [toggleRecipes, setToggleRecipes] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -76,23 +77,18 @@ const Profile = ({navigation}) => {
 
   return (
     <KeyboardAvoidingView
-      backgroundColor="#FFFFFF"
-      display="flex"
-      height="100%"
+      style={{flex: 1}}
+      bg={['#FFC56D']}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <View
-        width="100%"
-        height="25%"
-        display="flex"
-        flexDirection="row"
-        backgroundColor="#FFC56D"
-      >
-        <View
+      <Box width="100%" display="flex">
+        <Box
           display="flex"
-          width="75%"
+          width="100%"
           alignItems="center"
           justifyContent="flex-start"
           flexDirection="row"
+          flexWrap="wrap"
           marginY={5}
         >
           <Avatar
@@ -103,121 +99,108 @@ const Profile = ({navigation}) => {
             source={{uri: uploadsUrl + avatar}}
             alt="User avatar"
           />
-          <View width="40%">
+          <Box>
             <Text fontSize="2xl">{user.username}</Text>
-          </View>
-          <View display="flex">
-            <Button marginLeft={2} onPress={() => setShowModal(true)}>
-              Update profile
+          </Box>
+          <Box width="15%">
+            <Button
+              onPress={() => setShowModal(true)}
+              backgroundColor="#FFC56D"
+            >
+              <FontAwesome5 name="user-edit" size={24} color="black" />
             </Button>
-            <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
-              <Modal.Content maxWidth="400px">
-                <Modal.CloseButton />
-                <Modal.Header>Update user information</Modal.Header>
-                <Modal.Body>
-                  <View
-                    display="flex"
-                    alignSelf="center"
-                    width="80%"
-                    borderRadius={20}
-                    margin={10}
-                  >
-                    <Controller
-                      control={control}
-                      // rules={{required: {value: true, message: 'is required'}}}
-                      render={({field: {onChange, onBlur, value}}) => (
-                        <Input
-                          placeholder="New username"
-                          onBlur={onBlur}
-                          onChangeText={onChange}
-                          value={value}
-                          type="text"
-                          errorMessage={
-                            errors.username && errors.username.message
-                          }
-                        />
-                      )}
-                      name="username"
-                    />
-                    <Controller
-                      control={control}
-                      rules={{
-                        required: {
-                          value: true,
-                          minLength: 5,
-                          message: 'Password must be at lest 5 letters',
-                        },
-                      }}
-                      render={({field: {onChange, onBlur, value}}) => (
-                        <Input
-                          placeholder="New password"
-                          onBlur={onBlur}
-                          onChangeText={onChange}
-                          value={value}
-                          type="password"
-                          errorMessage={
-                            errors.password && errors.password.message
-                          }
-                        />
-                      )}
-                      name="password"
-                    />
-                    <Controller
-                      control={control}
-                      render={({field: {onChange, onBlur, value}}) => (
-                        <Input
-                          placeholder="New email"
-                          onBlur={onBlur}
-                          onChangeText={onChange}
-                          value={value}
-                          type="text"
-                        />
-                      )}
-                      name="email"
-                    />
-                  </View>
-                </Modal.Body>
-                <Modal.Footer>
-                  <Button.Group space={2}>
-                    <Button
-                      onPress={() => {
-                        setShowModal(false);
-                      }}
-                    >
-                      Cancel
-                    </Button>
-                    <Button onPress={handleSubmit(UpdateUser)}>Save</Button>
-                  </Button.Group>
-                </Modal.Footer>
-              </Modal.Content>
+            <Modal
+              isOpen={showModal}
+              onClose={() => setShowModal(false)}
+              avoidKeyboard
+            >
+              <KeyboardAvoidingView
+                display="flex"
+                width="100%"
+                alignItems="center"
+                borderRadius={20}
+                marginBottom={75}
+              >
+                <Modal.Content>
+                  <Modal.CloseButton />
+                  <Modal.Header>Update user information</Modal.Header>
+                  <Modal.Body>
+                    <Box>
+                      <Controller
+                        control={control}
+                        // rules={{required: {value: true, message: 'is required'}}}
+                        render={({field: {onChange, onBlur, value}}) => (
+                          <Input
+                            placeholder="New username"
+                            onBlur={onBlur}
+                            onChangeText={onChange}
+                            value={value}
+                            type="text"
+                            errorMessage={
+                              errors.username && errors.username.message
+                            }
+                          />
+                        )}
+                        name="username"
+                      />
+                      <Controller
+                        control={control}
+                        rules={{
+                          required: {
+                            value: true,
+                            minLength: 5,
+                            message: 'Password must be at lest 5 letters',
+                          },
+                        }}
+                        render={({field: {onChange, onBlur, value}}) => (
+                          <Input
+                            placeholder="New password"
+                            onBlur={onBlur}
+                            onChangeText={onChange}
+                            value={value}
+                            type="password"
+                            errorMessage={
+                              errors.password && errors.password.message
+                            }
+                          />
+                        )}
+                        name="password"
+                      />
+                      <Controller
+                        control={control}
+                        render={({field: {onChange, onBlur, value}}) => (
+                          <Input
+                            placeholder="New email"
+                            onBlur={onBlur}
+                            onChangeText={onChange}
+                            value={value}
+                            type="text"
+                          />
+                        )}
+                        name="email"
+                      />
+                    </Box>
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button.Group space={2}>
+                      <Button
+                        onPress={() => {
+                          setShowModal(false);
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                      <Button onPress={handleSubmit(UpdateUser)}>Save</Button>
+                    </Button.Group>
+                  </Modal.Footer>
+                </Modal.Content>
+              </KeyboardAvoidingView>
             </Modal>
-          </View>
-        </View>
-        <View
-          display="flex"
-          width="25%"
-          borderRadius={10}
-          alignSelf="flex-end"
-          padding={2}
-        >
-          <Button
-            onPress={async () => {
-              console.log('Logging out!');
-              setUser({});
-              setIsLoggedIn(false);
-              try {
-                await AsyncStorage.clear();
-              } catch (e) {
-                console.log('Clearning async storage failed', e);
-              }
-            }}
-          >
-            Log Out
-          </Button>
-        </View>
-      </View>
-      <View display="flex" flexDirection="row">
-        <View width="50%">
+          </Box>
+        </Box>
+      </Box>
+      <Box display="flex" flexDirection="row">
+        <Box width="50%">
           <Button
             borderRadius={0}
             borderWidth={1}
@@ -229,8 +212,8 @@ const Profile = ({navigation}) => {
           >
             My recipes
           </Button>
-        </View>
-        <View width="50%">
+        </Box>
+        <Box width="50%">
           <Button
             borderRadius={0}
             borderWidth={1}
@@ -242,17 +225,17 @@ const Profile = ({navigation}) => {
           >
             My likes
           </Button>
-        </View>
-      </View>
-      <View>
+        </Box>
+      </Box>
+      <Box>
         {toggleRecipes ? (
           <List navigation={navigation} myFilesOnly={true} />
         ) : (
-          <View>
+          <Box>
             <List navigation={navigation} MyFavouritesOnly={true} />
-          </View>
+          </Box>
         )}
-      </View>
+      </Box>
     </KeyboardAvoidingView>
   );
 };
