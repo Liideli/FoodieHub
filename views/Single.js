@@ -104,6 +104,7 @@ const Single = ({route, navigation}) => {
   useEffect(() => {
     getOwner();
     getLikes();
+    unlock();
 
     const orientSub = ScreenOrientation.addOrientationChangeListener((evt) => {
       console.log('orientation', evt);
