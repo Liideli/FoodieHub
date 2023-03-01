@@ -1,11 +1,12 @@
 import PropTypes from 'prop-types';
 import {uploadsUrl} from '../utils/variables';
 import {Dimensions} from 'react-native';
-import {useState, useEffect, useContext} from 'react';
+import {useState, useEffect, useContext, useCallback} from 'react';
 import {useFavourite, useUser} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
 import {AntDesign} from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useFocusEffect} from '@react-navigation/native';
 
 import {
   AspectRatio,
@@ -24,7 +25,7 @@ const ListItem = ({singleMedia, navigation}) => {
   const [owner, setOwner] = useState({});
   const {user} = useContext(MainContext);
   const {getUserById} = useUser();
-  const {userLikesIt, setUserLikesIt} = useContext(MainContext);
+  const [userLikesIt, setUserLikesIt] = useState(false);
   const {getFavouritesByFileId, postFavourite, deleteFavourite} =
     useFavourite();
   const item = singleMedia;
@@ -39,12 +40,15 @@ const ListItem = ({singleMedia, navigation}) => {
 
   const getLikes = async () => {
     const likes = await getFavouritesByFileId(fileId);
-    // console.log('likes', userLikes, 'user', user);
     // check if the current user id is included in the 'likes' array and
     // set the 'userLikesIt' state accordingly
     for (const like of likes) {
       if (like.user_id === user.user_id) {
         setUserLikesIt(true);
+        break;
+      }
+      if (like.user_id !== user.user_id) {
+        setUserLikesIt(false);
         break;
       }
     }
@@ -77,6 +81,13 @@ const ListItem = ({singleMedia, navigation}) => {
     getLikes();
     setTransition(true);
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      getOwner();
+      getLikes();
+    }, [])
+  );
 
   return (
     <Pressable

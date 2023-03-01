@@ -25,7 +25,7 @@ const Single = ({route, navigation}) => {
   const video = useRef(null);
   const [owner, setOwner] = useState({});
   const [likes, setLikes] = useState([]);
-  const {userLikesIt, setUserLikesIt} = useContext(MainContext);
+  const [userLikesIt, setUserLikesIt] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const {user} = useContext(MainContext);
   const {getUserById} = useUser();
@@ -41,7 +41,6 @@ const Single = ({route, navigation}) => {
 
   const getLikes = async () => {
     const likes = await getFavouritesByFileId(fileId);
-    // console.log('likes', likes, 'user', user);
     setLikes(likes);
     // check if the current user id is included in the 'likes' array and
     // set the 'userLikesIt' state accordingly
@@ -105,7 +104,6 @@ const Single = ({route, navigation}) => {
   useEffect(() => {
     getOwner();
     getLikes();
-    unlock();
 
     const orientSub = ScreenOrientation.addOrientationChangeListener((evt) => {
       console.log('orientation', evt);
