@@ -100,8 +100,8 @@ const ListItem = ({singleMedia, navigation}) => {
           width={width / 2}
           rounded="lg"
           overflow="hidden"
-          borderColor="#fff"
-          borderWidth="4"
+          borderColor="#FFC56D"
+          borderWidth="5"
           _light={{
             backgroundColor: 'gray.200',
           }}
@@ -126,12 +126,7 @@ const ListItem = ({singleMedia, navigation}) => {
               },
             }}
           >
-            <Stack
-              p="2"
-              space={0}
-              overflow="hidden"
-              backgroundColor="light.300"
-            >
+            <Stack p="2" space={0} overflow="hidden" backgroundColor="#fff">
               <Stack alignItems="center">
                 <Heading size="md" color="black" fontFamily="JudsonRegular">
                   {item.title}

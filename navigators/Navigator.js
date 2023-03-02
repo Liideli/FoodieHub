@@ -1,4 +1,5 @@
 import React, {useContext} from 'react';
+import {Image} from 'native-base';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -29,8 +30,14 @@ const TabScreen = ({navigation}) => {
         name="Home"
         component={Home}
         options={{
+          headerTitle: () => (
+            <Image
+              source={require('../assets/logo.png')}
+              style={{width: 175, height: 32, size: 50}}
+              alt="logo"
+            />
+          ),
           tabBarIcon: (color) => <Icon name="home" color={color} />,
-          title: 'FoodieHub',
           headerLeft: () => <Feather name="menu" size={24} color="black" />,
           headerLeftContainerStyle: {paddingLeft: 10},
           headerRight: () => (
