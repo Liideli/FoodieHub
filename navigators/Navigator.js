@@ -2,6 +2,7 @@ import React, {useContext} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import PropTypes from 'prop-types';
 import Home from '../views/Home';
 import Single from '../views/Single';
@@ -16,12 +17,14 @@ import {Icon} from '@rneui/base';
 import Modify from '../views/Modify';
 import {Feather} from '@expo/vector-icons';
 import {AntDesign} from '@expo/vector-icons';
+import {FontAwesome5} from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
 
 const TabScreen = ({navigation}) => {
+  const {setIsLoggedIn, setUser} = useContext(MainContext);
   return (
     <Tab.Navigator>
       <Tab.Screen
@@ -57,6 +60,24 @@ const TabScreen = ({navigation}) => {
         component={Profile}
         options={{
           tabBarIcon: (color) => <Icon name="person" color={color} />,
+          headerRight: () => (
+            <FontAwesome5
+              name="sign-out-alt"
+              size={24}
+              color="black"
+              onPress={async () => {
+                console.log('Logging out!');
+                setUser({});
+                setIsLoggedIn(false);
+                try {
+                  await AsyncStorage.clear();
+                } catch (e) {
+                  console.log('Clearning async storage failed', e);
+                }
+              }}
+            />
+          ),
+          headerRightContainerStyle: {paddingRight: 10},
         }}
       />
     </Tab.Navigator>

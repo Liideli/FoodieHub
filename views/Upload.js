@@ -1,5 +1,4 @@
 import React, {useCallback, useContext, useState, useRef} from 'react';
-import {Button, Card, Input} from '@rneui/base';
 import PropTypes from 'prop-types';
 import {Controller, useForm} from 'react-hook-form';
 import {Alert, Keyboard, ScrollView, TouchableOpacity} from 'react-native';
@@ -8,8 +7,23 @@ import {useMedia, useTag} from '../hooks/ApiHooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {MainContext} from '../contexts/MainContext';
 import {useFocusEffect} from '@react-navigation/native';
-import {appId} from '../utils/variables';
+import { appId, uploadsUrl } from "../utils/variables";
 import {Video} from 'expo-av';
+
+import {
+  AspectRatio,
+  Box,
+  FormControl,
+  Heading,
+  Image,
+  Stack,
+  Input,
+  TextArea,
+  Button,
+  Center,
+  Icon,
+  Pressable
+} from "native-base";
 
 const Upload = ({navigation}) => {
   const [mediafile, setMediaFile] = useState({});
@@ -117,79 +131,90 @@ const Upload = ({navigation}) => {
         style={{padding: 16}}
         activeOpacity={1}
       >
-        <Card>
-          {mediafile.type === 'video' ? (
-            <Video
-              ref={video}
-              source={{uri: mediafile.uri}}
-              style={{width: '100%', height: 200}}
-              resizeMode="cover"
-              useNativeControls
-              onError={(error) => {
-                console.log(error);
-              }}
-            />
-          ) : (
-            <Card.Image
-              source={{uri: mediafile.uri || 'https://placekitten.com/200/300'}}
-              onPress={pickFile}
-            />
-          )}
-          <Controller
-            control={control}
-            rules={{
-              required: {
-                value: true,
-                message: 'is required',
-              },
-              minLength: {
-                value: 3,
-                message: 'Title min length is 3 characters.',
-              },
-            }}
-            render={({field: {onChange, onBlur, value}}) => (
-              <Input
-                placeholder="Title"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                errorMessage={errors.username && errors.username.message}
-              />
-            )}
-            name="title"
-          />
-          <Controller
-            control={control}
-            rules={{
-              required: {
-                value: true,
-                message: 'is required',
-              },
-              minLength: {
-                value: 3,
-                message: 'Description min length is 3 characters.',
-              },
-            }}
-            render={({field: {onChange, onBlur, value}}) => (
-              <Input
-                placeholder="Description"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                errorMessage={errors.description && errors.description.message}
-              />
-            )}
-            name="description"
-          />
-          <Button title="Pick a file" onPress={pickFile} />
-          <Button
-            loading={loading}
-            disabled={!mediafile.uri || errors.title || errors.description}
-            title="Upload"
-            onPress={handleSubmit(uploadFile)}
-          />
-          <Button title={'Reset'} onPress={resetForm} type="outline" />
-        </Card>
+        <Box alignItems="center" mt="12px">
+          <Box maxW="80" rounded="lg" overflow="hidden" borderColor="coolGray.200" borderWidth="1" bg="#FFC56D">
+            <Box>
+              <TouchableOpacity onPress={pickFile}>
+                <AspectRatio w="100%" ratio={16 / 9}>
+                  <Image
+                    source={{uri: mediafile.uri || "https://content.hostgator.com/img/weebly_image_sample.png" }}
+                    alt="recipeImage"
+                  />
+                </AspectRatio>
+              </TouchableOpacity>
+            </Box>
+            <Stack p="4" space={3}>
+              <Stack space={2}>
+                <Heading
+                  fontSize="xl"
+                  fontWeight="500"
+                  ml="-0.5"
+                  mt="-1"
+                >
+                  Recipe name
+                </Heading>
+                <FormControl isRequired>
+                  <Controller
+                    control={control}
+                    rules={{
+                      required: {
+                        value: true,
+                        message: 'is required',
+                      },
+                      minLength: {
+                        value: 3,
+                        message: 'Title min length is 3 characters.',
+                      },
+                    }}
+                    render={({field: {onChange, onBlur, value}}) => (
+                      <Input
+                        placeholder="Title"
+                        onBlur={onBlur}
+                        onChangeText={onChange}
+                        value={value}
+                        errorMessage={errors.title && errors.title.message}
+                      />
+                    )}
+                    name="title"
+                  />
+                  <FormControl.ErrorMessage>{errors.title && errors.title.message}</FormControl.ErrorMessage>
+                </FormControl>
+              </Stack>
+              <Stack space={2}>
+                <Heading
+                  fontSize="xl"
+                  fontWeight="500"
+                  ml="-0.5"
+                  mt="-1"
+                >
+                  Ingredients and instructions
+                </Heading>
+                <FormControl isRequired>
+                  <TextArea
+                    color="black"
+                    h={40}
+                    placeholder="Add Ingredients and Instructions here"
+                    backgroundColor="white"
+                  />
+                </FormControl>
+              </Stack>
+              <Button
+                loading={loading}
+                disabled={!mediafile.uri || errors.title || errors.description}
+                onPress={pickFile}
+                backgroundColor="#ff8282"
+                borderRadius="full"
+              >Add image</Button>
+              <Button
+                loading={loading}
+                disabled={!mediafile.uri || errors.title || errors.description}
+                onPress={handleSubmit(uploadFile)}
+                backgroundColor="#FE5D26"
+                borderRadius="full"
+              >Upload recipe</Button>
+            </Stack>
+          </Box>
+        </Box>
       </TouchableOpacity>
     </ScrollView>
   );

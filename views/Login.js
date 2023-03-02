@@ -21,9 +21,9 @@ import {
 const Login = ({navigation}) => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
   const {getUserByToken} = useUser();
-  const [toggleForm, setToggleForm] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
+  const {toggleForm, setToggleForm} = useContext(MainContext);
 
   const onRefresh = useCallback(() => {
     setLoading(true);

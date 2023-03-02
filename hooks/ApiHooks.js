@@ -81,6 +81,22 @@ const useMedia = (myFilesOnly, myFavouritesOnly) => {
     }
   };
 
+  const searchMedia = async (title, token) => {
+    const options = {
+      method: 'post',
+      headers: {
+        'x-access-token': token,
+        'Content-Type': 'multipart/form-data',
+      },
+      body: title,
+    };
+    try {
+      return await doFetch(baseUrl + 'media/search/', + title, options);
+    } catch (error) {
+      throw new Error('postMedia: ' + error.message);
+    }
+  };
+
   const putMedia = async (id, data, token) => {
     const options = {
       method: 'put',
