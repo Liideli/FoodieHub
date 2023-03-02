@@ -1,12 +1,13 @@
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {uploadsUrl} from '../utils/variables';
 import PropTypes from 'prop-types';
-import {useFavourite, useUser} from '../hooks/ApiHooks';
+import {useFavourite, useUser, useMedia} from '../hooks/ApiHooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {MainContext} from '../contexts/MainContext';
 import * as ScreenOrientation from 'expo-screen-orientation';
-import { AspectRatio, Box, Center, Fab, HStack, Image, ScrollView, Stack, Text, useToast } from "native-base";
+import { AspectRatio, Box, Center, Fab, HStack, Image, Modal, ScrollView, Stack, Text, useToast } from "native-base";
 import { Icon } from "@rneui/themed";
+import { TouchableOpacity } from "react-native";
 
 const Single = ({route, navigation}) => {
   // console.log(route.params);
@@ -25,8 +26,11 @@ const Single = ({route, navigation}) => {
   const [likes, setLikes] = useState([]);
   const [userLikesIt, setUserLikesIt] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const initialRef = React.useRef(null);
+  const finalRef = React.useRef(null);
   const {user} = useContext(MainContext);
   const {getUserById} = useUser();
+  const {deleteMedia} = useMedia();
   const toast = useToast();
   const {getFavouritesByFileId, postFavourite, deleteFavourite} =
     useFavourite();
@@ -62,6 +66,7 @@ const Single = ({route, navigation}) => {
     }
     setUserLikesIt(true);
   };
+
   const dislikeFile = async () => {
     try {
       const token = await AsyncStorage.getItem('userToken');
@@ -72,6 +77,15 @@ const Single = ({route, navigation}) => {
       console.log(error);
     }
     setUserLikesIt(false);
+  };
+
+  const deleteFile = async () => {
+    try {
+      const token = await AsyncStorage.getItem('userToken');
+      await deleteMedia(fileId, token);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const unlock = async () => {
@@ -124,13 +138,31 @@ const Single = ({route, navigation}) => {
       <ScrollView>
         <Box alignItems="center" mt="12px">
           <Box maxW="80" rounded="lg" overflow="hidden" borderColor="coolGray.200" borderWidth="1" bg="#FFC56D">
+            <Modal isOpen={modalVisible} onClose={() => setModalVisible(false)} initialFocusRef={initialRef} finalFocusRef={finalRef} size="full">
+              <Modal.Content>
+                <Modal.CloseButton />
+                <Modal.Header>{title}</Modal.Header>
+                <Modal.Body>
+                  <AspectRatio w="100%" ratio={16 / 9}>
+                    <Image
+                      source={{uri: uploadsUrl + filename }}
+                      alt="recipeImage"
+                    />
+                  </AspectRatio>
+                </Modal.Body>
+              </Modal.Content>
+            </Modal>
             <Box>
-              <AspectRatio w="100%" ratio={16 / 9}>
-                <Image
-                  source={{uri: uploadsUrl + filename }}
-                  alt="recipeImage"
-                />
-              </AspectRatio>
+              <TouchableOpacity onPress={() => {
+                setModalVisible(!modalVisible);
+              }}>
+                <AspectRatio w="100%" ratio={16 / 9}>
+                  <Image
+                    source={{uri: uploadsUrl + filename }}
+                    alt="recipeImage"
+                  />
+                </AspectRatio>
+              </TouchableOpacity>
               <HStack>
                 <Center
                   _text={{
@@ -163,7 +195,7 @@ const Single = ({route, navigation}) => {
           </Box>
         </Box>
       </ScrollView>
-      <Center position="absolute" bottom="30px" right="30px" h="50px" w="50px" borderRadius="full" overflow="hidden" borderColor="coolGray.200" borderWidth="1" bg="#ff7300">
+      <Center position="absolute" bottom="30px" right="30px" h="50px" w="50px" borderRadius="full" borderColor="coolGray.200" borderWidth="1" bg="#ff7300">
         {userLikesIt ? (
           <Icon name="favorite" color="red" onPress={() => {dislikeFile(); toast.show({
             description: "Removed from favorites"
@@ -174,6 +206,19 @@ const Single = ({route, navigation}) => {
           })}} />
         )}
       </Center>
+      { user.user_id === owner.user_id && (
+        <Center position="absolute" bottom="90px" right="30px" h="50px" w="50px" borderRadius="full"
+                borderColor="coolGray.200" borderWidth="1" bg="#ff7300">
+          <Icon name="delete" color="black" onPress={() => {
+            deleteFile(fileId);
+            toast.show({
+              description: "File deleted"
+            });
+            navigation.navigate('Home'); console.log("user: " + user.user_id + " owner: " + owner.user_id)
+          }}
+          />
+        </Center>
+      )}
     </>
   );
 };
