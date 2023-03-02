@@ -69,11 +69,11 @@ const RegisterForm = (props) => {
       <Box safeArea pr="6" pl="6" w="100%">
         <Heading
           fontFamily="JudsonRegular"
-          size="2xl"
+          size="xl"
           fontWeight="600"
           color="black"
         >
-          Welcome!
+          Welcome to FoodieHub!
         </Heading>
         <Heading
           fontFamily="JudsonRegular"
@@ -85,7 +85,7 @@ const RegisterForm = (props) => {
           Register to continue.
         </Heading>
 
-        <VStack space="5" mt="5">
+        <VStack space="2" mt="5" mb="-4">
           <FormControl isRequired isInvalid={'email' in errors}>
             <FormControl.Label
               _text={{
