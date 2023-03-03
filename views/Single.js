@@ -35,6 +35,8 @@ const Single = ({route, navigation}) => {
   const {getFavouritesByFileId, postFavourite, deleteFavourite} =
     useFavourite();
 
+
+
   const getOwner = async () => {
     const token = await AsyncStorage.getItem('userToken');
     const owner = await getUserById(userId, token);

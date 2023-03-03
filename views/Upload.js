@@ -190,11 +190,30 @@ const Upload = ({navigation}) => {
                   Ingredients and instructions
                 </Heading>
                 <FormControl isRequired>
-                  <TextArea
-                    color="black"
-                    h={40}
-                    placeholder="Add Ingredients and Instructions here"
-                    backgroundColor="white"
+                  <Controller
+                    control={control}
+                    rules={{
+                      required: {
+                        value: true,
+                        message: 'is required',
+                      },
+                      minLength: {
+                        value: 3,
+                        message: 'Add a description',
+                      },
+                    }}
+                    render={({field: {onChange, onBlur, value}}) => (
+                      <TextArea
+                        color="black"
+                        h={40}
+                        placeholder="Add Ingredients and Instructions here"
+                        backgroundColor="white"
+                        value={value}
+                        onBlur={onBlur}
+                        onChangeText={onChange}
+                      />
+                    )}
+                    name="description"
                   />
                 </FormControl>
               </Stack>

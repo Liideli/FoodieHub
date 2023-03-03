@@ -47,6 +47,7 @@ const useMedia = (myFilesOnly, myFavouritesOnly) => {
       console.error('List, loadMedia', error);
     }
   };
+
   useEffect(() => {
     loadMedia();
     // load media when update or refreshing state changes in main context
@@ -91,9 +92,9 @@ const useMedia = (myFilesOnly, myFavouritesOnly) => {
       body: title,
     };
     try {
-      return await doFetch(baseUrl + 'media/search/', + title, options);
+      return await doFetch(baseUrl + 'media/search/', + title + options);
     } catch (error) {
-      throw new Error('postMedia: ' + error.message);
+      throw new Error('searchMedia: ' + title + error.message);
     }
   };
 
@@ -113,7 +114,7 @@ const useMedia = (myFilesOnly, myFavouritesOnly) => {
     }
   };
 
-  return {mediaArray, postMedia, deleteMedia, putMedia};
+  return {mediaArray, postMedia, deleteMedia, putMedia, searchMedia};
 };
 
 const useAuthentication = () => {
