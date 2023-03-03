@@ -7,14 +7,12 @@ import PropTypes from 'prop-types';
 import Home from '../views/Home';
 import Single from '../views/Single';
 import Search from '../views/Search';
-import MyFiles from '../views/MyFiles';
 import Profile from '../views/Profile';
 import Login from '../views/Login';
 import Upload from '../views/Upload';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {MainContext} from '../contexts/MainContext';
 import {Icon} from '@rneui/base';
-import Modify from '../views/Modify';
 import {Feather} from '@expo/vector-icons';
 import {AntDesign} from '@expo/vector-icons';
 import {FontAwesome5} from '@expo/vector-icons';
@@ -33,8 +31,15 @@ const TabScreen = ({navigation}) => {
         options={{
           tabBarIcon: (color) => <Icon name="home" color={color} />,
           title: 'FoodieHub',
-          // headerLeft: () => <Feather name="menu" size={24} color="black" />,
-          // headerLeftContainerStyle: {paddingLeft: 10},
+          headerLeft: () => (
+            <Feather
+              name="menu"
+              size={24}
+              color="black"
+              onPress={() => navigation.openDrawer()}
+            />
+          ),
+          headerLeftContainerStyle: {paddingLeft: 10},
           headerRight: () => (
             <AntDesign
               name="search1"
@@ -52,6 +57,15 @@ const TabScreen = ({navigation}) => {
         name="Upload"
         component={Upload}
         options={{
+          headerLeft: () => (
+            <Feather
+              name="menu"
+              size={24}
+              color="black"
+              onPress={() => navigation.openDrawer()}
+            />
+          ),
+          headerLeftContainerStyle: {paddingLeft: 10},
           tabBarIcon: (color) => <Icon name="cloud-upload" color={color} />,
         }}
       />
@@ -60,6 +74,15 @@ const TabScreen = ({navigation}) => {
         component={Profile}
         options={{
           tabBarIcon: (color) => <Icon name="person" color={color} />,
+          headerLeft: () => (
+            <Feather
+              name="menu"
+              size={24}
+              color="black"
+              onPress={() => navigation.openDrawer()}
+            />
+          ),
+          headerLeftContainerStyle: {paddingLeft: 10},
           headerRight: () => (
             <FontAwesome5
               name="sign-out-alt"
@@ -84,11 +107,14 @@ const TabScreen = ({navigation}) => {
   );
 };
 
-const MyDrawer = () => {
+const DrawerScreen = () => {
   return (
-    <Drawer.Navigator initialRouteName="Home">
-      <Drawer.Screen name="Home" component={Home} />
-      <Drawer.Screen name="Profile" component={Profile} />
+    <Drawer.Navigator useLegacyImplementation initialRouteName="Home">
+      <Drawer.Screen
+        name="Home"
+        component={StackScreen}
+        options={{headerShown: false}}
+      />
     </Drawer.Navigator>
   );
 };
@@ -104,11 +130,8 @@ const StackScreen = () => {
             component={TabScreen}
             options={{headerShown: false}}
           />
-          {/* <Stack.Screen name="Drawer" component={MyDrawer} />*/}
           <Stack.Screen name="Single" component={Single} />
           <Stack.Screen name="Search" component={Search} />
-          <Stack.Screen name="MyFiles" component={MyFiles} />
-          <Stack.Screen name="Modify" component={Modify} />
         </>
       ) : (
         <Stack.Screen
@@ -124,7 +147,7 @@ const StackScreen = () => {
 const Navigator = () => {
   return (
     <NavigationContainer>
-      <StackScreen />
+      <DrawerScreen />
     </NavigationContainer>
   );
 };
