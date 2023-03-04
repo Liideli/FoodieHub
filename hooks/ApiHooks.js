@@ -17,7 +17,7 @@ const doFetch = async (url, options) => {
 
 const useMedia = (myFilesOnly, myFavouritesOnly) => {
   const [mediaArray, setMediaArray] = useState([]);
-  const {update, refreshing, user} = useContext(MainContext);
+  const {update, user} = useContext(MainContext);
 
   const loadMedia = async () => {
     try {
@@ -52,7 +52,7 @@ const useMedia = (myFilesOnly, myFavouritesOnly) => {
     // load media when update or refreshing state changes in main context
     // by adding update state to the array below
     console.log('loaded');
-  }, [update, refreshing]);
+  }, [update]);
 
   const postMedia = async (fileData, token) => {
     const options = {

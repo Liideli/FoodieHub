@@ -7,7 +7,11 @@ import PropTypes from 'prop-types';
 const Home = ({navigation}) => {
   return (
     <View style={styles.container}>
-      <List navigation={navigation} />
+      <List
+        navigation={navigation}
+        myFilesOnly={false}
+        MyFavouritesOnly={false}
+      />
     </View>
   );
 };
@@ -15,13 +19,12 @@ const Home = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFC56D',
+    backgroundColor: '#fff',
   },
 });
 
 Home.propTypes = {
   navigation: PropTypes.object,
-  children: PropTypes.object,
 };
 
 export default Home;

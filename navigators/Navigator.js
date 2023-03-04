@@ -13,7 +13,6 @@ import Login from '../views/Login';
 import Upload from '../views/Upload';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {MainContext} from '../contexts/MainContext';
-import {Icon} from '@rneui/base';
 import Modify from '../views/Modify';
 import {Feather} from '@expo/vector-icons';
 import {AntDesign} from '@expo/vector-icons';
@@ -24,20 +23,30 @@ const Stack = createNativeStackNavigator();
 
 const TabScreen = ({navigation}) => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
+
   return (
     <Tab.Navigator>
       <Tab.Screen
         name="Home"
         component={Home}
         options={{
+          tabBarLabel: () => {
+            return null;
+          },
           headerTitle: () => (
             <Image
               source={require('../assets/logo.png')}
-              style={{width: 175, height: 32, size: 50}}
+              style={{width: 155, height: 32, size: 50}}
               alt="logo"
             />
           ),
-          tabBarIcon: (color) => <Icon name="home" color={color} />,
+          tabBarIcon: ({focused}) => (
+            <AntDesign
+              name="home"
+              size={focused ? '28' : '24'}
+              color={focused ? 'black' : 'gray'}
+            />
+          ),
           headerLeft: () => <Feather name="menu" size={24} color="black" />,
           headerLeftContainerStyle: {paddingLeft: 10},
           headerRight: () => (
@@ -57,14 +66,32 @@ const TabScreen = ({navigation}) => {
         name="Upload"
         component={Upload}
         options={{
-          tabBarIcon: (color) => <Icon name="cloud-upload" color={color} />,
+          tabBarLabel: () => {
+            return null;
+          },
+          tabBarIcon: ({focused}) => (
+            <AntDesign
+              name="pluscircleo"
+              size={focused ? '28' : '24'}
+              color={focused ? 'black' : 'gray'}
+            />
+          ),
         }}
       />
       <Tab.Screen
         name="Profile"
         component={Profile}
         options={{
-          tabBarIcon: (color) => <Icon name="person" color={color} />,
+          tabBarLabel: () => {
+            return null;
+          },
+          tabBarIcon: ({focused}) => (
+            <AntDesign
+              name="user"
+              size={focused ? '28' : '24'}
+              color={focused ? 'black' : 'gray'}
+            />
+          ),
           headerRight: () => (
             <FontAwesome5
               name="sign-out-alt"
