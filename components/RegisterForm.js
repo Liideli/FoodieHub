@@ -212,7 +212,7 @@ const RegisterForm = (props) => {
                   type={show ? 'text' : 'password'}
                   InputRightElement={
                     <Pressable onPress={() => setShow(!show)} pr="1">
-                      <Entypo name={show ? 'eye' : 'eye-with-line'} size={24} />
+                      <Entypo name={show ? 'eye-with-line' : 'eye'} size={24} />
                     </Pressable>
                   }
                 />
@@ -253,7 +253,7 @@ const RegisterForm = (props) => {
                   InputRightElement={
                     <Pressable onPress={() => setShowTwo(!showTwo)} pr="1">
                       <Entypo
-                        name={showTwo ? 'eye' : 'eye-with-line'}
+                        name={showTwo ? 'eye-with-line' : 'eye'}
                         size={24}
                       />
                     </Pressable>
