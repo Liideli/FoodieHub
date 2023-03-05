@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import {PresenceTransition} from 'native-base';
 import {MainContext} from '../contexts/MainContext';
 
-const List = ({navigation, myFilesOnly = false, MyFavouritesOnly = false}) => {
+const List = ({navigation, myFilesOnly = false, MyFavouritesOnly = false,}) => {
   const {mediaArray} = useMedia(myFilesOnly, MyFavouritesOnly);
   const [transition, setTransition] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -59,6 +59,7 @@ List.propTypes = {
   navigation: PropTypes.object.isRequired,
   myFilesOnly: PropTypes.bool,
   MyFavouritesOnly: PropTypes.bool,
+  searchText: PropTypes.string,
   children: PropTypes.bool,
 };
 

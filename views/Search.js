@@ -3,20 +3,24 @@ import List from '../components/List';
 import {StyleSheet, SafeAreaView, View} from 'react-native';
 import {VStack, Input} from 'native-base';
 import {AntDesign} from '@expo/vector-icons';
+import {useSearch} from '../hooks/ApiHooks';
 import {useMedia} from '../hooks/ApiHooks';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 const Search = ({navigation}) => {
 
-  const {searchMedia} = useMedia();
+  const {postSearch} = useSearch();
+
+  const {loadMedia} = useMedia();
 
   const searchFile = async (searchText) => {
     console.log('searching', searchText);
     try {
       const token = await AsyncStorage.getItem('userToken');
-      console.log(token)
-      const searchMediaResult = await searchMedia(searchText, token);
+      const searchMediaResult = await postSearch(searchText, token);
+      loadMedia();
+      console.log(searchMediaResult);
     } catch (error) {
       console.error('Search', error);
     }
@@ -37,14 +41,14 @@ const Search = ({navigation}) => {
                 InputLeftElement={
                   <AntDesign name="search1" size={24} color="black" />
                 }
-                onChangeText={(searchText) => {console.log(searchText);
+                onChangeText={(searchText) => {
                   searchFile(searchText);
                 }
               }
               />
           </VStack>
         </VStack>
-        <List navigation={navigation} />
+        <List navigation={navigation}/>
       </SafeAreaView>
     </View>
   );

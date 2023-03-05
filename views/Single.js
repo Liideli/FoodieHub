@@ -5,7 +5,20 @@ import {useFavourite, useUser, useMedia} from '../hooks/ApiHooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {MainContext} from '../contexts/MainContext';
 import * as ScreenOrientation from 'expo-screen-orientation';
-import { AspectRatio, Box, Center, Fab, HStack, Image, Modal, ScrollView, Stack, Text, useToast } from "native-base";
+import {
+  AspectRatio,
+  Box,
+  Center,
+  Fab,
+  HStack,
+  Image,
+  Modal,
+  ScrollView,
+  Stack,
+  Text,
+  useToast,
+  VStack
+} from "native-base";
 import { Icon } from "@rneui/themed";
 import { TouchableOpacity } from "react-native";
 
@@ -26,6 +39,7 @@ const Single = ({route, navigation}) => {
   const [likes, setLikes] = useState([]);
   const [userLikesIt, setUserLikesIt] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [modalEditVisible, setModalEditVisible] = useState(false);
   const initialRef = React.useRef(null);
   const finalRef = React.useRef(null);
   const {user} = useContext(MainContext);
@@ -138,8 +152,9 @@ const Single = ({route, navigation}) => {
   return (
     <>
       <ScrollView>
-        <Box alignItems="center" mt="12px">
-          <Box maxW="80" rounded="lg" overflow="hidden" borderColor="coolGray.200" borderWidth="1" bg="#FFC56D">
+        <Box shadow="7">
+        <Box alignItems="center" mt="12px" shadow="7">
+          <Box maxW="95%" rounded="lg" overflow="hidden" borderColor="coolGray.200" borderWidth="1" bg="#FFC56D" shadow="7">
             <Modal isOpen={modalVisible} onClose={() => setModalVisible(false)} initialFocusRef={initialRef} finalFocusRef={finalRef} size="full">
               <Modal.Content>
                 <Modal.CloseButton />
@@ -176,19 +191,29 @@ const Single = ({route, navigation}) => {
                 </Center>
               </HStack>
             </Box>
+            <Box margin="12px" backgroundColor="white" rounded="lg" overflow="hidden" shadow="7">
             <Stack p="4" space={3}>
-              <Stack space={2}>
-                <Text fontSize="xs" fontWeight="500" ml="-0.5" mt="-1">
-                   recipe by: {owner.full_name} {owner.username}
+              <VStack space={1}>
+                <Text fontSize="xs" fontWeight="500" ml="-0.5" mt="-1" color="black">
+                   Recipe by: {owner.full_name} {owner.username}
                 </Text>
-                <Text>Total likes: {likes.length}</Text>
-              </Stack>
-              <Text color="white" fontWeight="400">
-                {description}
-              </Text>
+                <Text color="black" fontSize="xs">Total likes: {likes.length}</Text>
+              </VStack>
+              <Box rounded="lg" overflow="hidden" borderColor="black" borderWidth="1" bg="white"
+              padding="8px"
+              >
+                <Text fontSize="lg" color="black" bold paddingBottom="6px">Recipe and ingredients</Text>
+                <Text color="black" fontWeight="400">
+                  {description}
+                </Text>
+                <Text color="black" fontWeight="400">
+                  {description}
+                </Text>
+              </Box>
               <HStack alignItems="center" space={4} justifyContent="space-between">
                 <HStack alignItems="center">
-                  <Text color="white" fontWeight="400">
+                  <Text color="light.400" fontWeight="400" fontSize="sm">
+                    Posted: {" "}
                     {new Date(timeAdded).toLocaleString('fi-FI')}
                   </Text>
                 </HStack>
@@ -196,8 +221,10 @@ const Single = ({route, navigation}) => {
             </Stack>
           </Box>
         </Box>
+        </Box>
+        </Box>
       </ScrollView>
-      <Center position="absolute" bottom="30px" right="30px" h="50px" w="50px" borderRadius="full" borderColor="coolGray.200" borderWidth="1" bg="#ff7300">
+      <Center position="absolute" bottom="30px" right="20px" h="50px" w="50px" borderRadius="full" borderColor="coolGray.200" borderWidth="1" bg="#ff7300" shadow="7">
         {userLikesIt ? (
           <Icon name="favorite" color="red" onPress={() => {dislikeFile(); toast.show({
             description: "Removed from favorites"
@@ -209,14 +236,32 @@ const Single = ({route, navigation}) => {
         )}
       </Center>
       { user.user_id === owner.user_id && (
-        <Center position="absolute" bottom="90px" right="30px" h="50px" w="50px" borderRadius="full"
-                borderColor="coolGray.200" borderWidth="1" bg="#ff7300">
+        <Center position="absolute" bottom="90px" right="20px" h="50px" w="50px" borderRadius="full"
+                borderColor="coolGray.200" borderWidth="1" bg="#ff7300" shadow="7">
           <Icon name="delete" color="black" onPress={() => {
             deleteFile(fileId);
             toast.show({
               description: "File deleted"
             });
-            navigation.navigate('Home'); console.log("user: " + user.user_id + " owner: " + owner.user_id)
+            navigation.navigate('Home');
+          }}
+          />
+        </Center>
+      )}
+      <Modal isOpen={modalEditVisible} onClose={() => setModalEditVisible(false)} initialFocusRef={initialRef} finalFocusRef={finalRef} size="full">
+        <Modal.Content>
+          <Modal.CloseButton />
+          <Modal.Header>{title}</Modal.Header>
+          <Modal.Body>
+              <Text>pylly paska perse</Text>
+          </Modal.Body>
+        </Modal.Content>
+      </Modal>
+      { user.user_id === owner.user_id && (
+        <Center position="absolute" bottom="150px" right="20px" h="50px" w="50px" borderRadius="full"
+                borderColor="coolGray.200" borderWidth="1" bg="#ff7300" shadow="7">
+          <Icon name="edit" color="black" onPress={() => {
+            setModalEditVisible(!modalEditVisible);
           }}
           />
         </Center>

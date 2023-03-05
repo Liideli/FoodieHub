@@ -1,7 +1,7 @@
 import React, {useCallback, useContext, useState, useRef} from 'react';
 import PropTypes from 'prop-types';
 import {Controller, useForm} from 'react-hook-form';
-import {Alert, Keyboard, ScrollView, TouchableOpacity} from 'react-native';
+import { Alert, Keyboard, ScrollView, TouchableOpacity, View } from "react-native";
 import * as ImagePicker from 'expo-image-picker';
 import {useMedia, useTag} from '../hooks/ApiHooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -9,7 +9,6 @@ import {MainContext} from '../contexts/MainContext';
 import {useFocusEffect} from '@react-navigation/native';
 import { appId, uploadsUrl } from "../utils/variables";
 import {Video} from 'expo-av';
-
 import {
   AspectRatio,
   Box,
@@ -22,10 +21,19 @@ import {
   Button,
   Center,
   Icon,
-  Pressable
+  Pressable, Text
 } from "native-base";
+import {
+  actions,
+  RichEditor,
+  RichToolbar,
+} from "react-native-pell-rich-editor";
 
 const Upload = ({navigation}) => {
+
+  const richText = useRef();
+  const [descHTML, setDescHTML] = useState("");
+  const [showDescError, setShowDescError] = useState(false);
   const [mediafile, setMediaFile] = useState({});
   const video = useRef(null);
   const [loading, setLoading] = useState(false);
@@ -45,6 +53,17 @@ const Upload = ({navigation}) => {
     },
     mode: 'onChange',
   });
+
+  const richTextHandle = (descriptionText) => {
+    if (descriptionText) {
+      setShowDescError(false);
+      setDescHTML(descriptionText);
+      console.log(descriptionText)
+    } else {
+      setShowDescError(true);
+      setDescHTML("");
+    }
+  };
 
   const uploadFile = async (data) => {
     setLoading(true);
@@ -150,6 +169,7 @@ const Upload = ({navigation}) => {
                   fontWeight="500"
                   ml="-0.5"
                   mt="-1"
+                  color="black"
                 >
                   Recipe name
                 </Heading>
@@ -186,9 +206,23 @@ const Upload = ({navigation}) => {
                   fontWeight="500"
                   ml="-0.5"
                   mt="-1"
+                  color="black"
                 >
                   Ingredients and instructions
                 </Heading>
+                <RichToolbar
+                  editor={richText}
+                  selectedIconTint="#873c1e"
+                  iconTint="#312921"
+                  actions={[
+                    actions.setBold,
+                    actions.setItalic,
+                    actions.insertBulletsList,
+                    actions.insertOrderedList,
+                    actions.setStrikethrough,
+                    actions.setUnderline,
+                  ]}
+                />
                 <FormControl isRequired>
                   <Controller
                     control={control}
@@ -237,10 +271,6 @@ const Upload = ({navigation}) => {
       </TouchableOpacity>
     </ScrollView>
   );
-};
-
-Upload.propTypes = {
-  navigation: PropTypes.object,
 };
 
 export default Upload;

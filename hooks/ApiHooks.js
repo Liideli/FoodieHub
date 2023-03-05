@@ -2,6 +2,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useContext, useEffect, useState} from 'react';
 import {MainContext} from '../contexts/MainContext';
 import {appId, baseUrl} from '../utils/variables';
+import { observe } from "react-native/Libraries/LogBox/Data/LogBoxData";
+import search from "../views/Search";
 
 const doFetch = async (url, options) => {
   const response = await fetch(url, options);
@@ -34,6 +36,11 @@ const useMedia = (myFilesOnly, myFavouritesOnly) => {
         const favourites = await useFavourite().getFavouritesByUser(userToken);
         json = favourites;
       }
+
+      /* if(searchText != null && (searchText != "")) {
+        const searched = await useSearch().postSearch(searchText);
+        json = searched;
+      } */
 
       json.reverse();
       const media = await Promise.all(
@@ -82,7 +89,7 @@ const useMedia = (myFilesOnly, myFavouritesOnly) => {
     }
   };
 
-  const searchMedia = async (title, token) => {
+ /* const searchMedia = async (title, token) => {
     const options = {
       method: 'post',
       headers: {
@@ -91,12 +98,13 @@ const useMedia = (myFilesOnly, myFavouritesOnly) => {
       },
       body: title,
     };
+    console.log(title)
     try {
-      return await doFetch(baseUrl + 'media/search/', + title + options);
+      return await doFetch(baseUrl + 'media/search', title, options);
     } catch (error) {
-      throw new Error('searchMedia: ' + title + error.message);
+      throw new Error('searchMedia: ' + title + " " + error.message);
     }
-  };
+  }; */
 
   const putMedia = async (id, data, token) => {
     const options = {
@@ -114,7 +122,7 @@ const useMedia = (myFilesOnly, myFavouritesOnly) => {
     }
   };
 
-  return {mediaArray, postMedia, deleteMedia, putMedia, searchMedia};
+  return {mediaArray, postMedia, deleteMedia, putMedia};
 };
 
 const useAuthentication = () => {
@@ -280,7 +288,6 @@ const useFavourite = () => {
       throw new Error('deleteFavourite error, ' + error.message);
     }
   };
-
   return {
     postFavourite,
     getFavouritesByFileId,
@@ -289,4 +296,26 @@ const useFavourite = () => {
   };
 };
 
-export {useMedia, useAuthentication, useUser, useTag, useFavourite};
+const useSearch = () => {
+  const postSearch = async (title, token) => {
+    const options = {
+      method: 'post',
+      headers: {
+        'x-access-token': token,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({title: title}),
+    };
+    try {
+      return await doFetch(baseUrl + 'media/search', options);
+    } catch (error) {
+      throw new Error('postSearch: ' + error.message);
+    }
+  };
+  return {
+    postSearch
+  };
+};
+
+
+export {useMedia, useAuthentication, useUser, useTag, useFavourite, useSearch};
