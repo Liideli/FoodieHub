@@ -252,8 +252,6 @@ const Upload = ({navigation}) => {
                 </FormControl>
               </Stack>
               <Button
-                loading={loading}
-                disabled={!mediafile.uri || errors.title || errors.description}
                 onPress={pickFile}
                 backgroundColor="#ff8282"
                 borderRadius="full"

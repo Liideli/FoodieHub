@@ -7,23 +7,23 @@ import {MainContext} from '../contexts/MainContext';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import {
   AspectRatio,
-  Box,
+  Box, Button,
   Center,
-  Fab,
   HStack,
   Image,
+  Input,
   Modal,
   ScrollView,
   Stack,
-  Text,
+  Text, TextArea,
   useToast,
   VStack
 } from "native-base";
 import { Icon } from "@rneui/themed";
-import { TouchableOpacity } from "react-native";
+import { Alert, TouchableOpacity } from "react-native";
+import { Controller, useForm} from "react-hook-form";
 
 const Single = ({route, navigation}) => {
-  // console.log(route.params);
   const {
     title,
     description,
@@ -34,6 +34,17 @@ const Single = ({route, navigation}) => {
     file_id: fileId,
     filesize,
   } = route.params;
+  const {
+    control,
+    handleSubmit,
+    formState: {errors},
+  } = useForm({
+    defaultValues: {
+      title: '',
+      description: '',
+    },
+    mode: 'onChange',
+  });
   const video = useRef(null);
   const [owner, setOwner] = useState({});
   const [likes, setLikes] = useState([]);
@@ -44,12 +55,12 @@ const Single = ({route, navigation}) => {
   const finalRef = React.useRef(null);
   const {user} = useContext(MainContext);
   const {getUserById} = useUser();
-  const {deleteMedia} = useMedia();
+  const {deleteMedia, putMedia} = useMedia();
   const toast = useToast();
   const {getFavouritesByFileId, postFavourite, deleteFavourite} =
     useFavourite();
-
-
+  const [loading, setLoading] = useState(false);
+  const {update, setUpdate} = useContext(MainContext);
 
   const getOwner = async () => {
     const token = await AsyncStorage.getItem('userToken');
@@ -101,6 +112,29 @@ const Single = ({route, navigation}) => {
       await deleteMedia(fileId, token);
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const updateFile = async (updatedData) => {
+    setLoading(true);
+    const token = await AsyncStorage.getItem('userToken');
+    try {
+      if (updatedData.title === '') {
+        updatedData.title = title;
+      }
+      if (updatedData.description === '') {
+        updatedData.description = description;
+      }
+      updatedData.token = token;
+      const updateResult = await putMedia(fileId, updatedData, token);
+      navigation.navigate('Home');
+      toast.show({
+        description: "File updated"
+      });
+    } catch (error) {
+      console.error('UpdateFile', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -206,9 +240,6 @@ const Single = ({route, navigation}) => {
                 <Text color="black" fontWeight="400">
                   {description}
                 </Text>
-                <Text color="black" fontWeight="400">
-                  {description}
-                </Text>
               </Box>
               <HStack alignItems="center" space={4} justifyContent="space-between">
                 <HStack alignItems="center">
@@ -251,10 +282,66 @@ const Single = ({route, navigation}) => {
       <Modal isOpen={modalEditVisible} onClose={() => setModalEditVisible(false)} initialFocusRef={initialRef} finalFocusRef={finalRef} size="full">
         <Modal.Content>
           <Modal.CloseButton />
-          <Modal.Header>{title}</Modal.Header>
+          <Modal.Header>Edit recipe {" " + title}</Modal.Header>
           <Modal.Body>
-              <Text>pylly paska perse</Text>
+            <Box>
+              <Controller
+                control={control}
+                render={({field: {onChange, onBlur, value}}) => (
+                  <Input
+                    placeholder="Change recipe title"
+                    onBlur={onBlur}
+                    value={value}
+                    onChangeText={onChange}
+                    type="text"
+                    errorMessage={
+                      errors.title && errors.title.message
+                    }
+                  />
+                )}
+                name="title"
+              />
+              <Controller
+                control={control}
+                rules={{
+                  required: {
+                    value: true,
+                    minLength: 10,
+                    message: 'New description must be at least 10 characters',
+                  },
+                }}
+                render={({field: {onChange, onBlur, value}}) => (
+                  <TextArea
+                    placeholder="Change description"
+                    h={40}
+                    onBlur={onBlur}
+                    value={value}
+                    onChangeText={onChange}
+                    type="text"
+                    color="black"
+                    backgroundColor="white"
+                    errorMessage={
+                      errors.description && errors.description.message
+                    }
+                  />
+                )}
+                name="description"
+              />
+            </Box>
+
           </Modal.Body>
+          <Modal.Footer>
+            <Button.Group space={2}>
+              <Button
+                onPress={() => {
+                  setModalEditVisible(!modalEditVisible);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button onPress={handleSubmit(updateFile)}>Save</Button>
+            </Button.Group>
+          </Modal.Footer>
         </Modal.Content>
       </Modal>
       { user.user_id === owner.user_id && (
