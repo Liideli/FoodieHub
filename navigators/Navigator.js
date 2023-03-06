@@ -29,7 +29,6 @@ const TabScreen = ({navigation}) => {
       screenOptions={{
         tabBarStyle: {
           backgroundColor: 'rgba(255, 255, 255, 0.9)',
-          position: 'absolute',
         },
       }}
     >
