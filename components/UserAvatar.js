@@ -31,13 +31,13 @@ const AvatarName = (props) => {
       margin={2}
     >
       <Avatar
-        size="2xl"
+        size="xl"
         borderWidth={1}
         borderColor={'black'}
         source={{uri: uploadsUrl + avatar}}
         alt="User avatar"
       />
-      <Text fontSize="2xl" marginLeft={2}>
+      <Text fontSize="xl" marginLeft={2}>
         {user.username}
       </Text>
     </Box>
