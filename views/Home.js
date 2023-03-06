@@ -7,7 +7,11 @@ import PropTypes from 'prop-types';
 const Home = ({navigation}) => {
   return (
     <View style={styles.container}>
-      <List navigation={navigation} />
+      <List
+        navigation={navigation}
+        myFilesOnly={false}
+        MyFavouritesOnly={false}
+      />
     </View>
   );
 };
@@ -21,7 +25,6 @@ const styles = StyleSheet.create({
 
 Home.propTypes = {
   navigation: PropTypes.object,
-  children: PropTypes.object,
 };
 
 export default Home;

@@ -193,7 +193,7 @@ const Single = ({route, navigation}) => {
                 <Modal.CloseButton />
                 <Modal.Header>{title}</Modal.Header>
                 <Modal.Body>
-                  <AspectRatio w="100%" ratio={16 / 9}>
+                  <AspectRatio w="100%" ratio={4 / 3}>
                     <Image
                       source={{uri: uploadsUrl + filename }}
                       alt="recipeImage"
