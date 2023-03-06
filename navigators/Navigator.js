@@ -25,7 +25,14 @@ const TabScreen = ({navigation}) => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
 
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      screenOptions={{
+        tabBarStyle: {
+          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+          position: 'absolute',
+        },
+      }}
+    >
       <Tab.Screen
         name="Home"
         component={Home}
