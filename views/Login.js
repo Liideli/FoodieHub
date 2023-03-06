@@ -10,12 +10,11 @@ import RegisterForm from '../components/RegisterForm';
 import {
   Box,
   Center,
-  Divider,
   HStack,
   VStack,
-  Link,
   ScrollView,
   KeyboardAvoidingView,
+  Button,
 } from 'native-base';
 
 const Login = ({navigation}) => {
@@ -72,49 +71,40 @@ const Login = ({navigation}) => {
             {toggleForm ? <LoginForm /> : <RegisterForm />}
             <Box>
               <HStack justifyContent="center">
-                <VStack w="90%">
-                  <Divider />
+                <VStack w="100%" px="6">
                   <Center>
                     {toggleForm ? (
-                      <Link
-                        mb="100"
-                        mt="6"
-                        type="outline"
-                        title="Sign Up"
-                        onPress={() => {
-                          setToggleForm(!toggleForm);
-                        }}
+                      <Button
                         _text={{
                           fontFamily: 'JudsonRegular',
-                          color: 'indigo.500',
-                          fontWeight: 'medium',
-                          fontSize: 'md',
+                          fontSize: 'lg',
                         }}
-                        href="#"
-                      >
-                        {' '}
-                        Sign Up
-                      </Link>
-                    ) : (
-                      <Link
-                        mb="100"
-                        mt="6"
-                        type="outline"
+                        width="100%"
+                        variant="outline"
+                        outlineColor="black"
                         title="Sign In"
                         onPress={() => {
                           setToggleForm(!toggleForm);
                         }}
+                      >
+                        Sign Up
+                      </Button>
+                    ) : (
+                      <Button
                         _text={{
                           fontFamily: 'JudsonRegular',
-                          color: 'indigo.500',
-                          fontWeight: 'medium',
-                          fontSize: 'md',
+                          fontSize: 'lg',
                         }}
-                        href="#"
+                        width="100%"
+                        variant="outline"
+                        outlineColor="black"
+                        title="Sign In"
+                        onPress={() => {
+                          setToggleForm(!toggleForm);
+                        }}
                       >
-                        {' '}
                         Sign In
-                      </Link>
+                      </Button>
                     )}
                   </Center>
                 </VStack>

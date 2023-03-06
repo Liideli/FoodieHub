@@ -18,10 +18,12 @@ import {
   HStack,
   Pressable,
   PresenceTransition,
+  Center,
 } from 'native-base';
+import {TouchableWithoutFeedback} from 'react-native';
 
 const ListItem = ({singleMedia, navigation}) => {
-  const {user_id: userId, file_id: fileId} = singleMedia;
+  const {file_id: fileId} = singleMedia;
   const [owner, setOwner] = useState({});
   const {user} = useContext(MainContext);
   const {getUserById} = useUser();
@@ -29,12 +31,13 @@ const ListItem = ({singleMedia, navigation}) => {
   const {getFavouritesByFileId, postFavourite, deleteFavourite} =
     useFavourite();
   const item = singleMedia;
+  // console.log('item', item.user_id);
   const width = Dimensions.get('window').width;
   const [transition, setTransition] = useState(false);
 
   const getOwner = async () => {
     const token = await AsyncStorage.getItem('userToken');
-    const owner = await getUserById(userId, token);
+    const owner = await getUserById(item.user_id, token);
     setOwner(owner);
   };
 
@@ -51,6 +54,9 @@ const ListItem = ({singleMedia, navigation}) => {
         setUserLikesIt(false);
         break;
       }
+    }
+    if (likes.length === 0) {
+      setUserLikesIt(false);
     }
   };
 
@@ -98,7 +104,7 @@ const ListItem = ({singleMedia, navigation}) => {
       <Box alignItems="center">
         <Box
           width={width / 2}
-          rounded="lg"
+          rounded="2xl"
           overflow="hidden"
           borderColor="#fff"
           borderWidth="4"
@@ -130,7 +136,8 @@ const ListItem = ({singleMedia, navigation}) => {
               p="2"
               space={0}
               overflow="hidden"
-              backgroundColor="light.300"
+              backgroundColor="#FFC56D"
+              height={70}
             >
               <Stack alignItems="center">
                 <Heading size="md" color="black" fontFamily="JudsonRegular">
@@ -138,19 +145,28 @@ const ListItem = ({singleMedia, navigation}) => {
                 </Heading>
               </Stack>
               <HStack alignItems="center" justifyContent="space-between">
-                <Text color="coolGray.600" fontFamily="JudsonItalic">
+                <Text
+                  color="coolGray.600"
+                  fontFamily="JudsonItalic"
+                  fontSize="md"
+                >
                   By: {owner.username}
                 </Text>
-                {userLikesIt ? (
-                  <AntDesign
-                    name="heart"
-                    size={24}
-                    color="red"
-                    onPress={dislikeFile}
-                  />
-                ) : (
-                  <AntDesign name="hearto" size={24} onPress={likeFile} />
-                )}
+                <Center size={7}>
+                  {userLikesIt ? (
+                    <TouchableWithoutFeedback onPress={dislikeFile}>
+                      <Box>
+                        <AntDesign name="heart" size={24} color="red" />
+                      </Box>
+                    </TouchableWithoutFeedback>
+                  ) : (
+                    <TouchableWithoutFeedback onPress={likeFile}>
+                      <Box>
+                        <AntDesign name="hearto" size={20} color="black" />
+                      </Box>
+                    </TouchableWithoutFeedback>
+                  )}
+                </Center>
               </HStack>
             </Stack>
           </PresenceTransition>
