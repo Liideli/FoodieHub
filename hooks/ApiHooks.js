@@ -37,11 +37,6 @@ const useMedia = (myFilesOnly, myFavouritesOnly) => {
         json = favourites;
       }
 
-      /* if(searchText != null && (searchText != "")) {
-        const searched = await useSearch().postSearch(searchText);
-        json = searched;
-      } */
-
       json.reverse();
       const media = await Promise.all(
         json.map(async (file) => {

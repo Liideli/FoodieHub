@@ -186,7 +186,6 @@ const Single = ({route, navigation}) => {
   return (
     <>
       <ScrollView>
-        <Box shadow="7">
         <Box alignItems="center" mt="12px" shadow="7">
           <Box maxW="95%" rounded="lg" overflow="hidden" borderColor="coolGray.200" borderWidth="1" bg="#FFC56D" shadow="7">
             <Modal isOpen={modalVisible} onClose={() => setModalVisible(false)} initialFocusRef={initialRef} finalFocusRef={finalRef} size="full">
@@ -216,11 +215,12 @@ const Single = ({route, navigation}) => {
               </TouchableOpacity>
               <HStack>
                 <Center
+                  borderTopRadius="lg"
                   _text={{
                   color: "white",
                   fontWeight: "700",
-                  fontSize: "md"
-                }} position="absolute" bottom="0" px="3" py="1.5" w="100%" bg="primary.black:alpha.60">
+                  fontSize: "3xl"
+                }} position="absolute" bottom="0" px="3" py="1.5" w="100%"bg="primary.black:alpha.60">
                   {title}
                 </Center>
               </HStack>
@@ -233,7 +233,7 @@ const Single = ({route, navigation}) => {
                 </Text>
                 <Text color="black" fontSize="xs">Total likes: {likes.length}</Text>
               </VStack>
-              <Box rounded="lg" overflow="hidden" borderColor="black" borderWidth="1" bg="white"
+              <Box rounded="lg" overflow="hidden" borderColor="coolGray.300" borderWidth="1" bg="white"
               padding="8px"
               >
                 <Text fontSize="lg" color="black" bold paddingBottom="6px">Recipe and ingredients</Text>
@@ -251,9 +251,60 @@ const Single = ({route, navigation}) => {
               </HStack>
             </Stack>
           </Box>
+            <Box backgroundColor="white" rounded="lg" overflow="hidden" shadow="7" margin="12px">
+              <VStack>
+                <Text bold fontSize="lg" color="black" padding="8px">Comments</Text>
+                <Center padding="24px" borderBottomWidth="1px" borderBottomColor="coolGray.300">
+                  <Text italic color="coolGray.500"> No comments yet</Text>
+                </Center>
+                <Box backgroundColor="white" rounded="lg" overflow="hidden" shadow="7" margin="12px">
+                  <HStack padding="2px">
+                  <Controller
+                    control={control}
+                    rules={{
+                      required: {
+                        value: true,
+                        minLength: 10,
+                        message: 'New description must be at least 10 characters',
+                      },
+                    }}
+                    render={({field: {onChange, onBlur, value}}) => (
+                      <TextArea
+                        placeholder="Add a comment"
+                        h={20}
+                        w="80%"
+                        onBlur={onBlur}
+                        value={value}
+                        onChangeText={onChange}
+                        type="text"
+                        color="black"
+                        backgroundColor="white"
+                        errorMessage={
+                          errors.comment && errors.comment.message
+                        }
+                      />
+                    )}
+                    name="comment"
+                  />
+                    <Center w="20%" backgroundColor="green.500"  borderRightRadius="lg">
+                      <Center h="40px" w="40px" borderRadius="full" borderColor="white" borderWidth="2">
+                        <Icon
+                          name="send"
+                          color="white"
+                          onPress={() => {toast.show({
+                            description: "comment posted"
+                          })}}
+                        />
+                      </Center>
+                    </Center>
+                  </HStack>
+                </Box>
+              </VStack>
+            </Box>
         </Box>
+
         </Box>
-        </Box>
+
       </ScrollView>
       <Center position="absolute" bottom="30px" right="20px" h="50px" w="50px" borderRadius="full" borderColor="coolGray.200" borderWidth="1" bg="#ff7300" shadow="7">
         {userLikesIt ? (
