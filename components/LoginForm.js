@@ -66,11 +66,11 @@ const LoginForm = (props) => {
           Login to continue.
         </Heading>
 
-        <VStack space="2" mt="5" mb="-4">
+        <VStack space="2" mt="5">
           <FormControl isInvalid={'username' in errors}>
             <FormControl.Label
               _text={{
-                fontSize: "md",
+                fontSize: 'md',
                 fontFamily: 'JudsonRegular',
               }}
             >
@@ -79,11 +79,7 @@ const LoginForm = (props) => {
             <Controller
               control={control}
               render={({field: {onChange, onBlur, value}}) => (
-                <Input
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                />
+                <Input onBlur={onBlur} onChangeText={onChange} value={value} />
               )}
               name="username"
               rules={{required: 'Field is required.'}}
@@ -96,7 +92,7 @@ const LoginForm = (props) => {
           <FormControl isInvalid={'password' in errors}>
             <FormControl.Label
               _text={{
-                fontSize: "md",
+                fontSize: 'md',
                 fontFamily: 'JudsonRegular',
               }}
             >
