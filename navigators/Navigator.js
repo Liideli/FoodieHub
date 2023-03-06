@@ -1,6 +1,11 @@
 import React, {useContext} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {createDrawerNavigator} from '@react-navigation/drawer';
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+  DrawerItem,
+  DrawerItemList,
+} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PropTypes from 'prop-types';
@@ -10,16 +15,90 @@ import Search from '../views/Search';
 import Profile from '../views/Profile';
 import Login from '../views/Login';
 import Upload from '../views/Upload';
+import AvatarName from '../components/UserAvatar';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {MainContext} from '../contexts/MainContext';
 import {Icon} from '@rneui/base';
 import {Feather} from '@expo/vector-icons';
 import {AntDesign} from '@expo/vector-icons';
 import {FontAwesome5} from '@expo/vector-icons';
+import {Box} from 'native-base';
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
+
+const DrawerScreen = () => {
+  return (
+    <Drawer.Navigator
+      drawerContent={(props) => <DrawerContent {...props} />}
+      screenOptions={{
+        swipeEnabled: false,
+        drawerStyle: {backgroundColor: '#FFC56D'},
+        drawerLabelStyle: {marginLeft: -25},
+      }}
+      initialRouteName="Home"
+    >
+      <Drawer.Screen
+        name="Home"
+        component={StackScreen}
+        options={{
+          headerShown: false,
+          drawerIcon: () => (
+            <FontAwesome5 name="home" size={22} color="black" />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Profile"
+        component={Profile}
+        options={{
+          drawerIcon: () => (
+            <FontAwesome5 name="user-alt" size={22} color="black" />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Add a new recipe"
+        component={Upload}
+        options={{
+          drawerIcon: () => (
+            <FontAwesome5 name="upload" size={22} color="black" />
+          ),
+        }}
+      />
+    </Drawer.Navigator>
+  );
+};
+
+const DrawerContent = (props, {navigation}) => {
+  const {setIsLoggedIn, setUser} = useContext(MainContext);
+  return (
+    <DrawerContentScrollView {...props}>
+      <Box borderBottomWidth={0.5} borderColor="white" marginBottom={1}>
+        <AvatarName />
+      </Box>
+      <DrawerItemList {...props} />
+      <DrawerItem
+        label="Sign out"
+        labelStyle={{marginLeft: -25}}
+        icon={() => (
+          <FontAwesome5 name="sign-out-alt" size={22} color="black" />
+        )}
+        onPress={async () => {
+          console.log('Logging out!');
+          setUser({});
+          setIsLoggedIn(false);
+          try {
+            await AsyncStorage.clear();
+          } catch (e) {
+            console.log('Clearning async storage failed', e);
+          }
+        }}
+      ></DrawerItem>
+    </DrawerContentScrollView>
+  );
+};
 
 const TabScreen = ({navigation}) => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
@@ -107,18 +186,6 @@ const TabScreen = ({navigation}) => {
   );
 };
 
-const DrawerScreen = () => {
-  return (
-    <Drawer.Navigator useLegacyImplementation initialRouteName="Home">
-      <Drawer.Screen
-        name="Home"
-        component={StackScreen}
-        options={{headerShown: false}}
-      />
-    </Drawer.Navigator>
-  );
-};
-
 const StackScreen = () => {
   const {isLoggedIn} = useContext(MainContext);
   return (
@@ -153,6 +220,10 @@ const Navigator = () => {
 };
 
 TabScreen.propTypes = {
+  navigation: PropTypes.object,
+};
+
+DrawerContent.propTypes = {
   navigation: PropTypes.object,
 };
 

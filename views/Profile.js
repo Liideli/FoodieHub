@@ -1,21 +1,12 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {MainContext} from '../contexts/MainContext';
+import React, {useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useTag, useUser} from '../hooks/ApiHooks';
-import {uploadsUrl} from '../utils/variables';
+import {useUser} from '../hooks/ApiHooks';
 import List from '../components/List';
+import AvatarName from '../components/UserAvatar';
 import {Alert, Platform} from 'react-native';
 import {FontAwesome5} from '@expo/vector-icons';
 import {Controller, useForm} from 'react-hook-form';
-import {
-  Text,
-  Button,
-  Box,
-  Avatar,
-  Modal,
-  Input,
-  KeyboardAvoidingView,
-} from 'native-base';
+import {Button, Box, Modal, Input, KeyboardAvoidingView} from 'native-base';
 import PropTypes from 'prop-types';
 
 const Profile = ({navigation}) => {
@@ -31,20 +22,9 @@ const Profile = ({navigation}) => {
       email: '',
     },
   });
-  const {getFilesByTag} = useTag();
-  const {user} = useContext(MainContext);
-  const [avatar, setAvatar] = useState('');
+
   const [toggleRecipes, setToggleRecipes] = useState(true);
   const [showModal, setShowModal] = useState(false);
-
-  const loadAvatar = async () => {
-    try {
-      const avatarArray = await getFilesByTag('avatar_' + user.user_id);
-      setAvatar(avatarArray.pop().filename);
-    } catch (error) {
-      console.error('user avatar fetch failed', error.message);
-    }
-  };
 
   const UpdateUser = async (updatedData) => {
     const {getUserByToken} = useUser();
@@ -71,10 +51,6 @@ const Profile = ({navigation}) => {
     }
   };
 
-  useEffect(() => {
-    loadAvatar();
-  }, []);
-
   return (
     <KeyboardAvoidingView
       style={{flex: 1}}
@@ -91,18 +67,8 @@ const Profile = ({navigation}) => {
           flexWrap="wrap"
           marginY={5}
         >
-          <Avatar
-            size="2xl"
-            borderWidth={1}
-            borderColor={'black'}
-            marginX={5}
-            source={{uri: uploadsUrl + avatar}}
-            alt="User avatar"
-          />
-          <Box>
-            <Text fontSize="2xl">{user.username}</Text>
-          </Box>
-          <Box width="15%">
+          <AvatarName />
+          <Box width="13%">
             <Button
               onPress={() => setShowModal(true)}
               backgroundColor="#FFC56D"
