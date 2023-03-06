@@ -164,6 +164,10 @@ const RegisterForm = (props) => {
                   value: 3,
                   message: 'Username min length is 3 characters.',
                 },
+                maxLength: {
+                  value: 10,
+                  message: 'Username max length is 10 characters.',
+                },
                 validate: checkUser,
               }}
               render={({field: {onChange, onBlur, value}}) => (

@@ -24,6 +24,7 @@ const Login = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const {toggleForm, setToggleForm} = useContext(MainContext);
 
+  // Pull down to reset input fields
   const onRefresh = useCallback(() => {
     setLoading(true);
     setTimeout(() => {
@@ -35,6 +36,7 @@ const Login = ({navigation}) => {
     }, 700);
   }, [refreshing]);
 
+  // Check if user has logged in
   const checkToken = async () => {
     try {
       const userToken = await AsyncStorage.getItem('userToken');

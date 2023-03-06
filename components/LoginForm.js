@@ -79,7 +79,12 @@ const LoginForm = (props) => {
             <Controller
               control={control}
               render={({field: {onChange, onBlur, value}}) => (
-                <Input onBlur={onBlur} onChangeText={onChange} value={value} />
+                <Input
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  autoCapitalize="none"
+                />
               )}
               name="username"
               rules={{required: 'Field is required.'}}

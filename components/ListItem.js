@@ -132,13 +132,7 @@ const ListItem = ({singleMedia, navigation}) => {
               },
             }}
           >
-            <Stack
-              p="2"
-              space={0}
-              overflow="hidden"
-              backgroundColor="#FFC56D"
-              height={70}
-            >
+            <Stack p="2" space={0} backgroundColor="#FFC56D">
               <Stack alignItems="center">
                 <Heading size="md" color="black" fontFamily="JudsonRegular">
                   {item.title}
