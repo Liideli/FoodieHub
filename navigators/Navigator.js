@@ -128,7 +128,7 @@ const TabScreen = ({navigation}) => {
           tabBarIcon: ({focused}) => (
             <AntDesign
               name="home"
-              size={focused ? '28' : '24'}
+              size={focused ? 28 : 24}
               color={focused ? 'black' : 'gray'}
             />
           ),
@@ -173,7 +173,7 @@ const TabScreen = ({navigation}) => {
           tabBarIcon: ({focused}) => (
             <AntDesign
               name="pluscircleo"
-              size={focused ? '28' : '24'}
+              size={focused ? 28 : 24}
               color={focused ? 'black' : 'gray'}
             />
           ),
@@ -189,7 +189,7 @@ const TabScreen = ({navigation}) => {
           tabBarIcon: ({focused}) => (
             <AntDesign
               name="user"
-              size={focused ? '28' : '24'}
+              size={focused ? 28 : 24}
               color={focused ? 'black' : 'gray'}
             />
           ),

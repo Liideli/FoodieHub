@@ -70,7 +70,7 @@ const LoginForm = (props) => {
           <FormControl isInvalid={'username' in errors}>
             <FormControl.Label
               _text={{
-                fontSize: 'md',
+                fontSize: "md",
                 fontFamily: 'JudsonRegular',
               }}
             >
@@ -96,7 +96,7 @@ const LoginForm = (props) => {
           <FormControl isInvalid={'password' in errors}>
             <FormControl.Label
               _text={{
-                fontSize: 'md',
+                fontSize: "md",
                 fontFamily: 'JudsonRegular',
               }}
             >
