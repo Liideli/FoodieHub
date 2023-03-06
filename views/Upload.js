@@ -23,11 +23,7 @@ import {
   Icon,
   Pressable, Text
 } from "native-base";
-import {
-  actions,
-  RichEditor,
-  RichToolbar,
-} from "react-native-pell-rich-editor";
+
 
 const Upload = ({navigation}) => {
 
@@ -53,17 +49,6 @@ const Upload = ({navigation}) => {
     },
     mode: 'onChange',
   });
-
-  const richTextHandle = (descriptionText) => {
-    if (descriptionText) {
-      setShowDescError(false);
-      setDescHTML(descriptionText);
-      console.log(descriptionText)
-    } else {
-      setShowDescError(true);
-      setDescHTML("");
-    }
-  };
 
   const uploadFile = async (data) => {
     setLoading(true);
@@ -210,19 +195,6 @@ const Upload = ({navigation}) => {
                 >
                   Ingredients and instructions
                 </Heading>
-                <RichToolbar
-                  editor={richText}
-                  selectedIconTint="#873c1e"
-                  iconTint="#312921"
-                  actions={[
-                    actions.setBold,
-                    actions.setItalic,
-                    actions.insertBulletsList,
-                    actions.insertOrderedList,
-                    actions.setStrikethrough,
-                    actions.setUnderline,
-                  ]}
-                />
                 <FormControl isRequired>
                   <Controller
                     control={control}
