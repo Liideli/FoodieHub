@@ -274,6 +274,63 @@ const useFavourite = () => {
   };
 };
 
+const useComment = () => {
+  const postComment = async (fileId, token) => {
+    const options = {
+      method: 'post',
+      headers: {
+        'x-access-token': token,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({file_id: fileId}),
+    };
+    try {
+      return await doFetch(baseUrl + 'comments', options);
+    } catch (error) {
+      throw new Error('postComment: ' + error.message);
+    }
+  };
+  const getCommentsByFileId = async (fileId) => {
+    try {
+      return await doFetch(baseUrl + 'comments/file/' + fileId);
+    } catch (error) {
+      throw new Error('getCommentsByFileId error, ' + error.message);
+    }
+  };
+  const getCommentsByUser = async (token) => {
+    const options = {
+      method: 'get',
+      headers: {
+        'x-access-token': token,
+      },
+    };
+    try {
+      return await doFetch(baseUrl + 'comments', options);
+    } catch (error) {
+      throw new Error('getCommentsByUser error, ' + error.message);
+    }
+  };
+  const deleteComment = async (fileId, token) => {
+    const options = {
+      method: 'delete',
+      headers: {
+        'x-access-token': token,
+      },
+    };
+    try {
+      return await doFetch(baseUrl + 'comments/file/' + fileId, options);
+    } catch (error) {
+      throw new Error('deleteFavourite error, ' + error.message);
+    }
+  };
+  return {
+    postComment: postComment,
+    getFavouritesByFileId: getCommentsByFileId,
+    getCommentsByUser,
+    deleteComment,
+  };
+};
+
 const useSearch = () => {
   const postSearch = async (title, token) => {
     const options = {

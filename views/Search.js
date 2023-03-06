@@ -11,7 +11,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const Search = ({navigation}) => {
 
   const {postSearch} = useSearch();
-
   const {loadMedia} = useMedia();
 
   const searchFile = async (searchText) => {
