@@ -23,6 +23,7 @@ import {Feather} from '@expo/vector-icons';
 import {AntDesign} from '@expo/vector-icons';
 import {FontAwesome5} from '@expo/vector-icons';
 import {Box} from 'native-base';
+import {color} from 'react-native-reanimated';
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -104,27 +105,16 @@ const TabScreen = ({navigation}) => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
 
   return (
-    <Tab.Navigator
-      screenOptions={{
-        tabBarStyle: {
-          backgroundColor: 'rgba(255, 255, 255, 0.9)',
-        },
-      }}
-    >
+    <Tab.Navigator>
       <Tab.Screen
         name="Home"
         component={Home}
         options={{
+          headerTitle: 'FoodieHub',
+          headerTitleStyle: {fontFamily: 'JudsonRegular', fontSize: 24},
           tabBarLabel: () => {
             return null;
           },
-          headerTitle: () => (
-            <Image
-              source={require('../assets/logo.png')}
-              style={{width: 155, height: 32, size: 50}}
-              alt="logo"
-            />
-          ),
           tabBarIcon: ({focused}) => (
             <AntDesign
               name="home"
@@ -158,6 +148,8 @@ const TabScreen = ({navigation}) => {
         name="Upload"
         component={Upload}
         options={{
+          title: 'New recipe',
+          headerTitleStyle: {fontFamily: 'JudsonRegular', fontSize: 24},
           headerLeft: () => (
             <Feather
               name="menu"
@@ -183,6 +175,7 @@ const TabScreen = ({navigation}) => {
         name="Profile"
         component={Profile}
         options={{
+          headerTitleStyle: {fontFamily: 'JudsonRegular', fontSize: 24},
           tabBarLabel: () => {
             return null;
           },
@@ -237,7 +230,15 @@ const StackScreen = () => {
             component={TabScreen}
             options={{headerShown: false}}
           />
-          <Stack.Screen name="Single" component={Single} />
+          <Stack.Screen
+            name="Single"
+            component={Single}
+            options={{
+              headerBackTitleVisible: false,
+              title: 'Recipe',
+              headerTitleStyle: {fontFamily: 'JudsonRegular', fontSize: 24},
+            }}
+          />
           <Stack.Screen name="Search" component={Search} />
         </>
       ) : (
