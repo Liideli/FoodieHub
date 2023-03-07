@@ -74,6 +74,18 @@ const DrawerContent = (props) => {
         )}
       />
       <DrawerItem
+        label="Search"
+        labelStyle={{marginLeft: -25}}
+        onPress={() => props.navigation.navigate('Search')}
+        icon={({focused}) => (
+          <AntDesign
+            name="search1"
+            size={focused ? 28 : 24}
+            color={focused ? 'black' : 'gray'}
+          />
+        )}
+      />
+      <DrawerItem
         label="Add a new recipe"
         labelStyle={{marginLeft: -25}}
         onPress={() => props.navigation.navigate('Upload')}
@@ -106,7 +118,7 @@ const DrawerContent = (props) => {
             console.log('Clearning async storage failed', e);
           }
         }}
-      ></DrawerItem>
+      />
     </DrawerContentScrollView>
   );
 };
