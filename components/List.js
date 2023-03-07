@@ -6,26 +6,22 @@ import PropTypes from 'prop-types';
 import {PresenceTransition} from 'native-base';
 import {MainContext} from '../contexts/MainContext';
 
-const List = ({navigation, myFilesOnly = false, MyFavouritesOnly = false}) => {
+const List = ({navigation, myFilesOnly = false, MyFavouritesOnly = false,}) => {
   const {mediaArray} = useMedia(myFilesOnly, MyFavouritesOnly);
   const [transition, setTransition] = useState(false);
   const [loading, setLoading] = useState(false);
-  const {setRefreshing} = useContext(MainContext);
+  const {setUpdate} = useContext(MainContext);
 
   const onRefresh = useCallback(() => {
     setLoading(true);
-    setTimeout(() => {
-      setRefreshing(false);
-      setRefreshing(true);
-    }, 0);
-    setLoading(false);
+    setUpdate(false);
   }, []);
 
   useEffect(() => {
-    setTimeout(() => {
-      setTransition(true);
-    }, 0);
-  }, []);
+    setTransition(true);
+    setLoading(false);
+    setUpdate(true);
+  }, [loading]);
 
   return (
     <PresenceTransition
@@ -59,6 +55,7 @@ List.propTypes = {
   navigation: PropTypes.object.isRequired,
   myFilesOnly: PropTypes.bool,
   MyFavouritesOnly: PropTypes.bool,
+  searchText: PropTypes.string,
   children: PropTypes.bool,
 };
 

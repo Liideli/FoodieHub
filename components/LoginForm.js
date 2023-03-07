@@ -50,11 +50,11 @@ const LoginForm = (props) => {
       <Box safeArea pr="6" pl="6" w="100%">
         <Heading
           fontFamily="JudsonRegular"
-          size="2xl"
+          size="xl"
           fontWeight="600"
           color="black"
         >
-          Welcome!
+          Welcome to FoodieHub!
         </Heading>
         <Heading
           fontFamily="JudsonRegular"
@@ -66,11 +66,11 @@ const LoginForm = (props) => {
           Login to continue.
         </Heading>
 
-        <VStack space="5" mt="5">
+        <VStack space="2" mt="5" mb="-4">
           <FormControl isInvalid={'username' in errors}>
             <FormControl.Label
               _text={{
-                fontSize: 'md',
+                fontSize: "md",
                 fontFamily: 'JudsonRegular',
               }}
             >
@@ -83,7 +83,6 @@ const LoginForm = (props) => {
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
-                  autoCapitalize="none"
                 />
               )}
               name="username"
@@ -97,7 +96,7 @@ const LoginForm = (props) => {
           <FormControl isInvalid={'password' in errors}>
             <FormControl.Label
               _text={{
-                fontSize: 'md',
+                fontSize: "md",
                 fontFamily: 'JudsonRegular',
               }}
             >
@@ -110,7 +109,7 @@ const LoginForm = (props) => {
                   type={show ? 'text' : 'password'}
                   InputRightElement={
                     <Pressable onPress={() => setShow(!show)} pr="1">
-                      <Entypo name={show ? 'eye' : 'eye-with-line'} size={24} />
+                      <Entypo name={show ? 'eye-with-line' : 'eye'} size={24} />
                     </Pressable>
                   }
                   onBlur={onBlur}

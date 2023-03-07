@@ -2,6 +2,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useContext, useEffect, useState} from 'react';
 import {MainContext} from '../contexts/MainContext';
 import {appId, baseUrl} from '../utils/variables';
+import { observe } from "react-native/Libraries/LogBox/Data/LogBoxData";
+import search from "../views/Search";
 
 const doFetch = async (url, options) => {
   const response = await fetch(url, options);
@@ -17,7 +19,7 @@ const doFetch = async (url, options) => {
 
 const useMedia = (myFilesOnly, myFavouritesOnly) => {
   const [mediaArray, setMediaArray] = useState([]);
-  const {update, refreshing, user} = useContext(MainContext);
+  const {update, user} = useContext(MainContext);
 
   const loadMedia = async () => {
     try {
@@ -47,12 +49,13 @@ const useMedia = (myFilesOnly, myFavouritesOnly) => {
       console.error('List, loadMedia', error);
     }
   };
+
   useEffect(() => {
     loadMedia();
     // load media when update or refreshing state changes in main context
     // by adding update state to the array below
     console.log('loaded');
-  }, [update, refreshing]);
+  }, [update]);
 
   const postMedia = async (fileData, token) => {
     const options = {
@@ -78,22 +81,6 @@ const useMedia = (myFilesOnly, myFavouritesOnly) => {
       });
     } catch (error) {
       throw new Error('deleteMedia, ' + error.message);
-    }
-  };
-
-  const searchMedia = async (title, token) => {
-    const options = {
-      method: 'post',
-      headers: {
-        'x-access-token': token,
-        'Content-Type': 'multipart/form-data',
-      },
-      body: title,
-    };
-    try {
-      return await doFetch(baseUrl + 'media/search/', + title, options);
-    } catch (error) {
-      throw new Error('postMedia: ' + error.message);
     }
   };
 
@@ -279,7 +266,6 @@ const useFavourite = () => {
       throw new Error('deleteFavourite error, ' + error.message);
     }
   };
-
   return {
     postFavourite,
     getFavouritesByFileId,
@@ -288,4 +274,83 @@ const useFavourite = () => {
   };
 };
 
-export {useMedia, useAuthentication, useUser, useTag, useFavourite};
+const useComment = () => {
+  const postComment = async (fileId, token) => {
+    const options = {
+      method: 'post',
+      headers: {
+        'x-access-token': token,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({file_id: fileId}),
+    };
+    try {
+      return await doFetch(baseUrl + 'comments', options);
+    } catch (error) {
+      throw new Error('postComment: ' + error.message);
+    }
+  };
+  const getCommentsByFileId = async (fileId) => {
+    try {
+      return await doFetch(baseUrl + 'comments/file/' + fileId);
+    } catch (error) {
+      throw new Error('getCommentsByFileId error, ' + error.message);
+    }
+  };
+  const getCommentsByUser = async (token) => {
+    const options = {
+      method: 'get',
+      headers: {
+        'x-access-token': token,
+      },
+    };
+    try {
+      return await doFetch(baseUrl + 'comments', options);
+    } catch (error) {
+      throw new Error('getCommentsByUser error, ' + error.message);
+    }
+  };
+  const deleteComment = async (fileId, token) => {
+    const options = {
+      method: 'delete',
+      headers: {
+        'x-access-token': token,
+      },
+    };
+    try {
+      return await doFetch(baseUrl + 'comments/file/' + fileId, options);
+    } catch (error) {
+      throw new Error('deleteFavourite error, ' + error.message);
+    }
+  };
+  return {
+    postComment: postComment,
+    getFavouritesByFileId: getCommentsByFileId,
+    getCommentsByUser,
+    deleteComment,
+  };
+};
+
+const useSearch = () => {
+  const postSearch = async (title, token) => {
+    const options = {
+      method: 'post',
+      headers: {
+        'x-access-token': token,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({title: title}),
+    };
+    try {
+      return await doFetch(baseUrl + 'media/search', options);
+    } catch (error) {
+      throw new Error('postSearch: ' + error.message);
+    }
+  };
+  return {
+    postSearch
+  };
+};
+
+
+export {useMedia, useAuthentication, useUser, useTag, useFavourite, useSearch};

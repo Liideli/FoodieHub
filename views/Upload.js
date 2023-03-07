@@ -1,7 +1,7 @@
 import React, {useCallback, useContext, useState, useRef} from 'react';
 import PropTypes from 'prop-types';
 import {Controller, useForm} from 'react-hook-form';
-import {Alert, Keyboard, ScrollView, TouchableOpacity} from 'react-native';
+import { Alert, Keyboard, ScrollView, TouchableOpacity, View } from "react-native";
 import * as ImagePicker from 'expo-image-picker';
 import {useMedia, useTag} from '../hooks/ApiHooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -9,7 +9,6 @@ import {MainContext} from '../contexts/MainContext';
 import {useFocusEffect} from '@react-navigation/native';
 import { appId, uploadsUrl } from "../utils/variables";
 import {Video} from 'expo-av';
-
 import {
   AspectRatio,
   Box,
@@ -22,10 +21,15 @@ import {
   Button,
   Center,
   Icon,
-  Pressable
+  Pressable, Text
 } from "native-base";
 
+
 const Upload = ({navigation}) => {
+
+  const richText = useRef();
+  const [descHTML, setDescHTML] = useState("");
+  const [showDescError, setShowDescError] = useState(false);
   const [mediafile, setMediaFile] = useState({});
   const video = useRef(null);
   const [loading, setLoading] = useState(false);
@@ -150,6 +154,7 @@ const Upload = ({navigation}) => {
                   fontWeight="500"
                   ml="-0.5"
                   mt="-1"
+                  color="black"
                 >
                   Recipe name
                 </Heading>
@@ -186,21 +191,39 @@ const Upload = ({navigation}) => {
                   fontWeight="500"
                   ml="-0.5"
                   mt="-1"
+                  color="black"
                 >
                   Ingredients and instructions
                 </Heading>
                 <FormControl isRequired>
-                  <TextArea
-                    color="black"
-                    h={40}
-                    placeholder="Add Ingredients and Instructions here"
-                    backgroundColor="white"
+                  <Controller
+                    control={control}
+                    rules={{
+                      required: {
+                        value: true,
+                        message: 'is required',
+                      },
+                      minLength: {
+                        value: 3,
+                        message: 'Add a description',
+                      },
+                    }}
+                    render={({field: {onChange, onBlur, value}}) => (
+                      <TextArea
+                        color="black"
+                        h={40}
+                        placeholder="Add Ingredients and Instructions here"
+                        backgroundColor="white"
+                        value={value}
+                        onBlur={onBlur}
+                        onChangeText={onChange}
+                      />
+                    )}
+                    name="description"
                   />
                 </FormControl>
               </Stack>
               <Button
-                loading={loading}
-                disabled={!mediafile.uri || errors.title || errors.description}
                 onPress={pickFile}
                 backgroundColor="#ff8282"
                 borderRadius="full"
@@ -218,10 +241,6 @@ const Upload = ({navigation}) => {
       </TouchableOpacity>
     </ScrollView>
   );
-};
-
-Upload.propTypes = {
-  navigation: PropTypes.object,
 };
 
 export default Upload;

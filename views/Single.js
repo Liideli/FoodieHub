@@ -5,12 +5,25 @@ import {useFavourite, useUser, useMedia} from '../hooks/ApiHooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {MainContext} from '../contexts/MainContext';
 import * as ScreenOrientation from 'expo-screen-orientation';
-import { AspectRatio, Box, Center, Fab, HStack, Image, Modal, ScrollView, Stack, Text, useToast } from "native-base";
+import {
+  AspectRatio,
+  Box, Button,
+  Center,
+  HStack,
+  Image,
+  Input,
+  Modal,
+  ScrollView,
+  Stack,
+  Text, TextArea,
+  useToast,
+  VStack
+} from "native-base";
 import { Icon } from "@rneui/themed";
-import { TouchableOpacity } from "react-native";
+import { Alert, TouchableOpacity } from "react-native";
+import { Controller, useForm} from "react-hook-form";
 
 const Single = ({route, navigation}) => {
-  // console.log(route.params);
   const {
     title,
     description,
@@ -21,19 +34,33 @@ const Single = ({route, navigation}) => {
     file_id: fileId,
     filesize,
   } = route.params;
+  const {
+    control,
+    handleSubmit,
+    formState: {errors},
+  } = useForm({
+    defaultValues: {
+      title: '',
+      description: '',
+    },
+    mode: 'onChange',
+  });
   const video = useRef(null);
   const [owner, setOwner] = useState({});
   const [likes, setLikes] = useState([]);
   const [userLikesIt, setUserLikesIt] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [modalEditVisible, setModalEditVisible] = useState(false);
   const initialRef = React.useRef(null);
   const finalRef = React.useRef(null);
   const {user} = useContext(MainContext);
   const {getUserById} = useUser();
-  const {deleteMedia} = useMedia();
+  const {deleteMedia, putMedia} = useMedia();
   const toast = useToast();
   const {getFavouritesByFileId, postFavourite, deleteFavourite} =
     useFavourite();
+  const [loading, setLoading] = useState(false);
+  const {update, setUpdate} = useContext(MainContext);
 
   const getOwner = async () => {
     const token = await AsyncStorage.getItem('userToken');
@@ -88,6 +115,29 @@ const Single = ({route, navigation}) => {
     }
   };
 
+  const updateFile = async (updatedData) => {
+    setLoading(true);
+    const token = await AsyncStorage.getItem('userToken');
+    try {
+      if (updatedData.title === '') {
+        updatedData.title = title;
+      }
+      if (updatedData.description === '') {
+        updatedData.description = description;
+      }
+      updatedData.token = token;
+      const updateResult = await putMedia(fileId, updatedData, token);
+      navigation.navigate('Home');
+      toast.show({
+        description: "File updated"
+      });
+    } catch (error) {
+      console.error('UpdateFile', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const unlock = async () => {
     try {
       await ScreenOrientation.unlockAsync();
@@ -136,8 +186,8 @@ const Single = ({route, navigation}) => {
   return (
     <>
       <ScrollView>
-        <Box alignItems="center" mt="12px">
-          <Box maxW="80" rounded="lg" overflow="hidden" borderColor="coolGray.200" borderWidth="1" bg="#FFC56D">
+        <Box alignItems="center" mt="12px" shadow="7">
+          <Box maxW="95%" rounded="lg" overflow="hidden" borderColor="coolGray.200" borderWidth="1" bg="#FFC56D" shadow="7">
             <Modal isOpen={modalVisible} onClose={() => setModalVisible(false)} initialFocusRef={initialRef} finalFocusRef={finalRef} size="full">
               <Modal.Content>
                 <Modal.CloseButton />
@@ -165,37 +215,98 @@ const Single = ({route, navigation}) => {
               </TouchableOpacity>
               <HStack>
                 <Center
+                  borderTopRadius="lg"
                   _text={{
                   color: "white",
                   fontWeight: "700",
-                  fontSize: "md"
-                }} position="absolute" bottom="0" px="3" py="1.5" w="100%" bg="primary.black:alpha.60">
+                  fontSize: "3xl"
+                }} position="absolute" bottom="0" px="3" py="1.5" w="100%"bg="primary.black:alpha.60">
                   {title}
                 </Center>
               </HStack>
             </Box>
+            <Box margin="12px" backgroundColor="white" rounded="lg" overflow="hidden" shadow="7">
             <Stack p="4" space={3}>
-              <Stack space={2}>
-                <Text fontSize="xs" fontWeight="500" ml="-0.5" mt="-1">
-                   recipe by: {owner.full_name} {owner.username}
+              <VStack space={1}>
+                <Text fontSize="xs" fontWeight="500" ml="-0.5" mt="-1" color="black">
+                   Recipe by: {owner.full_name} {owner.username}
                 </Text>
-                <Text>Total likes: {likes.length}</Text>
-              </Stack>
-              <Text color="white" fontWeight="400">
-                {description}
-              </Text>
+                <Text color="black" fontSize="xs">Total likes: {likes.length}</Text>
+              </VStack>
+              <Box rounded="lg" overflow="hidden" borderColor="coolGray.300" borderWidth="1" bg="white"
+              padding="8px"
+              >
+                <Text fontSize="lg" color="black" bold paddingBottom="6px">Recipe and ingredients</Text>
+                <Text color="black" fontWeight="400">
+                  {description}
+                </Text>
+              </Box>
               <HStack alignItems="center" space={4} justifyContent="space-between">
                 <HStack alignItems="center">
-                  <Text color="white" fontWeight="400">
+                  <Text color="light.400" fontWeight="400" fontSize="sm">
+                    Posted: {" "}
                     {new Date(timeAdded).toLocaleString('fi-FI')}
                   </Text>
                 </HStack>
               </HStack>
             </Stack>
           </Box>
+            <Box backgroundColor="white" rounded="lg" overflow="hidden" shadow="7" margin="12px">
+              <VStack>
+                <Text bold fontSize="lg" color="black" padding="8px">Comments</Text>
+                <Center padding="24px" borderBottomWidth="1px" borderBottomColor="coolGray.300">
+                  <Text italic color="coolGray.500"> No comments yet</Text>
+                </Center>
+                <Box backgroundColor="white" rounded="lg" overflow="hidden" shadow="7" margin="12px">
+                  <HStack padding="2px">
+                  <Controller
+                    control={control}
+                    rules={{
+                      required: {
+                        value: true,
+                        minLength: 10,
+                        message: 'New description must be at least 10 characters',
+                      },
+                    }}
+                    render={({field: {onChange, onBlur, value}}) => (
+                      <TextArea
+                        placeholder="Add a comment"
+                        h={20}
+                        w="80%"
+                        onBlur={onBlur}
+                        value={value}
+                        onChangeText={onChange}
+                        type="text"
+                        color="black"
+                        backgroundColor="white"
+                        errorMessage={
+                          errors.comment && errors.comment.message
+                        }
+                      />
+                    )}
+                    name="comment"
+                  />
+                    <Center w="20%" backgroundColor="green.500"  borderRightRadius="lg">
+                      <Center h="40px" w="40px" borderRadius="full" borderColor="white" borderWidth="2">
+                        <Icon
+                          name="send"
+                          color="white"
+                          onPress={() => {toast.show({
+                            description: "comment posted"
+                          })}}
+                        />
+                      </Center>
+                    </Center>
+                  </HStack>
+                </Box>
+              </VStack>
+            </Box>
         </Box>
+
+        </Box>
+
       </ScrollView>
-      <Center position="absolute" bottom="30px" right="30px" h="50px" w="50px" borderRadius="full" borderColor="coolGray.200" borderWidth="1" bg="#ff7300">
+      <Center position="absolute" bottom="30px" right="20px" h="50px" w="50px" borderRadius="full" borderColor="coolGray.200" borderWidth="1" bg="#ff7300" shadow="7">
         {userLikesIt ? (
           <Icon name="favorite" color="red" onPress={() => {dislikeFile(); toast.show({
             description: "Removed from favorites"
@@ -207,14 +318,88 @@ const Single = ({route, navigation}) => {
         )}
       </Center>
       { user.user_id === owner.user_id && (
-        <Center position="absolute" bottom="90px" right="30px" h="50px" w="50px" borderRadius="full"
-                borderColor="coolGray.200" borderWidth="1" bg="#ff7300">
+        <Center position="absolute" bottom="90px" right="20px" h="50px" w="50px" borderRadius="full"
+                borderColor="coolGray.200" borderWidth="1" bg="#ff7300" shadow="7">
           <Icon name="delete" color="black" onPress={() => {
             deleteFile(fileId);
             toast.show({
               description: "File deleted"
             });
-            navigation.navigate('Home'); console.log("user: " + user.user_id + " owner: " + owner.user_id)
+            navigation.navigate('Home');
+          }}
+          />
+        </Center>
+      )}
+      <Modal isOpen={modalEditVisible} onClose={() => setModalEditVisible(false)} initialFocusRef={initialRef} finalFocusRef={finalRef} size="full">
+        <Modal.Content>
+          <Modal.CloseButton />
+          <Modal.Header>Edit recipe {" " + title}</Modal.Header>
+          <Modal.Body>
+            <Box>
+              <Controller
+                control={control}
+                render={({field: {onChange, onBlur, value}}) => (
+                  <Input
+                    placeholder="Change recipe title"
+                    onBlur={onBlur}
+                    value={value}
+                    onChangeText={onChange}
+                    type="text"
+                    errorMessage={
+                      errors.title && errors.title.message
+                    }
+                  />
+                )}
+                name="title"
+              />
+              <Controller
+                control={control}
+                rules={{
+                  required: {
+                    value: true,
+                    minLength: 10,
+                    message: 'New description must be at least 10 characters',
+                  },
+                }}
+                render={({field: {onChange, onBlur, value}}) => (
+                  <TextArea
+                    placeholder="Change description"
+                    h={40}
+                    onBlur={onBlur}
+                    value={value}
+                    onChangeText={onChange}
+                    type="text"
+                    color="black"
+                    backgroundColor="white"
+                    errorMessage={
+                      errors.description && errors.description.message
+                    }
+                  />
+                )}
+                name="description"
+              />
+            </Box>
+
+          </Modal.Body>
+          <Modal.Footer>
+            <Button.Group space={2}>
+              <Button
+                onPress={() => {
+                  setModalEditVisible(!modalEditVisible);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button onPress={handleSubmit(updateFile)}>Save</Button>
+            </Button.Group>
+          </Modal.Footer>
+        </Modal.Content>
+      </Modal>
+      { user.user_id === owner.user_id && (
+        <Center position="absolute" bottom="150px" right="20px" h="50px" w="50px" borderRadius="full"
+                borderColor="coolGray.200" borderWidth="1" bg="#ff7300" shadow="7">
+          <Icon name="edit" color="black" onPress={() => {
+            setModalEditVisible(!modalEditVisible);
           }}
           />
         </Center>

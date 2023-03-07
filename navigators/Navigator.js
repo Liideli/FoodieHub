@@ -1,4 +1,5 @@
 import React, {useContext} from 'react';
+import {Image} from 'native-base';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {
   createDrawerNavigator,
@@ -17,7 +18,6 @@ import Upload from '../views/Upload';
 import AvatarName from '../components/UserAvatar';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {MainContext} from '../contexts/MainContext';
-import {Icon} from '@rneui/base';
 import {Feather} from '@expo/vector-icons';
 import {AntDesign} from '@expo/vector-icons';
 import {Box} from 'native-base';
@@ -113,14 +113,36 @@ const DrawerContent = (props) => {
 
 const TabScreen = ({navigation}) => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
+
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      screenOptions={{
+        tabBarStyle: {
+          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+        },
+      }}
+    >
       <Tab.Screen
         name="Home"
         component={Home}
         options={{
-          tabBarIcon: (color) => <Icon name="home" color={color} />,
-          title: 'FoodieHub',
+          tabBarLabel: () => {
+            return null;
+          },
+          headerTitle: () => (
+            <Image
+              source={require('../assets/logo.png')}
+              style={{width: 155, height: 32, size: 50}}
+              alt="logo"
+            />
+          ),
+          tabBarIcon: ({focused}) => (
+            <AntDesign
+              name="home"
+              size={focused ? 28 : 24}
+              color={focused ? 'black' : 'gray'}
+            />
+          ),
           headerLeft: () => (
             <Feather
               name="menu"
@@ -156,14 +178,32 @@ const TabScreen = ({navigation}) => {
             />
           ),
           headerLeftContainerStyle: {paddingLeft: 10},
-          tabBarIcon: (color) => <Icon name="cloud-upload" color={color} />,
+          tabBarLabel: () => {
+            return null;
+          },
+          tabBarIcon: ({focused}) => (
+            <AntDesign
+              name="pluscircleo"
+              size={focused ? 28 : 24}
+              color={focused ? 'black' : 'gray'}
+            />
+          ),
         }}
       />
       <Tab.Screen
         name="Profile"
         component={Profile}
         options={{
-          tabBarIcon: (color) => <Icon name="person" color={color} />,
+          tabBarLabel: () => {
+            return null;
+          },
+          tabBarIcon: ({focused}) => (
+            <AntDesign
+              name="user"
+              size={focused ? 28 : 24}
+              color={focused ? 'black' : 'gray'}
+            />
+          ),
           headerLeft: () => (
             <Feather
               name="menu"
