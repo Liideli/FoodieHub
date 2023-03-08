@@ -5,7 +5,6 @@ import {
   createDrawerNavigator,
   DrawerContentScrollView,
   DrawerItem,
-  DrawerItemList,
 } from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -21,7 +20,6 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {MainContext} from '../contexts/MainContext';
 import {Feather} from '@expo/vector-icons';
 import {AntDesign} from '@expo/vector-icons';
-import {FontAwesome5} from '@expo/vector-icons';
 import {Box} from 'native-base';
 
 const Tab = createBottomTabNavigator();
@@ -31,61 +29,86 @@ const Stack = createNativeStackNavigator();
 const DrawerScreen = () => {
   return (
     <Drawer.Navigator
-      drawerContent={(props) => <DrawerContent {...props} />}
+      initialRouteName="Home"
       screenOptions={{
         swipeEnabled: false,
         drawerStyle: {backgroundColor: '#FFC56D'},
-        drawerLabelStyle: {marginLeft: -25},
+        headerShown: false,
       }}
-      initialRouteName="Home"
+      drawerContent={(props) => <DrawerContent {...props} />}
     >
-      <Drawer.Screen
-        name="Home"
-        component={StackScreen}
-        options={{
-          headerShown: false,
-          drawerIcon: () => (
-            <FontAwesome5 name="home" size={22} color="black" />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="Profile"
-        component={Profile}
-        options={{
-          drawerIcon: () => (
-            <FontAwesome5 name="user-alt" size={22} color="black" />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="Add a new recipe"
-        component={Upload}
-        options={{
-          drawerIcon: () => (
-            <FontAwesome5 name="upload" size={22} color="black" />
-          ),
-        }}
-      />
+      <Drawer.Screen name="Stack" component={StackScreen} />
     </Drawer.Navigator>
   );
 };
 
-const DrawerContent = (props, {navigation}) => {
+const DrawerContent = (props) => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
   return (
     <DrawerContentScrollView {...props}>
       <Box borderBottomWidth={0.5} borderColor="white" marginBottom={1}>
         <AvatarName />
       </Box>
-      <DrawerItemList {...props} />
+      <DrawerItem
+        label="Home"
+        labelStyle={{marginLeft: -25}}
+        onPress={() => props.navigation.navigate('Home')}
+        icon={({focused}) => (
+          <AntDesign
+            name="home"
+            size={focused ? 28 : 24}
+            color={focused ? 'black' : 'gray'}
+          />
+        )}
+      />
+      <DrawerItem
+        label="Profile"
+        labelStyle={{marginLeft: -25}}
+        onPress={() => props.navigation.navigate('Profile')}
+        icon={({focused}) => (
+          <AntDesign
+            name="user"
+            size={focused ? 28 : 24}
+            color={focused ? 'black' : 'gray'}
+          />
+        )}
+      />
+      <DrawerItem
+        label="Search"
+        labelStyle={{marginLeft: -25}}
+        onPress={() => props.navigation.navigate('Search')}
+        icon={({focused}) => (
+          <AntDesign
+            name="search1"
+            size={focused ? 28 : 24}
+            color={focused ? 'black' : 'gray'}
+          />
+        )}
+      />
+      <DrawerItem
+        label="Add a new recipe"
+        labelStyle={{marginLeft: -25}}
+        onPress={() => props.navigation.navigate('Upload')}
+        icon={({focused}) => (
+          <AntDesign
+            name="pluscircleo"
+            size={focused ? 28 : 24}
+            color={focused ? 'black' : 'gray'}
+          />
+        )}
+      />
       <DrawerItem
         label="Sign out"
         labelStyle={{marginLeft: -25}}
-        icon={() => (
-          <FontAwesome5 name="sign-out-alt" size={22} color="black" />
+        icon={({focused}) => (
+          <AntDesign
+            name="logout"
+            size={focused ? 28 : 24}
+            color={focused ? 'black' : 'gray'}
+          />
         )}
         onPress={async () => {
+          props.navigation.closeDrawer();
           console.log('Logging out!');
           setUser({});
           setIsLoggedIn(false);
@@ -95,7 +118,7 @@ const DrawerContent = (props, {navigation}) => {
             console.log('Clearning async storage failed', e);
           }
         }}
-      ></DrawerItem>
+      />
     </DrawerContentScrollView>
   );
 };
@@ -203,8 +226,8 @@ const TabScreen = ({navigation}) => {
           ),
           headerLeftContainerStyle: {paddingLeft: 10},
           headerRight: () => (
-            <FontAwesome5
-              name="sign-out-alt"
+            <AntDesign
+              name="logout"
               size={24}
               color="black"
               onPress={async () => {
