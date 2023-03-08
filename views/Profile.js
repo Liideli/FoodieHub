@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useUser} from '../hooks/ApiHooks';
 import List from '../components/List';
@@ -18,7 +18,7 @@ import {
 import PropTypes from 'prop-types';
 
 const Profile = ({navigation}) => {
-  const {putUser} = useUser();
+  const {putUser, checkUsername} = useUser();
   const {
     control,
     getValues,
@@ -34,9 +34,18 @@ const Profile = ({navigation}) => {
     mode: 'onBlur',
   });
 
+  const checkUser = async (username) => {
+    try {
+      const userAvailable = await checkUsername(username);
+      console.log('checkUser :DD', userAvailable);
+      return userAvailable || 'Username is already taken';
+    } catch (error) {
+      console.error('checkUser', error.message);
+    }
+  };
+
   const [toggleRecipes, setToggleRecipes] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const toast = useToast();
 
   const UpdateUser = async (updatedData) => {
     delete updatedData.confirmPassword;
@@ -47,10 +56,13 @@ const Profile = ({navigation}) => {
     console.log('userdata:', userData);
     try {
       if (updatedData.username === '') {
-        updatedData.username = userData.username;
+        delete updatedData.username;
       }
       if (updatedData.email === '') {
-        updatedData.email = userData.email;
+        delete updatedData.email;
+      }
+      if (updatedData.password === '') {
+        delete updatedData.password;
       }
       updatedData.token = userToken;
       console.log(':DD', errors);
@@ -104,6 +116,9 @@ const Profile = ({navigation}) => {
                 <Modal.Body>
                   <Box>
                     <FormControl isInvalid={'email' in errors}>
+                      <FormControl.HelperText>
+                        Leave any of the fields empty to not change their value
+                      </FormControl.HelperText>
                       <FormControl.Label
                         _text={{
                           fontSize: 'md',
@@ -132,25 +147,25 @@ const Profile = ({navigation}) => {
                         )}
                         name="email"
                       />
-                      <FormControl.HelperText>
-                        Leave the field empty to not change email
-                      </FormControl.HelperText>
                       <FormControl.ErrorMessage>
                         {errors.email?.message}
                       </FormControl.ErrorMessage>
                     </FormControl>
-                    <FormControl.Label
-                      _text={{
-                        fontSize: 'md',
-                        fontFamily: 'JudsonRegular',
-                        color: 'white',
-                      }}
-                    >
-                      Username
-                    </FormControl.Label>
-                    <FormControl>
+                    <FormControl isInvalid={'username' in errors}>
+                      <FormControl.Label
+                        _text={{
+                          fontSize: 'md',
+                          fontFamily: 'JudsonRegular',
+                          color: 'white',
+                        }}
+                      >
+                        Username
+                      </FormControl.Label>
                       <Controller
                         control={control}
+                        rules={{
+                          validate: checkUser,
+                        }}
                         // rules={{required: {value: true, message: 'is required'}}}
                         render={({field: {onChange, onBlur, value}}) => (
                           <Input
@@ -166,11 +181,11 @@ const Profile = ({navigation}) => {
                         )}
                         name="username"
                       />
-                      <FormControl.HelperText>
-                        Leave the field empty to not change username
-                      </FormControl.HelperText>
+                      <FormControl.ErrorMessage>
+                        {errors.username?.message}
+                      </FormControl.ErrorMessage>
                     </FormControl>
-                    <FormControl isRequired isInvalid={'password' in errors}>
+                    <FormControl isInvalid={'password' in errors}>
                       <FormControl.Label
                         _text={{
                           fontSize: 'md',
@@ -182,11 +197,6 @@ const Profile = ({navigation}) => {
                       </FormControl.Label>
                       <Controller
                         control={control}
-                        rules={{
-                          required: {
-                            value: true,
-                          },
-                        }}
                         render={({field: {onChange, onBlur, value}}) => (
                           <Input
                             placeholder="New password"
@@ -205,10 +215,7 @@ const Profile = ({navigation}) => {
                         {errors.password?.message}
                       </FormControl.ErrorMessage>
                     </FormControl>
-                    <FormControl
-                      isRequired
-                      isInvalid={'confirmPassword' in errors}
-                    >
+                    <FormControl isInvalid={'confirmPassword' in errors}>
                       <FormControl.Label
                         _text={{
                           fontSize: 'md',
@@ -239,7 +246,6 @@ const Profile = ({navigation}) => {
                           />
                         )}
                         name="confirmPassword"
-                        defaultValue=""
                       />
                       <FormControl.ErrorMessage>
                         {errors.confirmPassword?.message}
