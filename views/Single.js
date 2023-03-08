@@ -8,20 +8,25 @@ import * as ScreenOrientation from 'expo-screen-orientation';
 import {
   AspectRatio,
   Box, Button,
-  Center,
+  Center, Fab,
   HStack,
+  IconButton,
   Image,
   Input,
   Modal,
   ScrollView,
   Stack,
-  Text, TextArea,
+  Stagger,
+  Text,
+  TextArea,
+  useDisclose,
   useToast,
   VStack
 } from "native-base";
 import { Icon } from "@rneui/themed";
 import { Alert, TouchableOpacity } from "react-native";
 import { Controller, useForm} from "react-hook-form";
+import {AntDesign} from "@expo/vector-icons";
 
 const Single = ({route, navigation}) => {
   const {
@@ -300,7 +305,7 @@ const Single = ({route, navigation}) => {
           </VStack>
         </Box>
       </ScrollView>
-      <Center position="absolute" bottom="30px" right="20px" h="50px" w="50px" borderRadius="full" borderColor="coolGray.200" borderWidth="1" bg="#ff7300" shadow="7">
+      <Center position="absolute" top="10px" right="20px" h="50px" w="50px" borderRadius="full" bg="#ff7300" shadow="7">
         {userLikesIt ? (
           <Icon name="favorite" color="red" onPress={() => {dislikeFile(); toast.show({
             description: "Removed from favorites"
@@ -312,8 +317,7 @@ const Single = ({route, navigation}) => {
         )}
       </Center>
       { user.user_id === owner.user_id && (
-        <Center position="absolute" bottom="90px" right="20px" h="50px" w="50px" borderRadius="full"
-                borderColor="coolGray.200" borderWidth="1" bg="#ff7300" shadow="7">
+        <Center position="absolute" top="70px" right="20px" h="50px" w="50px" borderRadius="full" bg="#ff7300" shadow="7">
           <Icon name="delete" color="black" onPress={() => {
             deleteFile(fileId);
             toast.show({
@@ -373,7 +377,6 @@ const Single = ({route, navigation}) => {
                 name="description"
               />
             </Box>
-
           </Modal.Body>
           <Modal.Footer>
             <Button.Group space={2}>
@@ -390,8 +393,7 @@ const Single = ({route, navigation}) => {
         </Modal.Content>
       </Modal>
       { user.user_id === owner.user_id && (
-        <Center position="absolute" bottom="150px" right="20px" h="50px" w="50px" borderRadius="full"
-                borderColor="coolGray.200" borderWidth="1" bg="#ff7300" shadow="7">
+        <Center position="absolute" top="130px" right="20px" h="50px" w="50px" borderRadius="full" bg="#ff7300" shadow="7">
           <Icon name="edit" color="black" onPress={() => {
             setModalEditVisible(!modalEditVisible);
           }}

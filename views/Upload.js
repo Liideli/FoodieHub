@@ -21,7 +21,7 @@ import {
   Button,
   Center,
   Icon,
-  Pressable, Text, ScrollView
+  Pressable, Text, ScrollView, Select, WarningOutlineIcon, CheckIcon
 } from "native-base";
 
 
@@ -49,12 +49,13 @@ const Upload = ({navigation}) => {
     },
     mode: 'onChange',
   });
+  const [cooktime, setCookTime] = React.useState("");
 
   const uploadFile = async (data) => {
     setLoading(true);
     const formData = new FormData();
     formData.append('title', data.title);
-    formData.append('description', data.description);
+    formData.append('description', cooktime + data.description);
     const filename = mediafile.uri.split('/').pop();
     let fileExt = filename.split('.').pop();
     if (fileExt === 'jpg') fileExt = 'jpeg';
@@ -222,6 +223,40 @@ const Upload = ({navigation}) => {
                 )}
                 name="description"
               />
+            </FormControl>
+            <Heading
+              fontSize="xl"
+              fontWeight="500"
+              ml="-0.5"
+              mt="-1"
+              color="black"
+            >
+              Choose cooking time
+            </Heading>
+            <FormControl maxW="300" isRequired isInvalid>
+              <Select
+                selectedValue={cooktime}
+                minWidth="200"
+                placeholder="Cook time"
+                _selectedItem={{
+                  bg: "teal.600",
+                  endIcon: <CheckIcon size={5}/>
+                }}
+                mt="1"
+                onValueChange={itemValue => setCookTime(itemValue)}
+              >
+                <Select.Item label="5 minutes" value="Cooking time for this recipe is 5 minutes. " />
+                <Select.Item label="15 minutes" value="Cooking time for this recipe is 15 minutes. " />
+                <Select.Item label="30 minutes" value="Cooking time for this recipe is 30 minutes. " />
+                <Select.Item label="45 minutes" value="Cooking time for this recipe is 45 minutes. " />
+                <Select.Item label="1 hour" value="Cooking time for this recipe is 1 hour. " />
+                <Select.Item label="1.5 hours" value="Cooking time for this recipe is 1.5 hours. " />
+                <Select.Item label="2 hours" value="Cooking time for this recipe is 2 hours. " />
+                <Select.Item label="+2 hours" value="Cooking time for this recipe is +2 hours. " />
+              </Select>
+              <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
+                Please make a selection!
+              </FormControl.ErrorMessage>
             </FormControl>
           </Stack>
           <Button
