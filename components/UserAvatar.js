@@ -10,7 +10,7 @@ import {Avatar, Box, Text} from 'native-base';
 const AvatarName = (props) => {
   const {getFilesByTag} = useTag();
   const [avatar, setAvatar] = useState('');
-  const {user} = useContext(MainContext);
+  const {user, update} = useContext(MainContext);
   const loadAvatar = async () => {
     try {
       const avatarArray = await getFilesByTag('avatar_' + user.user_id);
@@ -22,7 +22,7 @@ const AvatarName = (props) => {
 
   useEffect(() => {
     loadAvatar();
-  }, []);
+  }, [update]);
   return (
     <Box
       display="flex"

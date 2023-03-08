@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useUser} from '../hooks/ApiHooks';
 import List from '../components/List';
@@ -18,19 +18,17 @@ import {
   useToast,
   FormControl,
 } from 'native-base';
+import {MainContext} from '../contexts/MainContext';
 
 const Profile = ({navigation}) => {
   const {putUser, checkUsername} = useUser();
   const {
     control,
-    getValues,
     handleSubmit,
     formState: {errors},
   } = useForm({
     defaultValues: {
       username: '',
-      password: '',
-      confirmPassword: '',
       email: '',
     },
     mode: 'onBlur',
@@ -47,11 +45,15 @@ const Profile = ({navigation}) => {
   };
 
   const [toggleRecipes, setToggleRecipes] = useState(true);
+  const [isfocused, setFocus] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const {update} = useContext(MainContext);
   const toast = useToast();
 
+  console.log('isfocused value', isfocused);
+  console.log('recipes value', toggleRecipes);
+
   const UpdateUser = async (updatedData) => {
-    delete updatedData.confirmPassword;
     const {getUserByToken} = useUser();
     const userToken = await AsyncStorage.getItem('userToken');
     console.log('userToken:', userToken);
@@ -63,9 +65,6 @@ const Profile = ({navigation}) => {
       }
       if (updatedData.email === '') {
         delete updatedData.email;
-      }
-      if (updatedData.password === '') {
-        delete updatedData.password;
       }
       updatedData.token = userToken;
       console.log(':DD', errors);
@@ -85,6 +84,12 @@ const Profile = ({navigation}) => {
       });
     }
   };
+
+  useEffect(() => {
+    setToggleRecipes(true);
+    setFocus(true);
+    console.log(';DD;D;D;D:D:D');
+  }, [update]);
 
   return (
     <Box
@@ -194,72 +199,6 @@ const Profile = ({navigation}) => {
                         {errors.username?.message}
                       </FormControl.ErrorMessage>
                     </FormControl>
-                    <FormControl isInvalid={'password' in errors}>
-                      <FormControl.Label
-                        _text={{
-                          fontSize: 'md',
-                          fontFamily: 'JudsonRegular',
-                          color: 'white',
-                        }}
-                      >
-                        Password
-                      </FormControl.Label>
-                      <Controller
-                        control={control}
-                        render={({field: {onChange, onBlur, value}}) => (
-                          <Input
-                            placeholder="New password"
-                            onBlur={onBlur}
-                            onChangeText={onChange}
-                            value={value}
-                            type="password"
-                            errorMessage={
-                              errors.password && errors.password.message
-                            }
-                          />
-                        )}
-                        name="password"
-                      />
-                      <FormControl.ErrorMessage>
-                        {errors.password?.message}
-                      </FormControl.ErrorMessage>
-                    </FormControl>
-                    <FormControl isInvalid={'confirmPassword' in errors}>
-                      <FormControl.Label
-                        _text={{
-                          fontSize: 'md',
-                          fontFamily: 'JudsonRegular',
-                          color: 'white',
-                        }}
-                      >
-                        Confirm password
-                      </FormControl.Label>
-                      <Controller
-                        control={control}
-                        rules={{
-                          validate: (value) => {
-                            if (value === getValues('password')) {
-                              return true;
-                            } else {
-                              return 'Passwords must match.';
-                            }
-                          },
-                        }}
-                        render={({field: {onChange, onBlur, value}}) => (
-                          <Input
-                            placeholder="Confirm new password"
-                            onBlur={onBlur}
-                            onChangeText={onChange}
-                            value={value}
-                            type="password"
-                          />
-                        )}
-                        name="confirmPassword"
-                      />
-                      <FormControl.ErrorMessage>
-                        {errors.confirmPassword?.message}
-                      </FormControl.ErrorMessage>
-                    </FormControl>
                   </Box>
                 </Modal.Body>
                 <Modal.Footer>
@@ -284,10 +223,12 @@ const Profile = ({navigation}) => {
           width="50%"
           borderRadius={0}
           borderWidth={1}
-          borderLeftWidth={0}
+          borderRightWidth={0}
           borderColor="black"
+          backgroundColor={isfocused ? '#CC5500' : '#FE5D26'}
           onPress={() => {
             setToggleRecipes(true);
+            setFocus(true);
           }}
         >
           My recipes
@@ -297,10 +238,11 @@ const Profile = ({navigation}) => {
           width="50%"
           borderRadius={0}
           borderWidth={1}
-          borderLeftWidth={0}
           borderColor="black"
+          backgroundColor={isfocused ? '#FE5D26' : '#CC5500'}
           onPress={() => {
             setToggleRecipes(false);
+            setFocus(false);
           }}
         >
           My likes
