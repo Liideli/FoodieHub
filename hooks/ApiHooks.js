@@ -100,7 +100,7 @@ const useMedia = (myFilesOnly, myFavouritesOnly) => {
     }
   };
 
-  return {mediaArray, postMedia, deleteMedia, putMedia};
+  return {mediaArray, setMediaArray, postMedia, deleteMedia, putMedia};
 };
 
 const useAuthentication = () => {

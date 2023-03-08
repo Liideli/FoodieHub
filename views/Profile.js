@@ -6,8 +6,10 @@ import AvatarName from '../components/UserAvatar';
 import {Alert, Platform} from 'react-native';
 import {FontAwesome5} from '@expo/vector-icons';
 import {Controller, useForm} from 'react-hook-form';
-import {Button, Box, Modal, Input, KeyboardAvoidingView} from 'native-base';
 import PropTypes from 'prop-types';
+
+// NativeBase Components
+import {Button, Box, Modal, Input, KeyboardAvoidingView} from 'native-base';
 
 const Profile = ({navigation}) => {
   const {putUser} = useUser();

@@ -1,7 +1,9 @@
 import React from 'react';
-import {View} from 'native-base';
 import List from '../components/List';
 import PropTypes from 'prop-types';
+
+// NativeBase Components
+import {View} from 'native-base';
 
 const Home = ({navigation}) => {
   return (

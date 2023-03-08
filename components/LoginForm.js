@@ -2,8 +2,11 @@ import React, {useContext, useState} from 'react';
 import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useAuthentication} from '../hooks/ApiHooks';
+import {useUser} from '../hooks/ApiHooks';
 import {Controller, useForm} from 'react-hook-form';
 import {Entypo} from '@expo/vector-icons';
+
+// NativeBase Components
 import {
   Box,
   Center,
@@ -16,9 +19,10 @@ import {
   useToast,
 } from 'native-base';
 
-const LoginForm = (props) => {
+const LoginForm = () => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
   const {postLogin} = useAuthentication();
+  const {getUserByToken} = useUser();
   const [show, setShow] = useState(false);
   const toast = useToast();
 
@@ -34,6 +38,12 @@ const LoginForm = (props) => {
       const loginResult = await postLogin(loginData);
       console.log('logIn', loginResult);
       await AsyncStorage.setItem('userToken', loginResult.token);
+      const loggedInUser = await getUserByToken(loginResult.token);
+      toast.show({
+        placement: 'top',
+        marginTop: 12,
+        description: 'Welcome ' + loggedInUser.username + '!',
+      });
       setUser(loginResult.user);
       setIsLoggedIn(true);
     } catch (error) {

@@ -1,8 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {View, Button, Input} from 'native-base';
 import {Controller, useForm} from 'react-hook-form';
 import {Alert} from 'react-native';
 import {useUser} from '../hooks/ApiHooks';
+
+// NativeBase Components
+import {View, Button, Input} from 'native-base';
 
 const Update = () => {
   const {putUser} = useUser();

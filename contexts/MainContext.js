@@ -10,6 +10,7 @@ const MainProvider = (props) => {
   const [userLikesIt, setUserLikesIt] = useState(false);
   const [toggleForm, setToggleForm] = useState({});
   const [refreshing, setRefreshing] = useState({});
+  const [searchMediaArray, setSearchMediaArray] = useState([]);
 
   return (
     <MainContext.Provider
@@ -26,6 +27,8 @@ const MainProvider = (props) => {
         setToggleForm,
         userLikesIt,
         setUserLikesIt,
+        searchMediaArray,
+        setSearchMediaArray,
       }}
     >
       {props.children}

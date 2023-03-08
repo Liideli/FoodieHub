@@ -1,11 +1,12 @@
-import 'react-native-gesture-handler';
 import React, {useEffect} from 'react';
 import {StatusBar} from 'expo-status-bar';
 import {MainProvider} from './contexts/MainContext';
 import Navigator from './navigators/Navigator';
-import {extendTheme, NativeBaseProvider} from 'native-base';
 import {useFonts} from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
+
+// NativeBase Components
+import {extendTheme, NativeBaseProvider} from 'native-base';
 
 const App = () => {
   const [fontsLoaded] = useFonts({
@@ -44,6 +45,19 @@ const App = () => {
           color: 'black',
           backgroundColor: 'white',
           focusOutlineColor: '#FE5D26',
+        },
+      },
+      PresenceTransition: {
+        defaultProps: {
+          initial: {
+            opacity: 0,
+          },
+          animate: {
+            opacity: 1,
+            transition: {
+              duration: 600,
+            },
+          },
         },
       },
     },

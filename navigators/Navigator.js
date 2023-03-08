@@ -1,5 +1,4 @@
 import React, {useContext} from 'react';
-import {Image} from 'native-base';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {
   createDrawerNavigator,
@@ -22,8 +21,9 @@ import {MainContext} from '../contexts/MainContext';
 import {Feather} from '@expo/vector-icons';
 import {AntDesign} from '@expo/vector-icons';
 import {FontAwesome5} from '@expo/vector-icons';
+
+// NativeBase Components
 import {Box} from 'native-base';
-import {color} from 'react-native-reanimated';
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();

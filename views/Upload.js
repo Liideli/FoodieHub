@@ -1,14 +1,22 @@
 import React, {useCallback, useContext, useState, useRef} from 'react';
+import {Platform} from 'react-native';
 import PropTypes from 'prop-types';
 import {Controller, useForm} from 'react-hook-form';
-import { Alert, Keyboard, ScrollView, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  Keyboard,
+  ScrollView,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import {useMedia, useTag} from '../hooks/ApiHooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {MainContext} from '../contexts/MainContext';
 import {useFocusEffect} from '@react-navigation/native';
-import { appId, uploadsUrl } from "../utils/variables";
-import {Video} from 'expo-av';
+import {appId, uploadsUrl} from '../utils/variables';
+
+// NativeBase Components
 import {
   AspectRatio,
   Box,
@@ -21,14 +29,14 @@ import {
   Button,
   Center,
   Icon,
-  Pressable, Text
-} from "native-base";
-
+  Pressable,
+  Text,
+  KeyboardAvoidingView,
+} from 'native-base';
 
 const Upload = ({navigation}) => {
-
   const richText = useRef();
-  const [descHTML, setDescHTML] = useState("");
+  const [descHTML, setDescHTML] = useState('');
   const [showDescError, setShowDescError] = useState(false);
   const [mediafile, setMediaFile] = useState({});
   const video = useRef(null);
@@ -129,117 +137,142 @@ const Upload = ({navigation}) => {
   );
 
   return (
-    <ScrollView>
-      <TouchableOpacity
-        onPress={() => Keyboard.dismiss()}
-        style={{padding: 16}}
-        activeOpacity={1}
-      >
-        <Box alignItems="center" mt="12px">
-          <Box maxW="80" rounded="lg" overflow="hidden" borderColor="coolGray.200" borderWidth="1" bg="#FFC56D">
-            <Box>
-              <TouchableOpacity onPress={pickFile}>
-                <AspectRatio w="100%" ratio={16 / 9}>
-                  <Image
-                    source={{uri: mediafile.uri || "https://content.hostgator.com/img/weebly_image_sample.png" }}
-                    alt="recipeImage"
-                  />
-                </AspectRatio>
-              </TouchableOpacity>
+    <KeyboardAvoidingView
+      style={{flex: 1}}
+      bg={['#FFC56D']}
+      behavior="position"
+    >
+      <ScrollView>
+        <TouchableOpacity
+          onPress={() => Keyboard.dismiss()}
+          style={{padding: 16}}
+          activeOpacity={1}
+        >
+          <Box alignItems="center" mt="12px">
+            <Box
+              maxW="80"
+              rounded="lg"
+              overflow="hidden"
+              borderColor="coolGray.200"
+              borderWidth="1"
+              bg="#FFC56D"
+            >
+              <Box>
+                <TouchableOpacity onPress={pickFile}>
+                  <AspectRatio w="100%" ratio={16 / 9}>
+                    <Image
+                      source={{
+                        uri:
+                          mediafile.uri ||
+                          'https://content.hostgator.com/img/weebly_image_sample.png',
+                      }}
+                      alt="recipeImage"
+                    />
+                  </AspectRatio>
+                </TouchableOpacity>
+              </Box>
+              <Stack p="4" space={3}>
+                <Stack space={2}>
+                  <Heading
+                    fontSize="xl"
+                    fontWeight="500"
+                    ml="-0.5"
+                    mt="-1"
+                    color="black"
+                  >
+                    Recipe name
+                  </Heading>
+                  <FormControl isRequired>
+                    <Controller
+                      control={control}
+                      rules={{
+                        required: {
+                          value: true,
+                          message: 'is required',
+                        },
+                        minLength: {
+                          value: 3,
+                          message: 'Title min length is 3 characters.',
+                        },
+                      }}
+                      render={({field: {onChange, onBlur, value}}) => (
+                        <Input
+                          placeholder="Title"
+                          onBlur={onBlur}
+                          onChangeText={onChange}
+                          value={value}
+                          errorMessage={errors.title && errors.title.message}
+                        />
+                      )}
+                      name="title"
+                    />
+                    <FormControl.ErrorMessage>
+                      {errors.title && errors.title.message}
+                    </FormControl.ErrorMessage>
+                  </FormControl>
+                </Stack>
+                <Stack space={2}>
+                  <Heading
+                    fontSize="xl"
+                    fontWeight="500"
+                    ml="-0.5"
+                    mt="-1"
+                    color="black"
+                  >
+                    Ingredients and instructions
+                  </Heading>
+                  <FormControl isRequired>
+                    <Controller
+                      control={control}
+                      rules={{
+                        required: {
+                          value: true,
+                          message: 'is required',
+                        },
+                        minLength: {
+                          value: 3,
+                          message: 'Add a description',
+                        },
+                      }}
+                      render={({field: {onChange, onBlur, value}}) => (
+                        <TextArea
+                          color="black"
+                          h={40}
+                          placeholder="Add Ingredients and Instructions here"
+                          backgroundColor="white"
+                          value={value}
+                          onBlur={onBlur}
+                          onChangeText={onChange}
+                        />
+                      )}
+                      name="description"
+                    />
+                  </FormControl>
+                </Stack>
+                <Button
+                  onPress={pickFile}
+                  backgroundColor="#ff8282"
+                  borderRadius="full"
+                >
+                  Add image
+                </Button>
+                <Button
+                  loading={loading}
+                  disabled={
+                    !mediafile.uri || errors.title || errors.description
+                  }
+                  onPress={handleSubmit(uploadFile)}
+                  backgroundColor="#FE5D26"
+                  borderRadius="full"
+                >
+                  Upload recipe
+                </Button>
+              </Stack>
             </Box>
-            <Stack p="4" space={3}>
-              <Stack space={2}>
-                <Heading
-                  fontSize="xl"
-                  fontWeight="500"
-                  ml="-0.5"
-                  mt="-1"
-                  color="black"
-                >
-                  Recipe name
-                </Heading>
-                <FormControl isRequired>
-                  <Controller
-                    control={control}
-                    rules={{
-                      required: {
-                        value: true,
-                        message: 'is required',
-                      },
-                      minLength: {
-                        value: 3,
-                        message: 'Title min length is 3 characters.',
-                      },
-                    }}
-                    render={({field: {onChange, onBlur, value}}) => (
-                      <Input
-                        placeholder="Title"
-                        onBlur={onBlur}
-                        onChangeText={onChange}
-                        value={value}
-                        errorMessage={errors.title && errors.title.message}
-                      />
-                    )}
-                    name="title"
-                  />
-                  <FormControl.ErrorMessage>{errors.title && errors.title.message}</FormControl.ErrorMessage>
-                </FormControl>
-              </Stack>
-              <Stack space={2}>
-                <Heading
-                  fontSize="xl"
-                  fontWeight="500"
-                  ml="-0.5"
-                  mt="-1"
-                  color="black"
-                >
-                  Ingredients and instructions
-                </Heading>
-                <FormControl isRequired>
-                  <Controller
-                    control={control}
-                    rules={{
-                      required: {
-                        value: true,
-                        message: 'is required',
-                      },
-                      minLength: {
-                        value: 3,
-                        message: 'Add a description',
-                      },
-                    }}
-                    render={({field: {onChange, onBlur, value}}) => (
-                      <TextArea
-                        color="black"
-                        h={40}
-                        placeholder="Add Ingredients and Instructions here"
-                        backgroundColor="white"
-                        value={value}
-                        onBlur={onBlur}
-                        onChangeText={onChange}
-                      />
-                    )}
-                    name="description"
-                  />
-                </FormControl>
-              </Stack>
-              <Button
-                onPress={pickFile}
-                backgroundColor="#ff8282"
-                borderRadius="full"
-              >Add image</Button>
-              <Button
-                loading={loading}
-                disabled={!mediafile.uri || errors.title || errors.description}
-                onPress={handleSubmit(uploadFile)}
-                backgroundColor="#FE5D26"
-                borderRadius="full"
-              >Upload recipe</Button>
-            </Stack>
           </Box>
-        </Box>
-      </TouchableOpacity>
-    </ScrollView>
+        </TouchableOpacity>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

@@ -7,7 +7,9 @@ import {MainContext} from '../contexts/MainContext';
 import {AntDesign} from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect} from '@react-navigation/native';
+import {TouchableWithoutFeedback, TouchableOpacity} from 'react-native';
 
+// NativeBase Components
 import {
   AspectRatio,
   Box,
@@ -16,11 +18,9 @@ import {
   Heading,
   Text,
   HStack,
-  Pressable,
   PresenceTransition,
   Center,
 } from 'native-base';
-import {TouchableWithoutFeedback} from 'react-native';
 
 const ListItem = ({singleMedia, navigation}) => {
   const {file_id: fileId} = singleMedia;
@@ -96,42 +96,43 @@ const ListItem = ({singleMedia, navigation}) => {
   );
 
   return (
-    <Pressable
-      onPress={() => {
-        navigation.navigate('Single', item);
-      }}
-    >
-      <Box alignItems="center">
-        <Box
-          width={width / 2}
-          rounded="2xl"
-          overflow="hidden"
-          borderColor="#fff"
-          borderWidth="4"
-          _light={{
-            backgroundColor: 'gray.200',
+    <Box alignItems="center">
+      <PresenceTransition
+        visible={transition}
+        initial={{
+          opacity: 0,
+        }}
+        animate={{
+          opacity: 1,
+          transition: {
+            duration: 400,
+          },
+        }}
+      >
+        <TouchableOpacity
+          activeOpacity={0.7}
+          onPress={() => {
+            navigation.navigate('Single', item);
           }}
         >
-          <Box>
-            <AspectRatio w="100%" ratio={1 / 1}>
-              <Image
-                source={{uri: uploadsUrl + item.thumbnails?.w160}}
-                alt="image"
-              />
-            </AspectRatio>
-          </Box>
-          <PresenceTransition
-            visible={transition}
-            initial={{
-              opacity: 0,
-            }}
-            animate={{
-              opacity: 1,
-              transition: {
-                duration: 400,
-              },
+          <Box
+            width={width / 2}
+            rounded="2xl"
+            overflow="hidden"
+            borderColor="#fff"
+            borderWidth="4"
+            _light={{
+              backgroundColor: 'gray.200',
             }}
           >
+            <Box>
+              <AspectRatio w="100%" ratio={1 / 1}>
+                <Image
+                  source={{uri: uploadsUrl + item.thumbnails?.w160}}
+                  alt="image"
+                />
+              </AspectRatio>
+            </Box>
             <Stack p="2" space={0} backgroundColor="#FFC56D">
               <Stack alignItems="center">
                 <Heading size="md" color="black" fontFamily="JudsonRegular">
@@ -150,23 +151,23 @@ const ListItem = ({singleMedia, navigation}) => {
                   {userLikesIt ? (
                     <TouchableWithoutFeedback onPress={dislikeFile}>
                       <Box>
-                        <AntDesign name="heart" size={24} color="red" />
+                        <AntDesign name="heart" size={28} color="red" />
                       </Box>
                     </TouchableWithoutFeedback>
                   ) : (
                     <TouchableWithoutFeedback onPress={likeFile}>
                       <Box>
-                        <AntDesign name="hearto" size={20} color="black" />
+                        <AntDesign name="hearto" size={24} color="black" />
                       </Box>
                     </TouchableWithoutFeedback>
                   )}
                 </Center>
               </HStack>
             </Stack>
-          </PresenceTransition>
-        </Box>
-      </Box>
-    </Pressable>
+          </Box>
+        </TouchableOpacity>
+      </PresenceTransition>
+    </Box>
   );
 };
 
