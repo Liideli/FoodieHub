@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useUser} from '../hooks/ApiHooks';
 import List from '../components/List';
 import AvatarName from '../components/UserAvatar';
-import {Alert, Platform} from 'react-native';
+import {Platform} from 'react-native';
 import {FontAwesome5} from '@expo/vector-icons';
 import {Controller, useForm} from 'react-hook-form';
 import {
@@ -46,6 +46,7 @@ const Profile = ({navigation}) => {
 
   const [toggleRecipes, setToggleRecipes] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const toast = useToast();
 
   const UpdateUser = async (updatedData) => {
     delete updatedData.confirmPassword;
@@ -69,11 +70,17 @@ const Profile = ({navigation}) => {
       console.log('UpdateUser button pressed', updatedData);
       const updateResult = await putUser(updatedData);
       console.log('updated result', updateResult);
-      Alert.alert('User information updated', '', [
-        {text: 'Close', onPress: () => setShowModal(false)},
-      ]);
+      setShowModal(false);
+      toast.show({
+        description: 'User information updated!',
+        placement: 'bottom',
+      });
     } catch (error) {
-      console.error('UpdateUser', error);
+      console.error('UpdateUser :DDDD', error);
+      toast.show({
+        description: 'Update failed!',
+        placement: 'bottom',
+      });
     }
   };
 
