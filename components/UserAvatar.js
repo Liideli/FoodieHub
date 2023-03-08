@@ -1,9 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {Avatar, Box, Text} from 'native-base';
 import {uploadsUrl} from '../utils/variables';
 import {useTag} from '../hooks/ApiHooks';
 import {useContext} from 'react';
 import {MainContext} from '../contexts/MainContext';
+
+// NativeBase Components
+import {Avatar, Box, Text} from 'native-base';
 
 const AvatarName = (props) => {
   const {getFilesByTag} = useTag();

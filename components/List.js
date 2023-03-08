@@ -3,10 +3,12 @@ import {FlatList, RefreshControl} from 'react-native';
 import {useMedia} from '../hooks/ApiHooks';
 import ListItem from './ListItem';
 import PropTypes from 'prop-types';
-import {PresenceTransition} from 'native-base';
 import {MainContext} from '../contexts/MainContext';
 
-const List = ({navigation, myFilesOnly = false, MyFavouritesOnly = false,}) => {
+// NativeBase Components
+import {PresenceTransition} from 'native-base';
+
+const List = ({navigation, myFilesOnly = false, MyFavouritesOnly = false}) => {
   const {mediaArray} = useMedia(myFilesOnly, MyFavouritesOnly);
   const [transition, setTransition] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -24,18 +26,7 @@ const List = ({navigation, myFilesOnly = false, MyFavouritesOnly = false,}) => {
   }, [loading]);
 
   return (
-    <PresenceTransition
-      visible={transition}
-      initial={{
-        opacity: 0,
-      }}
-      animate={{
-        opacity: 1,
-        transition: {
-          duration: 600,
-        },
-      }}
-    >
+    <PresenceTransition visible={transition}>
       <FlatList
         numColumns={2}
         renderItem={({item}) => (
@@ -45,6 +36,7 @@ const List = ({navigation, myFilesOnly = false, MyFavouritesOnly = false,}) => {
           <RefreshControl refreshing={loading} onRefresh={onRefresh} />
         }
         data={mediaArray}
+        extraData={mediaArray}
         keyExtractor={(item, index) => index.toString()}
       />
     </PresenceTransition>
@@ -57,6 +49,7 @@ List.propTypes = {
   MyFavouritesOnly: PropTypes.bool,
   searchText: PropTypes.string,
   children: PropTypes.bool,
+  searchMediaResult: PropTypes.bool,
 };
 
 export default List;

@@ -3,6 +3,8 @@ import {useUser} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
 import {Controller, useForm} from 'react-hook-form';
 import {Entypo} from '@expo/vector-icons';
+
+// NativeBase Components
 import {
   Box,
   Center,
@@ -163,6 +165,10 @@ const RegisterForm = (props) => {
                 minLength: {
                   value: 3,
                   message: 'Username min length is 3 characters.',
+                },
+                maxLength: {
+                  value: 10,
+                  message: 'Username max length is 10 characters.',
                 },
                 validate: checkUser,
               }}
