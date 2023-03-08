@@ -31,9 +31,6 @@ import {
   useToast,
   VStack
 } from "native-base";
-import { Icon } from "@rneui/themed";
-import { Alert, TouchableOpacity } from "react-native";
-import { Controller, useForm} from "react-hook-form";
 import {AntDesign} from "@expo/vector-icons";
 
 const Single = ({route, navigation}) => {

@@ -9,10 +9,15 @@ import {Controller, useForm} from 'react-hook-form';
 import PropTypes from 'prop-types';
 
 // NativeBase Components
-import {Button, Box, Modal, Input, KeyboardAvoidingView} from 'native-base';
-
-// NativeBase Components
-import {Button, Box, Modal, Input, KeyboardAvoidingView} from 'native-base';
+import {
+  Button,
+  Box,
+  Modal,
+  Input,
+  KeyboardAvoidingView,
+  useToast,
+  FormControl,
+} from 'native-base';
 
 const Profile = ({navigation}) => {
   const {putUser, checkUsername} = useUser();
@@ -111,7 +116,7 @@ const Profile = ({navigation}) => {
               display="flex"
               alignItems="center"
               borderRadius={20}
-              behavior="position"
+              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
               width="100%"
             >
               <Modal.Content>
