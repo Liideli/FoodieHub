@@ -197,7 +197,7 @@ const Upload = ({navigation}) => {
                 Ingredients and instructions
               </Heading>
               <Box>
-              <HStack justifyContent="space-between" bg="#99907c" borderTopRadius="lg" borderWidth="1px" borderColor="#99907c">
+              <HStack justifyContent="space-between" bg="#ffefcc" borderTopRadius="lg" borderWidth="1px" borderColor="#99907c">
               <IconButton
                 onPress={() => setEditValue(editValue + "\n•")}
                 variant="solid"
@@ -211,17 +211,17 @@ const Upload = ({navigation}) => {
                 }}
               ></IconButton>
                 <Button
-                  onPress={() => setEditValue(editValue + "dl")}
+                  onPress={() => setEditValue(editValue + "°C")}
                   variant="solid"
                   borderRadius="0px"
                   bg="#ffefcc"
-                >+dl</Button>
+                >°C</Button>
                 <Button
-                  onPress={() => setEditValue(editValue + "ml")}
+                  onPress={() => setEditValue(editValue + "°F")}
                   variant="solid"
                   borderRadius="0px"
                   bg="#ffefcc"
-                >+ml</Button>
+                >°F</Button>
                 <Button
                   onPress={() => setEditValue(editValue + "½")}
                   variant="solid"
