@@ -8,6 +8,7 @@ import {AntDesign} from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect} from '@react-navigation/native';
 import {TouchableWithoutFeedback, TouchableOpacity} from 'react-native';
+import * as Haptics from 'expo-haptics';
 
 // NativeBase Components
 import {
@@ -61,6 +62,7 @@ const ListItem = ({singleMedia, navigation}) => {
   };
 
   const likeFile = async () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     try {
       const token = await AsyncStorage.getItem('userToken');
       await postFavourite(fileId, token);
