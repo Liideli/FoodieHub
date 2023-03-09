@@ -79,6 +79,7 @@ const Login = ({navigation}) => {
                   <Center>
                     {toggleForm ? (
                       <Button
+                        mt={2}
                         width="100%"
                         variant="outline"
                         outlineColor="black"
@@ -91,6 +92,7 @@ const Login = ({navigation}) => {
                       </Button>
                     ) : (
                       <Button
+                        mt={6}
                         width="100%"
                         variant="outline"
                         outlineColor="black"

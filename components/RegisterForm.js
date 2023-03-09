@@ -262,14 +262,7 @@ const RegisterForm = (props) => {
               {errors.confirmPassword?.message}
             </FormControl.ErrorMessage>
           </FormControl>
-          <Button
-            mt="2"
-            onPress={handleSubmit(register)}
-            _text={{
-              fontFamily: 'OpenSansRegular',
-              fontSize: 'xl',
-            }}
-          >
+          <Button mt="2" onPress={handleSubmit(register)}>
             Sign Up
           </Button>
         </VStack>

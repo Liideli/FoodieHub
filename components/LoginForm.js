@@ -56,7 +56,7 @@ const LoginForm = () => {
   };
 
   return (
-    <Center w="100%" bg={['#FFC56D']}>
+    <Center w="100%" bg={['#FFC56D']} mb={0}>
       <Box safeArea pr="6" pl="6" w="100%">
         <Heading size="lg" fontFamily="Lobster" color="black">
           Welcome to FoodieHub!
