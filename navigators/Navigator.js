@@ -31,11 +31,12 @@ const Stack = createNativeStackNavigator();
 
 // Creates the drawer navigator
 const DrawerScreen = () => {
+  const {isLoggedIn} = useContext(MainContext);
   return (
     <Drawer.Navigator
       initialRouteName="Home"
       screenOptions={{
-        swipeEnabled: false,
+        swipeEnabled: isLoggedIn,
         drawerStyle: {backgroundColor: '#FFC56D'},
         headerShown: false,
         // Adds custom drawercontent to the drawer menu
@@ -46,7 +47,6 @@ const DrawerScreen = () => {
     </Drawer.Navigator>
   );
 };
-
 // Customized drawercontent
 const DrawerContent = (props) => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
