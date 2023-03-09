@@ -21,7 +21,7 @@ const Search = ({
   const {setSearchMediaArray} = useContext(MainContext);
   const {mediaArray, setMediaArray} = useMedia(myFilesOnly, MyFavouritesOnly);
 
-  const searchFile = async (searchText) => {
+  /* const searchFile = async (searchText) => {
     console.log('searching', searchText);
     try {
       const token = await AsyncStorage.getItem('userToken');
@@ -32,7 +32,7 @@ const Search = ({
     } catch (error) {
       console.error('Search', error);
     }
-  };
+  };*/
 
   return (
     <View style={styles.container}>
@@ -49,9 +49,9 @@ const Search = ({
               InputLeftElement={
                 <AntDesign name="search1" size={24} color="black" />
               }
-              onChangeText={(searchText) => {
+              /* onChangeText={(searchText) => {
                 searchFile(searchText);
-              }}
+              }}*/
             />
           </VStack>
         </VStack>

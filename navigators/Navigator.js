@@ -275,7 +275,7 @@ const StackScreen = () => {
             component={ChangePassword}
             options={{
               title: 'Change password',
-              headerTitleStyle: {fontFamily: 'OpenSansRegular', fontSize: 24},
+              headerTitleStyle: {fontFamily: 'Lobster', fontSize: 24},
             }}
           />
         </>
