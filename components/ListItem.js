@@ -110,14 +110,14 @@ const ListItem = ({singleMedia, navigation}) => {
         }}
       >
         <TouchableOpacity
-          activeOpacity={0.7}
+          activeOpacity={0.8}
           onPress={() => {
             navigation.navigate('Single', item);
           }}
         >
           <Box
             width={width / 2}
-            rounded="2xl"
+            rounded="3xl"
             overflow="hidden"
             borderColor="#fff"
             borderWidth="4"
@@ -135,16 +135,12 @@ const ListItem = ({singleMedia, navigation}) => {
             </Box>
             <Stack p="2" space={0} backgroundColor="#FFC56D">
               <Stack alignItems="center">
-                <Heading size="md" color="black" fontFamily="JudsonRegular">
+                <Heading size="sm" color="black">
                   {item.title}
                 </Heading>
               </Stack>
               <HStack alignItems="center" justifyContent="space-between">
-                <Text
-                  color="coolGray.600"
-                  fontFamily="JudsonItalic"
-                  fontSize="md"
-                >
+                <Text color="coolGray.600" fontSize="sm">
                   By: {owner.username}
                 </Text>
                 <Center size={7}>

@@ -53,51 +53,43 @@ const DrawerContent = (props) => {
       </Box>
       <DrawerItem
         label="Home"
-        labelStyle={{marginLeft: -25}}
+        labelStyle={{
+          marginLeft: -25,
+          fontFamily: 'OpenSansRegular',
+          fontSize: 16,
+        }}
         onPress={() => props.navigation.navigate('Home')}
-        icon={({focused}) => (
-          <AntDesign
-            name="home"
-            size={focused ? 28 : 24}
-            color={focused ? 'black' : 'gray'}
-          />
-        )}
+        icon={({focused}) => <AntDesign name="home" size={24} />}
       />
       <DrawerItem
         label="Profile"
-        labelStyle={{marginLeft: -25}}
+        labelStyle={{
+          marginLeft: -25,
+          fontFamily: 'OpenSansRegular',
+          fontSize: 16,
+        }}
         onPress={() => props.navigation.navigate('Profile')}
-        icon={({focused}) => (
-          <AntDesign
-            name="user"
-            size={focused ? 28 : 24}
-            color={focused ? 'black' : 'gray'}
-          />
-        )}
+        icon={({focused}) => <AntDesign name="user" size={24} />}
       />
       <DrawerItem
         label="Search"
-        labelStyle={{marginLeft: -25}}
+        labelStyle={{
+          marginLeft: -25,
+          fontFamily: 'OpenSansRegular',
+          fontSize: 16,
+        }}
         onPress={() => props.navigation.navigate('Search')}
-        icon={({focused}) => (
-          <AntDesign
-            name="search1"
-            size={focused ? 28 : 24}
-            color={focused ? 'black' : 'gray'}
-          />
-        )}
+        icon={({focused}) => <AntDesign name="search1" size={24} />}
       />
       <DrawerItem
         label="Add a new recipe"
-        labelStyle={{marginLeft: -25}}
+        labelStyle={{
+          marginLeft: -25,
+          fontFamily: 'OpenSansRegular',
+          fontSize: 16,
+        }}
         onPress={() => props.navigation.navigate('Upload')}
-        icon={({focused}) => (
-          <AntDesign
-            name="pluscircleo"
-            size={focused ? 28 : 24}
-            color={focused ? 'black' : 'gray'}
-          />
-        )}
+        icon={({focused}) => <AntDesign name="pluscircleo" size={24} />}
       />
       <DrawerItem
         label="Change password"
@@ -113,14 +105,12 @@ const DrawerContent = (props) => {
       />
       <DrawerItem
         label="Sign out"
-        labelStyle={{marginLeft: -25}}
-        icon={({focused}) => (
-          <AntDesign
-            name="logout"
-            size={focused ? 28 : 24}
-            color={focused ? 'black' : 'gray'}
-          />
-        )}
+        labelStyle={{
+          marginLeft: -25,
+          fontFamily: 'OpenSansRegular',
+          fontSize: 16,
+        }}
+        icon={({focused}) => <AntDesign name="logout" size={24} />}
         onPress={async () => {
           props.navigation.closeDrawer();
           console.log('Logging out!');
@@ -147,7 +137,7 @@ const TabScreen = ({navigation}) => {
         component={Home}
         options={{
           headerTitle: 'FoodieHub',
-          headerTitleStyle: {fontFamily: 'JudsonRegular', fontSize: 24},
+          headerTitleStyle: {fontFamily: 'Lobster', fontSize: 24},
           tabBarLabel: () => {
             return null;
           },
@@ -185,7 +175,7 @@ const TabScreen = ({navigation}) => {
         component={Upload}
         options={{
           title: 'New recipe',
-          headerTitleStyle: {fontFamily: 'JudsonRegular', fontSize: 24},
+          headerTitleStyle: {fontFamily: 'Lobster', fontSize: 24},
           headerLeft: () => (
             <Feather
               name="menu"
@@ -211,7 +201,7 @@ const TabScreen = ({navigation}) => {
         name="Profile"
         component={Profile}
         options={{
-          headerTitleStyle: {fontFamily: 'JudsonRegular', fontSize: 24},
+          headerTitleStyle: {fontFamily: 'Lobster', fontSize: 24},
           tabBarLabel: () => {
             return null;
           },
@@ -272,7 +262,7 @@ const StackScreen = () => {
             options={{
               headerBackTitleVisible: false,
               title: 'Recipe',
-              headerTitleStyle: {fontFamily: 'JudsonRegular', fontSize: 24},
+              headerTitleStyle: {fontFamily: 'Lobster', fontSize: 24},
             }}
           />
           <Stack.Screen name="Search" component={Search} />
