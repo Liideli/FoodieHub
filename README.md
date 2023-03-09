@@ -13,7 +13,10 @@ FoodieHub is a social media platform for food enthusiasts to connect, share and 
 - Toast Messages
 - Like Recipe
 - Upload Recipe
-- Profile
+- Profile (Created and liked recipes)
+- Recipe text editor
+- Navigation: burger menu & bottom navigation
+- Edit profile and recipes
 
 ## API Docs
 [WBMA](https://media.mw.metropolia.fi/wbma/docs/#api-Tag-GetTagFiles)

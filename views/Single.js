@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {MainContext} from '../contexts/MainContext';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import {Icon} from '@rneui/themed';
-import {Alert, TouchableOpacity} from 'react-native';
+import {TouchableOpacity} from 'react-native';
 import {Controller, useForm} from 'react-hook-form';
 
 // NativeBase Components
@@ -17,17 +17,14 @@ import {
   Button,
   Center,
   HStack,
-  IconButton,
   Image,
   Input,
   KeyboardAvoidingView,
   Modal,
   ScrollView,
   Stack,
-  Stagger,
   Text,
   TextArea,
-  useDisclose,
   useToast,
   VStack
 } from "native-base";
@@ -74,7 +71,6 @@ const Single = ({route, navigation}) => {
   const getOwner = async () => {
     const token = await AsyncStorage.getItem('userToken');
     const owner = await getUserById(userId, token);
-    console.log(owner);
     setOwner(owner);
   };
 
@@ -197,6 +193,7 @@ const Single = ({route, navigation}) => {
       style={{flex: 1}}
       bg={['#FFC56D']}
       behavior="position"
+      keyboardVerticalOffset={-200}
     >
       <ScrollView>
         <Modal

@@ -29,8 +29,6 @@ const Search = ({
       setUpdate(true);
       setSearchMediaArray(searchMediaResult);
       setMediaArray(searchMediaResult);
-      // console.log(mediaArray);
-      // console.log('searchResult', searchMediaResult);
     } catch (error) {
       console.error('Search', error);
     }

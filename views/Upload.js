@@ -3,11 +3,9 @@ import {Platform} from 'react-native';
 import PropTypes from 'prop-types';
 import {Controller, useForm} from 'react-hook-form';
 import {
-  Alert,
   Keyboard,
   ScrollView,
   TouchableOpacity,
-  View,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import {useMedia, useTag} from '../hooks/ApiHooks';
@@ -15,6 +13,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {MainContext} from '../contexts/MainContext';
 import {useFocusEffect} from '@react-navigation/native';
 import {appId, uploadsUrl} from '../utils/variables';
+import {MaterialIcons} from '@expo/vector-icons';
+
 
 // NativeBase Components
 import {
@@ -27,23 +27,14 @@ import {
   Input,
   TextArea,
   Button,
-  Center,
-  Icon,
-  Pressable,
-  Text,
-  KeyboardAvoidingView, Select, CheckIcon, WarningOutlineIcon, useToast
+  KeyboardAvoidingView, Select, CheckIcon, WarningOutlineIcon, useToast, HStack, IconButton
 } from "native-base";
 
 const Upload = ({navigation}) => {
-  const richText = useRef();
-  const [descHTML, setDescHTML] = useState('');
-  const [showDescError, setShowDescError] = useState(false);
   const [mediafile, setMediaFile] = useState({});
-  const video = useRef(null);
   const [loading, setLoading] = useState(false);
   const {postMedia} = useMedia();
   const {postTag} = useTag();
-  const {update, setUpdate} = useContext(MainContext);
   const {
     control,
     handleSubmit,
@@ -59,6 +50,7 @@ const Upload = ({navigation}) => {
   });
   const [cooktime, setCookTime] = React.useState("");
   const toast = useToast();
+  const [editValue, setEditValue] = React.useState("");
 
   const uploadFile = async (data) => {
     setLoading(true);
@@ -80,7 +72,6 @@ const Upload = ({navigation}) => {
       const result = await postMedia(formData, token);
       const appTag = {file_id: result.file_id, tag: appId};
       const tagResult = await postTag(appTag, token);
-      console.log('tag result', tagResult);
       toast.show({
         description: 'Recipe added',
       });
@@ -115,6 +106,7 @@ const Upload = ({navigation}) => {
 
   const resetForm = () => {
     setMediaFile({});
+    setEditValue("");
     reset();
   };
 
@@ -132,6 +124,7 @@ const Upload = ({navigation}) => {
       style={{flex: 1}}
       bg={['#FFC56D']}
       behavior="position"
+      keyboardVerticalOffset={-200}
     >
       <ScrollView>
         <TouchableOpacity
@@ -203,6 +196,63 @@ const Upload = ({navigation}) => {
               >
                 Ingredients and instructions
               </Heading>
+              <Box>
+              <HStack justifyContent="space-between" bg="#ffefcc" borderTopRadius="lg" borderWidth="1px" borderColor="#99907c">
+              <IconButton
+                onPress={() => setEditValue(editValue + "\n•")}
+                variant="solid"
+                borderRadius="0px"
+                borderTopLeftRadius="lg"
+                bg="#ffefcc"
+                _icon={{
+                  as: MaterialIcons,
+                  name: "format-list-bulleted",
+                  color: "black",
+                }}
+              ></IconButton>
+                <Button
+                  onPress={() => setEditValue(editValue + "°C")}
+                  variant="solid"
+                  borderRadius="0px"
+                  bg="#ffefcc"
+                >°C</Button>
+                <Button
+                  onPress={() => setEditValue(editValue + "°F")}
+                  variant="solid"
+                  borderRadius="0px"
+                  bg="#ffefcc"
+                >°F</Button>
+                <Button
+                  onPress={() => setEditValue(editValue + "½")}
+                  variant="solid"
+                  borderRadius="0px"
+                  bg="#ffefcc"
+                >½</Button>
+                <Button
+                  onPress={() => setEditValue(editValue + "¼")}
+                  variant="solid"
+                  borderRadius="0px"
+                  bg="#ffefcc"
+                >¼</Button>
+                <Button
+                  onPress={() => setEditValue(editValue + "¾")}
+                  variant="solid"
+                  borderRadius="0px"
+                  bg="#ffefcc"
+                >¾</Button>
+                <IconButton
+                  onPress={() => setEditValue("")}
+                  variant="solid"
+                  borderRadius="0px"
+                  bg="#ffefcc"
+                  borderTopRightRadius="lg"
+                  _icon={{
+                    as: MaterialIcons,
+                    name: "delete-sweep",
+                    color: "#ff2b2b",
+                  }}
+                ></IconButton>
+                </HStack>
               <FormControl isRequired>
                 <Controller
                   control={control}
@@ -219,17 +269,19 @@ const Upload = ({navigation}) => {
                   render={({field: {onChange, onBlur, value}}) => (
                     <TextArea
                       color="black"
+                      borderRadius="0px"
                       h={40}
+                      defaultValue={editValue}
                       placeholder="Add Ingredients and Instructions here"
                       backgroundColor="white"
-                      value={value}
                       onBlur={onBlur}
-                      onChangeText={onChange}
+                      onChangeText={(text)=> {setEditValue(text); onChange(text)}}
                     />
                   )}
                   name="description"
                 />
               </FormControl>
+              </Box>
             </Stack>
             <FormControl maxW="300" isRequired isInvalid>
               <Heading
@@ -252,7 +304,7 @@ const Upload = ({navigation}) => {
                 mt="1"
                 onValueChange={itemValue => setCookTime(itemValue)}
               >
-                <Select.Item label="5 minutes" value="Cooking time for this recipe is 5 minutes. " />
+                <Select.Item label="5 minutes" value="Cooking time for this recipe is 5 minutes." />
                 <Select.Item label="15 minutes" value="Cooking time for this recipe is 15 minutes. " />
                 <Select.Item label="30 minutes" value="Cooking time for this recipe is 30 minutes. " />
                 <Select.Item label="45 minutes" value="Cooking time for this recipe is 45 minutes. " />
