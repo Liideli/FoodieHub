@@ -24,10 +24,12 @@ import ChangePassword from '../views/ChangePassword';
 // NativeBase Components
 import {Box} from 'native-base';
 
+// Defines navigators
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
 
+// Creates the drawer navigator
 const DrawerScreen = () => {
   return (
     <Drawer.Navigator
@@ -36,6 +38,7 @@ const DrawerScreen = () => {
         swipeEnabled: false,
         drawerStyle: {backgroundColor: '#FFC56D'},
         headerShown: false,
+        // Adds custom drawercontent to the drawer menu
       }}
       drawerContent={(props) => <DrawerContent {...props} />}
     >
@@ -44,13 +47,16 @@ const DrawerScreen = () => {
   );
 };
 
+// Customized drawercontent
 const DrawerContent = (props) => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
   return (
     <DrawerContentScrollView {...props}>
+      {/* Adds the user's avatar and username to the drawer menu */}
       <Box borderBottomWidth={0.5} borderColor="white" marginBottom={1}>
         <AvatarName />
       </Box>
+      {/* Custom drawer items with navigation and icons */}
       <DrawerItem
         label="Home"
         labelStyle={{
@@ -59,7 +65,7 @@ const DrawerContent = (props) => {
           fontSize: 16,
         }}
         onPress={() => props.navigation.navigate('Home')}
-        icon={({focused}) => <AntDesign name="home" size={24} />}
+        icon={({}) => <AntDesign name="home" size={24} />}
       />
       <DrawerItem
         label="Profile"
@@ -79,7 +85,7 @@ const DrawerContent = (props) => {
           fontSize: 16,
         }}
         onPress={() => props.navigation.navigate('Search')}
-        icon={({focused}) => <AntDesign name="search1" size={24} />}
+        icon={() => <AntDesign name="search1" size={24} />}
       />
       <DrawerItem
         label="Add a new recipe"
@@ -89,19 +95,17 @@ const DrawerContent = (props) => {
           fontSize: 16,
         }}
         onPress={() => props.navigation.navigate('Upload')}
-        icon={({focused}) => <AntDesign name="pluscircleo" size={24} />}
+        icon={() => <AntDesign name="pluscircleo" size={24} />}
       />
       <DrawerItem
         label="Change password"
-        labelStyle={{marginLeft: -25}}
+        labelStyle={{
+          marginLeft: -25,
+          fontFamily: 'OpenSansRegular',
+          fontSize: 16,
+        }}
         onPress={() => props.navigation.navigate('ChangePassword')}
-        icon={({focused}) => (
-          <AntDesign
-            name="setting"
-            size={focused ? 28 : 24}
-            color={focused ? 'black' : 'gray'}
-          />
-        )}
+        icon={() => <AntDesign name="setting" size={24} />}
       />
       <DrawerItem
         label="Sign out"
@@ -110,7 +114,7 @@ const DrawerContent = (props) => {
           fontFamily: 'OpenSansRegular',
           fontSize: 16,
         }}
-        icon={({focused}) => <AntDesign name="logout" size={24} />}
+        icon={() => <AntDesign name="logout" size={24} />}
         onPress={async () => {
           props.navigation.closeDrawer();
           console.log('Logging out!');
@@ -286,6 +290,7 @@ const StackScreen = () => {
   );
 };
 
+// Uses drawer screen as the base navigation and nests stack nav inside drawer nav and tab nav inside stack nav
 const Navigator = () => {
   return (
     <NavigationContainer>

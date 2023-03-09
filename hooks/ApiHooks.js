@@ -54,7 +54,6 @@ const useMedia = (myFilesOnly, myFavouritesOnly) => {
     loadMedia();
     // load media when update or refreshing state changes in main context
     // by adding update state to the array below
-    console.log('loaded');
   }, [update]);
 
   const postMedia = async (fileData, token) => {
@@ -193,6 +192,7 @@ const useUser = () => {
 const useTag = () => {
   const getFilesByTag = async (tag) => {
     try {
+      console.log(baseUrl + 'tags/' + tag);
       return await doFetch(baseUrl + 'tags/' + tag);
     } catch (error) {
       throw new Error('getFilesByTag, ' + error.message);

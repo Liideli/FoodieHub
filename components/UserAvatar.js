@@ -1,20 +1,31 @@
 import React, {useEffect, useState} from 'react';
 import {uploadsUrl} from '../utils/variables';
-import {useTag} from '../hooks/ApiHooks';
+import {useTag, useUser} from '../hooks/ApiHooks';
 import {useContext} from 'react';
 import {MainContext} from '../contexts/MainContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // NativeBase Components
 import {Avatar, Box, Text} from 'native-base';
 
-const AvatarName = (props) => {
+const AvatarName = () => {
   const {getFilesByTag} = useTag();
-  const [avatar, setAvatar] = useState('');
-  const {user, update} = useContext(MainContext);
+  const {user} = useContext(MainContext);
+  const {getUserByToken} = useUser();
+
   const loadAvatar = async () => {
+    const token = await AsyncStorage.getItem('userToken');
+    const userData = await getUserByToken(token);
+    console.log('foodiehubavatar' + userData.user_id);
     try {
-      const avatarArray = await getFilesByTag('avatar_' + user.user_id);
-      setAvatar(avatarArray.pop().filename);
+      const avatarArray = await getFilesByTag(
+        'foodiehubavatar' + userData.user_id
+      );
+      console.log('teeees', avatarArray);
+      const avatar = avatarArray.pop().filename;
+      console.log('avat', avatar);
+      user.avatar = avatar;
+      console.log(user);
     } catch (error) {
       console.error('user avatar fetch failed', error.message);
     }
@@ -22,7 +33,7 @@ const AvatarName = (props) => {
 
   useEffect(() => {
     loadAvatar();
-  }, [update]);
+  }, []);
   return (
     <Box
       display="flex"
@@ -36,7 +47,7 @@ const AvatarName = (props) => {
         size="xl"
         borderWidth={1}
         borderColor={'black'}
-        source={{uri: uploadsUrl + avatar}}
+        source={{uri: uploadsUrl + user.avatar}}
         alt="User avatar"
       />
       <Text fontSize="xl" marginLeft={2}>
