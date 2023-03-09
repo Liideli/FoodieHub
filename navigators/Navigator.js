@@ -65,7 +65,7 @@ const DrawerContent = (props) => {
           fontSize: 16,
         }}
         onPress={() => props.navigation.navigate('Home')}
-        icon={({}) => <AntDesign name="home" size={24} />}
+        icon={() => <AntDesign name="home" size={24} />}
       />
       <DrawerItem
         label="Profile"
@@ -75,7 +75,7 @@ const DrawerContent = (props) => {
           fontSize: 16,
         }}
         onPress={() => props.navigation.navigate('Profile')}
-        icon={({focused}) => <AntDesign name="user" size={24} />}
+        icon={() => <AntDesign name="user" size={24} />}
       />
       <DrawerItem
         label="Search"
@@ -275,7 +275,7 @@ const StackScreen = () => {
             component={ChangePassword}
             options={{
               title: 'Change password',
-              headerTitleStyle: {fontFamily: 'JudsonRegular', fontSize: 24},
+              headerTitleStyle: {fontFamily: 'OpenSansRegular', fontSize: 24},
             }}
           />
         </>

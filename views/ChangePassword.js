@@ -86,7 +86,7 @@ const ChangePassword = ({navigation}) => {
     <Center w="100%" bg={['#FFC56D']}>
       <Box safeArea pr="6" pl="6" w="100%" h="100%">
         <Heading
-          fontFamily="JudsonRegular"
+          fontFamily="OpenSansRegular"
           size="lg"
           fontWeight="600"
           color="black"
@@ -98,7 +98,7 @@ const ChangePassword = ({navigation}) => {
             <FormControl.Label
               _text={{
                 fontSize: 'md',
-                fontFamily: 'JudsonRegular',
+                fontFamily: 'OpenSansRegular',
               }}
             >
               New password
@@ -140,7 +140,7 @@ const ChangePassword = ({navigation}) => {
             <FormControl.Label
               _text={{
                 fontSize: 'md',
-                fontFamily: 'JudsonRegular',
+                fontFamily: 'OpenSansRegular',
               }}
             >
               Confirm new password
@@ -185,7 +185,7 @@ const ChangePassword = ({navigation}) => {
                 navigation.navigate('Home');
               }}
               _text={{
-                fontFamily: 'JudsonRegular',
+                fontFamily: 'OpenSansRegular',
                 fontSize: 'xl',
               }}
             >
@@ -195,7 +195,7 @@ const ChangePassword = ({navigation}) => {
               mt="2"
               onPress={handleSubmit(UpdateUser)}
               _text={{
-                fontFamily: 'JudsonRegular',
+                fontFamily: 'OpenSansRegular',
                 fontSize: 'xl',
               }}
             >

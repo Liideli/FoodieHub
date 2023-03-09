@@ -60,7 +60,6 @@ const Profile = ({navigation}) => {
     const token = await AsyncStorage.getItem('userToken');
     const formData = new FormData();
     const userData = await getUserByToken(token);
-    console.log('userdata:DDD', userData);
     formData.append('title', '');
     const filename = mediafile.uri.split('/').pop();
     let fileExt = filename.split('.').pop();
@@ -74,7 +73,6 @@ const Profile = ({navigation}) => {
     });
     console.log('form data profile', formData);
     const result = await postMedia(formData, token);
-    console.log(':DD', result);
     const tagresult = await postTag(
       {file_id: result.file_id, tag: 'foodiehubavatar' + userData.user_id},
       token
@@ -201,7 +199,7 @@ const Profile = ({navigation}) => {
                     <FormControl.Label
                       _text={{
                         fontSize: 'md',
-                        fontFamily: 'JudsonRegular',
+                        fontFamily: 'OpenSansRegular',
                         color: 'white',
                       }}
                     >
@@ -234,7 +232,7 @@ const Profile = ({navigation}) => {
                     <FormControl.Label
                       _text={{
                         fontSize: 'md',
-                        fontFamily: 'JudsonRegular',
+                        fontFamily: 'OpenSansRegular',
                         color: 'white',
                       }}
                     >

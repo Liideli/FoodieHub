@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {uploadsUrl} from '../utils/variables';
 import {useTag, useUser} from '../hooks/ApiHooks';
 import {useContext} from 'react';
