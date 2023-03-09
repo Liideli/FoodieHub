@@ -56,28 +56,39 @@ const Profile = ({navigation}) => {
     }
   };
   const uploadFile = async () => {
-    const {postTag} = useTag();
-    const token = await AsyncStorage.getItem('userToken');
-    const formData = new FormData();
-    const userData = await getUserByToken(token);
-    formData.append('title', '');
-    const filename = mediafile.uri.split('/').pop();
-    let fileExt = filename.split('.').pop();
-    console.log(fileExt);
-    if (fileExt === 'jpg') fileExt = 'jpeg';
-    const mimeType = mediafile.type + '/' + fileExt;
-    formData.append('file', {
-      uri: mediafile.uri,
-      name: filename,
-      type: mimeType,
-    });
-    console.log('form data profile', formData);
-    const result = await postMedia(formData, token);
-    const tagresult = await postTag(
-      {file_id: result.file_id, tag: 'foodiehubavatar' + userData.user_id},
-      token
-    );
-    console.log('tagresult:', tagresult);
+    try {
+      const {postTag} = useTag();
+      const token = await AsyncStorage.getItem('userToken');
+      const formData = new FormData();
+      const userData = await getUserByToken(token);
+      formData.append('title', '');
+      const filename = mediafile.uri.split('/').pop();
+      let fileExt = filename.split('.').pop();
+      console.log(fileExt);
+      if (fileExt === 'jpg') fileExt = 'jpeg';
+      const mimeType = mediafile.type + '/' + fileExt;
+      formData.append('file', {
+        uri: mediafile.uri,
+        name: filename,
+        type: mimeType,
+      });
+      console.log('form data profile', formData);
+      const result = await postMedia(formData, token);
+      const tagresult = await postTag(
+        {file_id: result.file_id, tag: 'foodiehubavatar' + userData.user_id},
+        token
+      );
+      console.log('tagresult:', tagresult);
+      toast.show({
+        description: 'Avatar upload succesful',
+        placement: 'bottom',
+      });
+    } catch (error) {
+      toast.show({
+        description: 'Avatar upload failed, please try again',
+        placement: 'bottom',
+      });
+    }
   };
 
   const pickFile = async () => {
