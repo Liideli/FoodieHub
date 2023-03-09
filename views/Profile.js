@@ -21,6 +21,7 @@ import {
 import {MainContext} from '../contexts/MainContext';
 
 const Profile = ({navigation}) => {
+  // form controls
   const {putUser, checkUsername} = useUser();
   const {
     control,
@@ -34,61 +35,68 @@ const Profile = ({navigation}) => {
     mode: 'onBlur',
   });
 
+  // Checks if the username is available or not. Updates in real in the screen.
   const checkUser = async (username) => {
     try {
       const userAvailable = await checkUsername(username);
-      console.log('checkUser :DD', userAvailable);
       return userAvailable || 'Username is already taken';
     } catch (error) {
       console.error('checkUser', error.message);
     }
   };
 
+  // Define state changes
   const [toggleRecipes, setToggleRecipes] = useState(true);
   const [isfocused, setFocus] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const {update} = useContext(MainContext);
   const toast = useToast();
 
-  console.log('isfocused value', isfocused);
-  console.log('recipes value', toggleRecipes);
-
+  // Saves the form data to the backend
   const UpdateUser = async (updatedData) => {
-    const {getUserByToken} = useUser();
-    const userToken = await AsyncStorage.getItem('userToken');
-    console.log('userToken:', userToken);
-    const userData = await getUserByToken(userToken);
-    console.log('userdata:', userData);
-    try {
-      if (updatedData.username === '') {
-        delete updatedData.username;
-      }
-      if (updatedData.email === '') {
-        delete updatedData.email;
-      }
-      updatedData.token = userToken;
-      console.log(':DD', errors);
-      console.log('UpdateUser button pressed', updatedData);
-      const updateResult = await putUser(updatedData);
-      console.log('updated result', updateResult);
-      setShowModal(false);
+    // If the fields are empty, the app doesn't send data to the backend
+    if (updatedData.username === '' && updatedData.email === '') {
       toast.show({
-        description: 'User information updated!',
+        description: 'Please fill out a field',
         placement: 'bottom',
       });
-    } catch (error) {
-      console.error('UpdateUser :DDDD', error);
-      toast.show({
-        description: 'Update failed!',
-        placement: 'bottom',
-      });
+    } else {
+      const {getUserByToken} = useUser();
+      const userToken = await AsyncStorage.getItem('userToken');
+      console.log('userToken:', userToken);
+      const userData = await getUserByToken(userToken);
+      console.log('userdata:', userData);
+      // Remove empty fields from the form data to keep the current values
+      try {
+        if (updatedData.username === '') {
+          delete updatedData.username;
+        }
+        if (updatedData.email === '') {
+          delete updatedData.email;
+        }
+        updatedData.token = userToken;
+        const updateResult = await putUser(updatedData);
+        console.log('updated result', updateResult);
+        // Close the modal after succesfull update
+        setShowModal(false);
+        toast.show({
+          description: 'User information updated!',
+          placement: 'bottom',
+        });
+      } catch (error) {
+        console.error('UpdateUser', error);
+        toast.show({
+          description: 'Update failed!',
+          placement: 'bottom',
+        });
+      }
     }
   };
 
+  // Set my likes as the default tab on the profile page when the app state changes.
   useEffect(() => {
     setToggleRecipes(true);
     setFocus(true);
-    console.log(';DD;D;D;D:D:D');
   }, [update]);
 
   return (
@@ -108,6 +116,7 @@ const Profile = ({navigation}) => {
         backgroundColor="#FFC56D"
       >
         <AvatarName />
+        {/* opens the user information modal when pressing on the button */}
         <Box width="13%">
           <Button onPress={() => setShowModal(true)} backgroundColor="#FFC56D">
             <FontAwesome5 name="user-edit" size={24} color="black" />
@@ -180,7 +189,6 @@ const Profile = ({navigation}) => {
                         rules={{
                           validate: checkUser,
                         }}
-                        // rules={{required: {value: true, message: 'is required'}}}
                         render={({field: {onChange, onBlur, value}}) => (
                           <Input
                             placeholder="New username"
@@ -218,6 +226,8 @@ const Profile = ({navigation}) => {
           </Modal>
         </Box>
       </Box>
+      {/* Onpress on buttons changes the values to true or false to display My recipes or My likes.
+          Background colour changes depending on the value of isfocused to "highlight" the tab currently showing */}
       <Box display="flex" flexDirection="row">
         <Button
           width="50%"
@@ -249,6 +259,7 @@ const Profile = ({navigation}) => {
         </Button>
       </Box>
       <Box backgroundColor="white" marginBottom={180}>
+        {/* Displays a different list (My recipes or My likes) based on if toggleRecipe is true or false. */}
         {toggleRecipes ? (
           <List navigation={navigation} myFilesOnly={true} />
         ) : (
