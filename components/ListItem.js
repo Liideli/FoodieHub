@@ -110,14 +110,14 @@ const ListItem = ({singleMedia, navigation}) => {
         }}
       >
         <TouchableOpacity
-          activeOpacity={0.7}
+          activeOpacity={0.8}
           onPress={() => {
             navigation.navigate('Single', item);
           }}
         >
           <Box
             width={width / 2}
-            rounded="2xl"
+            rounded="3xl"
             overflow="hidden"
             borderColor="#fff"
             borderWidth="4"
