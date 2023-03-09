@@ -231,13 +231,6 @@ const Upload = ({navigation}) => {
                 />
               </FormControl>
             </Stack>
-            <Button
-              onPress={pickFile}
-              backgroundColor="#ff8282"
-              borderRadius="full"
-            >
-              Add image
-            </Button>
             <FormControl maxW="300" isRequired isInvalid>
               <Heading
                 fontSize="xl"
@@ -272,6 +265,13 @@ const Upload = ({navigation}) => {
                 Please make a selection!
               </FormControl.ErrorMessage>
             </FormControl>
+            <Button
+              onPress={pickFile}
+              backgroundColor="#ff8282"
+              borderRadius="full"
+            >
+              Add image
+            </Button>
             <Button
               loading={loading}
               disabled={
