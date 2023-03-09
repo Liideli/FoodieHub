@@ -4,6 +4,9 @@ import {MainProvider} from './contexts/MainContext';
 import Navigator from './navigators/Navigator';
 import {useFonts} from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
+import {LogBox} from 'react-native';
+
+LogBox.ignoreAllLogs(true);
 
 // NativeBase Components
 import {extendTheme, NativeBaseProvider} from 'native-base';
