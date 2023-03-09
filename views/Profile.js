@@ -121,7 +121,7 @@ const Profile = ({navigation}) => {
               display="flex"
               alignItems="center"
               borderRadius={20}
-              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+              behavior="position"
               width="100%"
             >
               <Modal.Content>
