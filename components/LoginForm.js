@@ -40,8 +40,8 @@ const LoginForm = () => {
       await AsyncStorage.setItem('userToken', loginResult.token);
       const loggedInUser = await getUserByToken(loginResult.token);
       toast.show({
-        placement: 'top',
-        marginTop: 12,
+        placement: 'bottom',
+        bottom: 20,
         description: 'Welcome ' + loggedInUser.username + '!',
       });
       setUser(loginResult.user);
@@ -56,23 +56,12 @@ const LoginForm = () => {
   };
 
   return (
-    <Center w="100%" bg={['#FFC56D']}>
+    <Center w="100%" bg={['#FFC56D']} mb={0}>
       <Box safeArea pr="6" pl="6" w="100%">
-        <Heading
-          fontFamily="JudsonRegular"
-          size="xl"
-          fontWeight="600"
-          color="black"
-        >
+        <Heading size="lg" fontFamily="Lobster" color="black">
           Welcome to FoodieHub!
         </Heading>
-        <Heading
-          fontFamily="JudsonRegular"
-          mt="1"
-          color="coolGray.600"
-          fontWeight="medium"
-          size="md"
-        >
+        <Heading mt="1" color="coolGray.600" fontWeight="medium" size="sm">
           Login to continue.
         </Heading>
 
@@ -81,7 +70,7 @@ const LoginForm = () => {
             <FormControl.Label
               _text={{
                 fontSize: 'md',
-                fontFamily: 'JudsonRegular',
+                fontFamily: 'OpenSansRegular',
               }}
             >
               Username
@@ -108,7 +97,7 @@ const LoginForm = () => {
             <FormControl.Label
               _text={{
                 fontSize: 'md',
-                fontFamily: 'JudsonRegular',
+                fontFamily: 'OpenSansRegular',
               }}
             >
               Password
@@ -136,14 +125,7 @@ const LoginForm = () => {
               {errors.password?.message}
             </FormControl.ErrorMessage>
           </FormControl>
-          <Button
-            mt="2"
-            onPress={handleSubmit(logIn)}
-            _text={{
-              fontFamily: 'JudsonRegular',
-              fontSize: 'xl',
-            }}
-          >
+          <Button mt="2" onPress={handleSubmit(logIn)}>
             Sign In
           </Button>
         </VStack>

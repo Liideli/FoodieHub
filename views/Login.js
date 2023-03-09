@@ -79,10 +79,7 @@ const Login = ({navigation}) => {
                   <Center>
                     {toggleForm ? (
                       <Button
-                        _text={{
-                          fontFamily: 'JudsonRegular',
-                          fontSize: 'lg',
-                        }}
+                        mt={2}
                         width="100%"
                         variant="outline"
                         outlineColor="black"
@@ -95,10 +92,7 @@ const Login = ({navigation}) => {
                       </Button>
                     ) : (
                       <Button
-                        _text={{
-                          fontFamily: 'JudsonRegular',
-                          fontSize: 'lg',
-                        }}
+                        mt={6}
                         width="100%"
                         variant="outline"
                         outlineColor="black"

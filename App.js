@@ -10,9 +10,9 @@ import {extendTheme, NativeBaseProvider} from 'native-base';
 
 const App = () => {
   const [fontsLoaded] = useFonts({
-    JudsonRegular: require('./assets/fonts/Judson-Regular.ttf'),
-    JudsonItalic: require('./assets/fonts/Judson-Italic.ttf'),
-    JudsonBold: require('./assets/fonts/Judson-Bold.ttf'),
+    Lobster: require('./assets/fonts/Lobster-Regular.ttf'),
+    OpenSansRegular: require('./assets/fonts/OpenSans-Regular.ttf'),
+    OpenSansSemiBold: require('./assets/fonts/OpenSans-SemiBold.ttf'),
   });
 
   useEffect(() => {
@@ -29,6 +29,7 @@ const App = () => {
     SplashScreen.hideAsync();
   }
 
+  // Customized Theme
   const theme = extendTheme({
     components: {
       Button: {
@@ -37,6 +38,8 @@ const App = () => {
           borderRadius: 10,
           _text: {
             color: 'black',
+            fontFamily: 'OpenSansRegular',
+            fontSize: 'lg',
           },
         },
       },
@@ -45,6 +48,17 @@ const App = () => {
           color: 'black',
           backgroundColor: 'white',
           focusOutlineColor: '#FE5D26',
+        },
+      },
+      Text: {
+        defaultProps: {
+          fontFamily: 'OpenSansRegular',
+          color: '#000',
+        },
+      },
+      Heading: {
+        defaultProps: {
+          fontFamily: 'OpenSansSemiBold',
         },
       },
       PresenceTransition: {

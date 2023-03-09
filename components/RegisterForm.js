@@ -69,21 +69,10 @@ const RegisterForm = (props) => {
   return (
     <Center w="100%" bg={['#FFC56D']}>
       <Box safeArea pr="6" pl="6" w="100%">
-        <Heading
-          fontFamily="JudsonRegular"
-          size="xl"
-          fontWeight="600"
-          color="black"
-        >
+        <Heading size="lg" fontFamily="Lobster" color="black">
           Welcome to FoodieHub!
         </Heading>
-        <Heading
-          fontFamily="JudsonRegular"
-          color="coolGray.600"
-          mt="1"
-          fontWeight="medium"
-          size="md"
-        >
+        <Heading color="coolGray.600" mt="1" size="sm">
           Register to continue.
         </Heading>
 
@@ -92,7 +81,7 @@ const RegisterForm = (props) => {
             <FormControl.Label
               _text={{
                 fontSize: 'md',
-                fontFamily: 'JudsonRegular',
+                fontFamily: 'OpenSansRegular',
               }}
             >
               Email
@@ -125,7 +114,7 @@ const RegisterForm = (props) => {
             <FormControl.Label
               _text={{
                 fontSize: 'md',
-                fontFamily: 'JudsonRegular',
+                fontFamily: 'OpenSansRegular',
               }}
             >
               Full Name
@@ -153,7 +142,7 @@ const RegisterForm = (props) => {
             <FormControl.Label
               _text={{
                 fontSize: 'md',
-                fontFamily: 'JudsonRegular',
+                fontFamily: 'OpenSansRegular',
               }}
             >
               Username
@@ -191,7 +180,7 @@ const RegisterForm = (props) => {
             <FormControl.Label
               _text={{
                 fontSize: 'md',
-                fontFamily: 'JudsonRegular',
+                fontFamily: 'OpenSansRegular',
               }}
             >
               Password
@@ -234,7 +223,7 @@ const RegisterForm = (props) => {
             <FormControl.Label
               _text={{
                 fontSize: 'md',
-                fontFamily: 'JudsonRegular',
+                fontFamily: 'OpenSansRegular',
               }}
             >
               Confirm password
@@ -273,14 +262,7 @@ const RegisterForm = (props) => {
               {errors.confirmPassword?.message}
             </FormControl.ErrorMessage>
           </FormControl>
-          <Button
-            mt="2"
-            onPress={handleSubmit(register)}
-            _text={{
-              fontFamily: 'JudsonRegular',
-              fontSize: 'xl',
-            }}
-          >
+          <Button mt="2" onPress={handleSubmit(register)}>
             Sign Up
           </Button>
         </VStack>
