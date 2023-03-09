@@ -19,7 +19,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {MainContext} from '../contexts/MainContext';
 import {Feather} from '@expo/vector-icons';
 import {AntDesign} from '@expo/vector-icons';
-import {FontAwesome5} from '@expo/vector-icons';
+import ChangePassword from '../views/ChangePassword';
 
 // NativeBase Components
 import {Box} from 'native-base';
@@ -94,6 +94,18 @@ const DrawerContent = (props) => {
         icon={({focused}) => (
           <AntDesign
             name="pluscircleo"
+            size={focused ? 28 : 24}
+            color={focused ? 'black' : 'gray'}
+          />
+        )}
+      />
+      <DrawerItem
+        label="Change password"
+        labelStyle={{marginLeft: -25}}
+        onPress={() => props.navigation.navigate('ChangePassword')}
+        icon={({focused}) => (
+          <AntDesign
+            name="setting"
             size={focused ? 28 : 24}
             color={focused ? 'black' : 'gray'}
           />
@@ -264,6 +276,14 @@ const StackScreen = () => {
             }}
           />
           <Stack.Screen name="Search" component={Search} />
+          <Stack.Screen
+            name="ChangePassword"
+            component={ChangePassword}
+            options={{
+              title: 'Change password',
+              headerTitleStyle: {fontFamily: 'JudsonRegular', fontSize: 24},
+            }}
+          />
         </>
       ) : (
         <Stack.Screen
