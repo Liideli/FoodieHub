@@ -138,6 +138,8 @@ const useUser = () => {
       throw new Error('checkUser: ' + error.message);
     }
   };
+
+  // Creates a new user
   const postUser = async (userData) => {
     const options = {
       method: 'post',
@@ -153,6 +155,7 @@ const useUser = () => {
     }
   };
 
+  // Updates user information
   const putUser = async (userData) => {
     const options = {
       method: 'PUT',
@@ -168,6 +171,7 @@ const useUser = () => {
     }
   };
 
+  // Check whether the given username is already in the database or not
   const checkUsername = async (username) => {
     try {
       const result = await doFetch(baseUrl + 'users/username/' + username);
@@ -177,6 +181,7 @@ const useUser = () => {
     }
   };
 
+  // Get user with given ID(usertoken required)
   const getUserById = async (id, token) => {
     try {
       return await doFetch(baseUrl + 'users/' + id, {

@@ -25,10 +25,12 @@ import ChangePassword from '../views/ChangePassword';
 // NativeBase Components
 import {Box} from 'native-base';
 
+// Defines navigators
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
 
+// Creates the drawer navigator
 const DrawerScreen = () => {
   return (
     <Drawer.Navigator
@@ -37,6 +39,7 @@ const DrawerScreen = () => {
         swipeEnabled: false,
         drawerStyle: {backgroundColor: '#FFC56D'},
         headerShown: false,
+        // Adds custom drawercontent to the drawer menu
       }}
       drawerContent={(props) => <DrawerContent {...props} />}
     >
@@ -45,13 +48,16 @@ const DrawerScreen = () => {
   );
 };
 
+// Customized drawercontent
 const DrawerContent = (props) => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
   return (
     <DrawerContentScrollView {...props}>
+      {/* Adds the user's avatar and username to the drawer menu */}
       <Box borderBottomWidth={0.5} borderColor="white" marginBottom={1}>
         <AvatarName />
       </Box>
+      {/* Custom drawer items with navigation and icons */}
       <DrawerItem
         label="Home"
         labelStyle={{marginLeft: -25}}

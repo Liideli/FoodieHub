@@ -1,14 +1,20 @@
 import React, {useEffect, useState} from 'react';
-import {Avatar, Box, Text} from 'native-base';
 import {uploadsUrl} from '../utils/variables';
 import {useTag} from '../hooks/ApiHooks';
 import {useContext} from 'react';
 import {MainContext} from '../contexts/MainContext';
 
+// NativeBase Components
+import {Avatar, Box, Text} from 'native-base';
+
+// Custom component that includes the user avatar and username
+// Used in profile page and drawer menu
 const AvatarName = (props) => {
   const {getFilesByTag} = useTag();
   const [avatar, setAvatar] = useState('');
   const {user} = useContext(MainContext);
+
+  // Function for loading the user avatar
   const loadAvatar = async () => {
     try {
       const avatarArray = await getFilesByTag('avatar_' + user.user_id);
@@ -18,6 +24,7 @@ const AvatarName = (props) => {
     }
   };
 
+  // Load the useravatar when the app starts
   useEffect(() => {
     loadAvatar();
   }, []);
