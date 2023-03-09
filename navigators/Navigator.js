@@ -93,15 +93,13 @@ const DrawerContent = (props) => {
       />
       <DrawerItem
         label="Change password"
-        labelStyle={{marginLeft: -25}}
+        labelStyle={{
+          marginLeft: -25,
+          fontFamily: 'OpenSansRegular',
+          fontSize: 16,
+        }}
         onPress={() => props.navigation.navigate('ChangePassword')}
-        icon={({focused}) => (
-          <AntDesign
-            name="setting"
-            size={focused ? 28 : 24}
-            color={focused ? 'black' : 'gray'}
-          />
-        )}
+        icon={({focused}) => <AntDesign name="setting" size={24} />}
       />
       <DrawerItem
         label="Sign out"

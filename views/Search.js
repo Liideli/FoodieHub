@@ -4,9 +4,7 @@ import List from '../components/List';
 import {useMedia} from '../hooks/ApiHooks';
 import {StyleSheet, SafeAreaView, View} from 'react-native';
 import {AntDesign} from '@expo/vector-icons';
-import {useSearch} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // NativeBase Components
 import {VStack, Input} from 'native-base';
@@ -16,19 +14,24 @@ const Search = ({
   myFilesOnly = false,
   MyFavouritesOnly = false,
 }) => {
-  const {postSearch} = useSearch();
   const {setUpdate} = useContext(MainContext);
   const {setSearchMediaArray} = useContext(MainContext);
   const {mediaArray, setMediaArray} = useMedia(myFilesOnly, MyFavouritesOnly);
 
   const searchFile = async (searchText) => {
-    console.log('searching', searchText);
+    // console.log('searching', searchText);
     try {
-      const token = await AsyncStorage.getItem('userToken');
-      const searchMediaResult = await postSearch(searchText, token);
-      setUpdate(true);
-      setSearchMediaArray(searchMediaResult);
-      setMediaArray(searchMediaResult);
+      if (searchText) {
+        setUpdate(true);
+        const searchData = mediaArray.filter(({title}) => {
+          if (RegExp(searchText).exec(title))
+            return RegExp(searchText).exec(title);
+        });
+        setMediaArray(searchData);
+        console.log('Search Result', searchData);
+      } else {
+        setMediaArray([]);
+      }
     } catch (error) {
       console.error('Search', error);
     }
