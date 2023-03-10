@@ -41,10 +41,9 @@ const Profile = ({navigation}) => {
   const [toggleRecipes, setToggleRecipes] = useState(true);
   const [isfocused, setFocus] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const {update} = useContext(MainContext);
-  const [mediafile, setMediaFile] = useState({});
   const {postMedia} = useMedia();
   const toast = useToast();
+  let mediafile = {};
 
   // Checks if the username is available or not. Updates in real in the screen.
   const checkUser = async (username) => {
@@ -55,6 +54,7 @@ const Profile = ({navigation}) => {
       console.error('checkUser', error.message);
     }
   };
+
   const uploadFile = async () => {
     try {
       const {postTag} = useTag();
@@ -64,7 +64,6 @@ const Profile = ({navigation}) => {
       formData.append('title', '');
       const filename = mediafile.uri.split('/').pop();
       let fileExt = filename.split('.').pop();
-      console.log(fileExt);
       if (fileExt === 'jpg') fileExt = 'jpeg';
       const mimeType = mediafile.type + '/' + fileExt;
       formData.append('file', {
@@ -72,13 +71,11 @@ const Profile = ({navigation}) => {
         name: filename,
         type: mimeType,
       });
-      console.log('form data profile', formData);
       const result = await postMedia(formData, token);
       const tagresult = await postTag(
         {file_id: result.file_id, tag: 'foodiehubavatar' + userData.user_id},
         token
       );
-      console.log('tagresult:', tagresult);
       toast.show({
         description: 'Avatar upload succesful',
         placement: 'bottom',
@@ -100,10 +97,9 @@ const Profile = ({navigation}) => {
         aspect: [4, 3],
         quality: 0.5,
       });
-      console.log('pickfileresult:', result);
 
       if (!result.canceled) {
-        setMediaFile(result.assets[0]);
+        mediafile = result.assets[0];
         // validate form
         trigger();
         uploadFile();
@@ -125,8 +121,7 @@ const Profile = ({navigation}) => {
       const {getUserByToken} = useUser();
       const userToken = await AsyncStorage.getItem('userToken');
       console.log('userToken:', userToken);
-      const userData = await getUserByToken(userToken);
-      console.log('userdata:', userData);
+      await getUserByToken(userToken);
       // Remove empty fields from the form data to keep the current values
       try {
         if (updatedData.username === '') {
@@ -158,7 +153,7 @@ const Profile = ({navigation}) => {
   useEffect(() => {
     setToggleRecipes(true);
     setFocus(true);
-  }, [update]);
+  }, []);
 
   return (
     <Box

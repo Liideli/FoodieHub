@@ -2,8 +2,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useContext, useEffect, useState} from 'react';
 import {MainContext} from '../contexts/MainContext';
 import {appId, baseUrl} from '../utils/variables';
-import { observe } from "react-native/Libraries/LogBox/Data/LogBoxData";
-import search from "../views/Search";
+import {observe} from 'react-native/Libraries/LogBox/Data/LogBoxData';
+import search from '../views/Search';
 
 const doFetch = async (url, options) => {
   const response = await fetch(url, options);
@@ -192,7 +192,6 @@ const useUser = () => {
 const useTag = () => {
   const getFilesByTag = async (tag) => {
     try {
-      console.log(baseUrl + 'tags/' + tag);
       return await doFetch(baseUrl + 'tags/' + tag);
     } catch (error) {
       throw new Error('getFilesByTag, ' + error.message);
@@ -348,9 +347,8 @@ const useSearch = () => {
     }
   };
   return {
-    postSearch
+    postSearch,
   };
 };
-
 
 export {useMedia, useAuthentication, useUser, useTag, useFavourite, useSearch};

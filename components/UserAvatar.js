@@ -16,16 +16,12 @@ const AvatarName = () => {
   const loadAvatar = async () => {
     const token = await AsyncStorage.getItem('userToken');
     const userData = await getUserByToken(token);
-    console.log('foodiehubavatar' + userData.user_id);
     try {
       const avatarArray = await getFilesByTag(
         'foodiehubavatar' + userData.user_id
       );
-      console.log('teeees', avatarArray);
       const avatar = avatarArray.pop().filename;
-      console.log('avat', avatar);
       user.avatar = avatar;
-      console.log(user);
     } catch (error) {
       console.error('user avatar fetch failed', error.message);
     }
