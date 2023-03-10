@@ -17,7 +17,7 @@ const Search = ({
   MyFavouritesOnly = false,
 }) => {
   const {postSearch} = useSearch();
-  const {setUpdate} = useContext(MainContext);
+  const {update, setUpdate} = useContext(MainContext);
   const {setSearchMediaArray} = useContext(MainContext);
   const {mediaArray, setMediaArray} = useMedia(myFilesOnly, MyFavouritesOnly);
 
@@ -26,7 +26,7 @@ const Search = ({
     try {
       const token = await AsyncStorage.getItem('userToken');
       const searchMediaResult = await postSearch(searchText, token);
-      setUpdate(true);
+      setUpdate(update);
       setSearchMediaArray(searchMediaResult);
       setMediaArray(searchMediaResult);
     } catch (error) {

@@ -2,11 +2,7 @@ import React, {useCallback, useContext, useState, useRef} from 'react';
 import {Platform} from 'react-native';
 import PropTypes from 'prop-types';
 import {Controller, useForm} from 'react-hook-form';
-import {
-  Keyboard,
-  ScrollView,
-  TouchableOpacity,
-} from 'react-native';
+import {Keyboard, ScrollView, TouchableOpacity} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import {useMedia, useTag} from '../hooks/ApiHooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -14,7 +10,6 @@ import {MainContext} from '../contexts/MainContext';
 import {useFocusEffect} from '@react-navigation/native';
 import {appId, uploadsUrl} from '../utils/variables';
 import {MaterialIcons} from '@expo/vector-icons';
-
 
 // NativeBase Components
 import {
@@ -27,8 +22,14 @@ import {
   Input,
   TextArea,
   Button,
-  KeyboardAvoidingView, Select, CheckIcon, WarningOutlineIcon, useToast, HStack, IconButton
-} from "native-base";
+  KeyboardAvoidingView,
+  Select,
+  CheckIcon,
+  WarningOutlineIcon,
+  useToast,
+  HStack,
+  IconButton,
+} from 'native-base';
 
 const Upload = ({navigation}) => {
   const [mediafile, setMediaFile] = useState({});
@@ -48,9 +49,10 @@ const Upload = ({navigation}) => {
     },
     mode: 'onChange',
   });
-  const [cooktime, setCookTime] = React.useState("");
+  const [cooktime, setCookTime] = React.useState('');
   const toast = useToast();
-  const [editValue, setEditValue] = React.useState("");
+  const [editValue, setEditValue] = React.useState('');
+  const {update, setUpdate} = useContext(MainContext);
 
   const uploadFile = async (data) => {
     setLoading(true);
@@ -75,7 +77,8 @@ const Upload = ({navigation}) => {
       toast.show({
         description: 'Recipe added',
       });
-      navigation.navigate("Home");
+      setUpdate(!update);
+      navigation.navigate('Home');
     } catch (error) {
       console.error('file upload failed', error);
     } finally {
@@ -106,7 +109,7 @@ const Upload = ({navigation}) => {
 
   const resetForm = () => {
     setMediaFile({});
-    setEditValue("");
+    setEditValue('');
     reset();
   };
 
@@ -197,90 +200,109 @@ const Upload = ({navigation}) => {
                 Ingredients and instructions
               </Heading>
               <Box>
-              <HStack justifyContent="space-between" bg="#ffefcc" borderTopRadius="lg" borderWidth="1px" borderColor="#99907c">
-              <IconButton
-                onPress={() => setEditValue(editValue + "\n•")}
-                variant="solid"
-                borderRadius="0px"
-                borderTopLeftRadius="lg"
-                bg="#ffefcc"
-                _icon={{
-                  as: MaterialIcons,
-                  name: "format-list-bulleted",
-                  color: "black",
-                }}
-              ></IconButton>
-                <Button
-                  onPress={() => setEditValue(editValue + "°C")}
-                  variant="solid"
-                  borderRadius="0px"
+                <HStack
+                  justifyContent="space-between"
                   bg="#ffefcc"
-                >°C</Button>
-                <Button
-                  onPress={() => setEditValue(editValue + "°F")}
-                  variant="solid"
-                  borderRadius="0px"
-                  bg="#ffefcc"
-                >°F</Button>
-                <Button
-                  onPress={() => setEditValue(editValue + "½")}
-                  variant="solid"
-                  borderRadius="0px"
-                  bg="#ffefcc"
-                >½</Button>
-                <Button
-                  onPress={() => setEditValue(editValue + "¼")}
-                  variant="solid"
-                  borderRadius="0px"
-                  bg="#ffefcc"
-                >¼</Button>
-                <Button
-                  onPress={() => setEditValue(editValue + "¾")}
-                  variant="solid"
-                  borderRadius="0px"
-                  bg="#ffefcc"
-                >¾</Button>
-                <IconButton
-                  onPress={() => setEditValue("")}
-                  variant="solid"
-                  borderRadius="0px"
-                  bg="#ffefcc"
-                  borderTopRightRadius="lg"
-                  _icon={{
-                    as: MaterialIcons,
-                    name: "delete-sweep",
-                    color: "#ff2b2b",
-                  }}
-                ></IconButton>
+                  borderTopRadius="lg"
+                  borderWidth="1px"
+                  borderColor="#99907c"
+                >
+                  <IconButton
+                    onPress={() => setEditValue(editValue + '\n•')}
+                    variant="solid"
+                    borderRadius="0px"
+                    borderTopLeftRadius="lg"
+                    bg="#ffefcc"
+                    _icon={{
+                      as: MaterialIcons,
+                      name: 'format-list-bulleted',
+                      color: 'black',
+                    }}
+                  ></IconButton>
+                  <Button
+                    onPress={() => setEditValue(editValue + '°C')}
+                    variant="solid"
+                    borderRadius="0px"
+                    bg="#ffefcc"
+                  >
+                    °C
+                  </Button>
+                  <Button
+                    onPress={() => setEditValue(editValue + '°F')}
+                    variant="solid"
+                    borderRadius="0px"
+                    bg="#ffefcc"
+                  >
+                    °F
+                  </Button>
+                  <Button
+                    onPress={() => setEditValue(editValue + '½')}
+                    variant="solid"
+                    borderRadius="0px"
+                    bg="#ffefcc"
+                  >
+                    ½
+                  </Button>
+                  <Button
+                    onPress={() => setEditValue(editValue + '¼')}
+                    variant="solid"
+                    borderRadius="0px"
+                    bg="#ffefcc"
+                  >
+                    ¼
+                  </Button>
+                  <Button
+                    onPress={() => setEditValue(editValue + '¾')}
+                    variant="solid"
+                    borderRadius="0px"
+                    bg="#ffefcc"
+                  >
+                    ¾
+                  </Button>
+                  <IconButton
+                    onPress={() => setEditValue('')}
+                    variant="solid"
+                    borderRadius="0px"
+                    bg="#ffefcc"
+                    borderTopRightRadius="lg"
+                    _icon={{
+                      as: MaterialIcons,
+                      name: 'delete-sweep',
+                      color: '#ff2b2b',
+                    }}
+                  ></IconButton>
                 </HStack>
-              <FormControl isRequired>
-                <Controller
-                  control={control}
-                  rules={{
-                    required: {
-                      value: true,
-                      message: 'is required',
-                    },
-                    minLength: {
-                      value: 3,
-                      message: 'Add a description',
-                    },
-                  }}
-                  render={({field: {onChange, onBlur, value}}) => (
-                    <TextArea
-                      color="black"
-                      borderRadius="0px"
-                      h={40}
-                      defaultValue={editValue}
-                      placeholder="Add Ingredients and Instructions here"
-                      backgroundColor="white"
-                      onBlur={onBlur}
-                      onChangeText={(text)=> {setEditValue(text); onChange(text)}}
-                    />
-                  )}
-                  name="description"
-                />
-              </FormControl>
+                <FormControl isRequired>
+                  <Controller
+                    control={control}
+                    rules={{
+                      required: {
+                        value: true,
+                        message: 'is required',
+                      },
+                      minLength: {
+                        value: 3,
+                        message: 'Add a description',
+                      },
+                    }}
+                    render={({field: {onChange, onBlur, value}}) => (
+                      <TextArea
+                        color="black"
+                        borderRadius="0px"
+                        h={40}
+                        defaultValue={editValue}
+                        placeholder="Add Ingredients and Instructions here"
+                        backgroundColor="white"
+                        onBlur={onBlur}
+                        onChangeText={(text) => {
+                          setEditValue(text);
+                          onChange(text);
+                        }}
+                      />
+                    )}
+                    name="description"
+                  />
+                </FormControl>
               </Box>
             </Stack>
             <FormControl maxW="300" isRequired isInvalid>
@@ -298,39 +320,58 @@ const Upload = ({navigation}) => {
                 minWidth="200"
                 placeholder="Cook time"
                 _selectedItem={{
-                  bg: "teal.600",
-                  endIcon: <CheckIcon size={5}/>
+                  bg: 'teal.600',
+                  endIcon: <CheckIcon size={5} />,
                 }}
                 mt="1"
-                onValueChange={itemValue => setCookTime(itemValue)}
+                onValueChange={(itemValue) => setCookTime(itemValue)}
               >
-                <Select.Item label="5 minutes" value="Cooking time for this recipe is 5 minutes." />
-                <Select.Item label="15 minutes" value="Cooking time for this recipe is 15 minutes. " />
-                <Select.Item label="30 minutes" value="Cooking time for this recipe is 30 minutes. " />
-                <Select.Item label="45 minutes" value="Cooking time for this recipe is 45 minutes. " />
-                <Select.Item label="1 hour" value="Cooking time for this recipe is 1 hour. " />
-                <Select.Item label="1.5 hours" value="Cooking time for this recipe is 1.5 hours. " />
-                <Select.Item label="2 hours" value="Cooking time for this recipe is 2 hours. " />
-                <Select.Item label="+2 hours" value="Cooking time for this recipe is +2 hours. " />
+                <Select.Item
+                  label="5 minutes"
+                  value="Cooking time for this recipe is 5 minutes."
+                />
+                <Select.Item
+                  label="15 minutes"
+                  value="Cooking time for this recipe is 15 minutes. "
+                />
+                <Select.Item
+                  label="30 minutes"
+                  value="Cooking time for this recipe is 30 minutes. "
+                />
+                <Select.Item
+                  label="45 minutes"
+                  value="Cooking time for this recipe is 45 minutes. "
+                />
+                <Select.Item
+                  label="1 hour"
+                  value="Cooking time for this recipe is 1 hour. "
+                />
+                <Select.Item
+                  label="1.5 hours"
+                  value="Cooking time for this recipe is 1.5 hours. "
+                />
+                <Select.Item
+                  label="2 hours"
+                  value="Cooking time for this recipe is 2 hours. "
+                />
+                <Select.Item
+                  label="+2 hours"
+                  value="Cooking time for this recipe is +2 hours. "
+                />
               </Select>
-              <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
+              <FormControl.ErrorMessage
+                leftIcon={<WarningOutlineIcon size="xs" />}
+              >
                 Please make a selection!
               </FormControl.ErrorMessage>
             </FormControl>
-            <Button
-              onPress={pickFile}
-              backgroundColor="#ff8282"
-              borderRadius="full"
-            >
+            <Button onPress={pickFile} borderRadius="full">
               Add image
             </Button>
             <Button
               loading={loading}
-              disabled={
-                !mediafile.uri || errors.title || errors.description
-              }
+              disabled={!mediafile.uri || errors.title || errors.description}
               onPress={handleSubmit(uploadFile)}
-              backgroundColor="#FE5D26"
               borderRadius="full"
             >
               Upload recipe
@@ -340,6 +381,10 @@ const Upload = ({navigation}) => {
       </ScrollView>
     </KeyboardAvoidingView>
   );
+};
+
+Upload.propTypes = {
+  navigation: PropTypes.object.isRequired,
 };
 
 export default Upload;

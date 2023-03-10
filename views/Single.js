@@ -16,6 +16,7 @@ import {
   Box,
   Button,
   Center,
+  FormControl,
   HStack,
   Image,
   Input,
@@ -26,8 +27,8 @@ import {
   Text,
   TextArea,
   useToast,
-  VStack
-} from "native-base";
+  VStack,
+} from 'native-base';
 
 const Single = ({route, navigation}) => {
   const {
@@ -115,13 +116,15 @@ const Single = ({route, navigation}) => {
     try {
       const token = await AsyncStorage.getItem('userToken');
       await deleteMedia(fileId, token);
+      setUpdate(!update);
     } catch (error) {
       console.log(error);
     }
   };
 
   const updateFile = async (updatedData) => {
-    setLoading(true);
+    console.log(updatedData);
+    setLoading(loading);
     const token = await AsyncStorage.getItem('userToken');
     try {
       if (updatedData.title === '') {
@@ -223,10 +226,7 @@ const Single = ({route, navigation}) => {
             }}
           >
             <AspectRatio w="100%" ratio={16 / 9}>
-              <Image
-                source={{uri: uploadsUrl + filename}}
-                alt="recipeImage"
-              />
+              <Image source={{uri: uploadsUrl + filename}} alt="recipeImage" />
             </AspectRatio>
           </TouchableOpacity>
           <HStack>
@@ -333,8 +333,7 @@ const Single = ({route, navigation}) => {
                     required: {
                       value: true,
                       minLength: 10,
-                      message:
-                        'New description must be at least 10 characters',
+                      message: 'New description must be at least 10 characters',
                     },
                   }}
                   render={({field: {onChange, onBlur, value}}) => (
@@ -348,9 +347,7 @@ const Single = ({route, navigation}) => {
                       type="text"
                       color="black"
                       backgroundColor="white"
-                      errorMessage={
-                        errors.comment && errors.comment.message
-                      }
+                      errorMessage={errors.comment && errors.comment.message}
                     />
                   )}
                   name="comment"
@@ -456,46 +453,50 @@ const Single = ({route, navigation}) => {
           <Modal.Header>Edit recipe {' ' + title}</Modal.Header>
           <Modal.Body>
             <Box>
-              <Controller
-                control={control}
-                render={({field: {onChange, onBlur, value}}) => (
-                  <Input
-                    placeholder="Change recipe title"
-                    onBlur={onBlur}
-                    value={value}
-                    onChangeText={onChange}
-                    type="text"
-                    errorMessage={errors.title && errors.title.message}
-                  />
-                )}
-                name="title"
-              />
-              <Controller
-                control={control}
-                rules={{
-                  required: {
-                    value: true,
-                    minLength: 10,
-                    message: 'New description must be at least 10 characters',
-                  },
-                }}
-                render={({field: {onChange, onBlur, value}}) => (
-                  <TextArea
-                    placeholder="Change description"
-                    h={40}
-                    onBlur={onBlur}
-                    value={value}
-                    onChangeText={onChange}
-                    type="text"
-                    color="black"
-                    backgroundColor="white"
-                    errorMessage={
-                      errors.description && errors.description.message
-                    }
-                  />
-                )}
-                name="description"
-              />
+              <FormControl>
+                <Controller
+                  control={control}
+                  render={({field: {onChange, onBlur, value}}) => (
+                    <Input
+                      placeholder="Change recipe title"
+                      onBlur={onBlur}
+                      value={value}
+                      onChangeText={onChange}
+                      type="text"
+                      errorMessage={errors.title && errors.title.message}
+                    />
+                  )}
+                  name="title"
+                />
+              </FormControl>
+              <FormControl>
+                <Controller
+                  control={control}
+                  rules={{
+                    required: {
+                      value: true,
+                      minLength: 10,
+                      message: 'New description must be at least 10 characters',
+                    },
+                  }}
+                  render={({field: {onChange, onBlur, value}}) => (
+                    <TextArea
+                      placeholder="Change description"
+                      h={40}
+                      onBlur={onBlur}
+                      value={value}
+                      onChangeText={onChange}
+                      type="text"
+                      color="black"
+                      backgroundColor="white"
+                      errorMessage={
+                        errors.description && errors.description.message
+                      }
+                    />
+                  )}
+                  name="description"
+                />
+              </FormControl>
             </Box>
           </Modal.Body>
           <Modal.Footer>
@@ -507,7 +508,13 @@ const Single = ({route, navigation}) => {
               >
                 Cancel
               </Button>
-              <Button onPress={handleSubmit(updateFile)}>Save</Button>
+              <Button
+                onPress={() => {
+                  handleSubmit(updateFile());
+                }}
+              >
+                Save
+              </Button>
             </Button.Group>
           </Modal.Footer>
         </Modal.Content>

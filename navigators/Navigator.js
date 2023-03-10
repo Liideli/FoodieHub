@@ -269,7 +269,13 @@ const StackScreen = () => {
               headerTitleStyle: {fontFamily: 'Lobster', fontSize: 24},
             }}
           />
-          <Stack.Screen name="Search" component={Search} />
+          <Stack.Screen
+            name="Search"
+            component={Search}
+            options={{
+              headerTitleStyle: {fontFamily: 'Lobster', fontSize: 24},
+            }}
+          />
           <Stack.Screen
             name="ChangePassword"
             component={ChangePassword}
