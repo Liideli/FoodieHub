@@ -47,6 +47,7 @@ const DrawerScreen = () => {
     </Drawer.Navigator>
   );
 };
+
 // Customized drawercontent
 const DrawerContent = (props) => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);

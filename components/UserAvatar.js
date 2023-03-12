@@ -8,11 +8,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // NativeBase Components
 import {Avatar, Box, Text} from 'native-base';
 
-const AvatarName = () => {
+// Custom component that includes the user avatar and username
+// Used in profile page and drawer menu
+const AvatarName = (props) => {
   const {getFilesByTag} = useTag();
   const {user} = useContext(MainContext);
   const {getUserByToken} = useUser();
 
+  // Function for loading the user avatar
   const loadAvatar = async () => {
     const token = await AsyncStorage.getItem('userToken');
     const userData = await getUserByToken(token);
@@ -27,6 +30,7 @@ const AvatarName = () => {
     }
   };
 
+  // Load the useravatar when the app starts
   useEffect(() => {
     loadAvatar();
   }, []);

@@ -21,6 +21,7 @@ import {
 import {useContext} from 'react';
 import {MainContext} from '../contexts/MainContext';
 
+// Creates a screen where the user can change their password
 const ChangePassword = ({navigation}) => {
   const {user} = useContext(MainContext);
   const [show, setShow] = useState(false);
@@ -29,6 +30,7 @@ const ChangePassword = ({navigation}) => {
   const toast = useToast();
 
   const {putUser} = useUser();
+  // Form controls
   const {
     control,
     getValues,
@@ -42,7 +44,10 @@ const ChangePassword = ({navigation}) => {
     mode: 'onBlur',
   });
 
+  // Function for saving the new password to the backend
   const UpdateUser = async (updatedData) => {
+    // Delete the confirm password field, so it doesn't get sent to the backend
+    // Database has no confirmpassword value
     delete updatedData.confirmPassword;
     const {getUserByToken} = useUser();
     const userToken = await AsyncStorage.getItem('userToken');
@@ -51,10 +56,10 @@ const ChangePassword = ({navigation}) => {
     console.log('userdata:', userData);
     try {
       updatedData.token = userToken;
-      console.log('passworderrors', errors);
-      console.log('Update password button pressed', updatedData);
       const updateResult = await putUser(updatedData);
       console.log('updated result', updateResult);
+      // Shows an alert to the user when the password change is succesful
+      // Logs out the user when they press close on the alert
       Alert.alert(
         'Password succesfully changed',
         'After pressing close, you will be logged out',
@@ -75,6 +80,8 @@ const ChangePassword = ({navigation}) => {
         ]
       );
     } catch (error) {
+      // Shows a toast to the user if changing password failed
+      // This should mostly happen when there's a server error
       console.error('Updatepassword ', error);
       toast.show({
         description: 'Update failed!',
