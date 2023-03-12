@@ -42,7 +42,7 @@ const Login = ({navigation}) => {
   const checkToken = async () => {
     try {
       const userToken = await AsyncStorage.getItem('userToken');
-      // if no token available, do nothing
+      // If there is no token available, do nothing
       if (userToken === null) return;
       const userData = await getUserByToken(userToken);
       console.log('checkToken', userData);

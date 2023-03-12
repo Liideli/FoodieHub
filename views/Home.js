@@ -7,6 +7,7 @@ import {View} from 'native-base';
 
 const Home = ({navigation}) => {
   return (
+    // Use List component with myFilesOnly and MyFavouritesOnly se to false
     <View backgroundColor={'#fff'}>
       <List
         navigation={navigation}

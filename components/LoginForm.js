@@ -32,6 +32,7 @@ const LoginForm = () => {
     formState: {errors},
   } = useForm();
 
+  // Post login and get the result in toast accordingly
   const logIn = async (loginData) => {
     console.log('Login button pressed', loginData);
     try {

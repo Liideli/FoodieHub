@@ -14,6 +14,7 @@ const List = ({navigation, myFilesOnly = false, MyFavouritesOnly = false}) => {
   const [loading, setLoading] = useState(false);
   const {setUpdate} = useContext(MainContext);
 
+  // Pull down to refresh list
   const onRefresh = useCallback(() => {
     setLoading(true);
     setUpdate(false);
