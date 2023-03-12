@@ -1,8 +1,8 @@
 # FoodieHub
 FoodieHub is a social media platform for food enthusiasts to connect, share and discover new recipes.
 
-### [FoodieHub app demo](https://drive.google.com/file/d/1S6Yxr0XgRnfAMsTJi0vCKfUa9v4b6C03/view?usp=share_link)
-## New features in the final version:
+## [FoodieHub app demo video](https://drive.google.com/file/d/1S6Yxr0XgRnfAMsTJi0vCKfUa9v4b6C03/view?usp=share_link)
+### New features in the final version:
 - Drawer menu now opens by swiping right everywhere when logged in.
 - Doesn't show error anymore when uploading avatar for the first time.
 
