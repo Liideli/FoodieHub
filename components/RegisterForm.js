@@ -38,7 +38,7 @@ const RegisterForm = (props) => {
     },
     mode: 'onBlur',
   });
-
+  // Post register and get the result in toast accordingly
   const register = async (registerData) => {
     delete registerData.confirmPassword;
     console.log('Registering: ', registerData);
@@ -55,7 +55,7 @@ const RegisterForm = (props) => {
       console.error('register', error);
     }
   };
-
+  // To check if username has already been taken
   const checkUser = async (username) => {
     try {
       const userAvailable = await checkUsername(username);

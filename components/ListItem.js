@@ -32,7 +32,6 @@ const ListItem = ({singleMedia, navigation}) => {
   const {getFavouritesByFileId, postFavourite, deleteFavourite} =
     useFavourite();
   const item = singleMedia;
-  // console.log('item', item.user_id);
   const width = Dimensions.get('window').width;
   const [transition, setTransition] = useState(false);
 
@@ -68,7 +67,7 @@ const ListItem = ({singleMedia, navigation}) => {
       await postFavourite(fileId, token);
       getLikes();
     } catch (error) {
-      // note: you cannot like same file multiple times
+      // You cannot like same file multiple times
     }
     setUserLikesIt(true);
   };
@@ -78,7 +77,7 @@ const ListItem = ({singleMedia, navigation}) => {
       await deleteFavourite(fileId, token);
       getLikes();
     } catch (error) {
-      // note: you cannot like same file multiple times
+      // You cannot like same file multiple times
       console.log(error);
     }
     setUserLikesIt(false);

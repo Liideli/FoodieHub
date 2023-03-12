@@ -4,9 +4,7 @@ import List from '../components/List';
 import {useMedia} from '../hooks/ApiHooks';
 import {StyleSheet, SafeAreaView, View} from 'react-native';
 import {AntDesign} from '@expo/vector-icons';
-import {useSearch} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // NativeBase Components
 import {VStack, Input} from 'native-base';
