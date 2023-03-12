@@ -14,10 +14,12 @@ const Search = ({
   myFilesOnly = false,
   MyFavouritesOnly = false,
 }) => {
+  /*
   const {postSearch} = useSearch();
   const {update, setUpdate} = useContext(MainContext);
   const {setSearchMediaArray} = useContext(MainContext);
   const {mediaArray, setMediaArray} = useMedia(myFilesOnly, MyFavouritesOnly);
+  */
 
   /* const searchFile = async (searchText) => {
     console.log('searching', searchText);
